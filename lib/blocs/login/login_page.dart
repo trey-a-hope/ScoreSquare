@@ -40,12 +40,7 @@ class _LoginPageState extends State<LoginPage>
           Container(
             width: screenWidth,
             height: screenHeight,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(ASSET_LOGIN_BG),
-                fit: BoxFit.cover,
-              ),
-            ),
+            color: Colors.green,
           ),
           Container(
             decoration: BoxDecoration(
@@ -240,15 +235,15 @@ class _LoginPageState extends State<LoginPage>
                               padding: const EdgeInsets.all(20),
                               child: InkWell(
                                 onTap: () {
-                                  // Route route = MaterialPageRoute(
-                                  //   builder: (BuildContext context) =>
-                                  //       BlocProvider(
-                                  //     create: (BuildContext context) =>
-                                  //         SIGN_UP_BP.SignUpBloc(),
-                                  //     child: SIGN_UP_BP.SignUpPage(),
-                                  //   ),
-                                  // );
-                                  // Navigator.push(context, route);
+                                  Route route = MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        BlocProvider(
+                                      create: (BuildContext context) =>
+                                          SignUpBloc(),
+                                      child: const SignUpPage(),
+                                    ),
+                                  );
+                                  Navigator.push(context, route);
                                 },
                                 child: RichText(
                                   textAlign: TextAlign.center,

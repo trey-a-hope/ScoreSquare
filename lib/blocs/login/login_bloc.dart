@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:score_square/blocs/sign_up/sign_up_bloc.dart';
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/nba_game_model.dart';
 import 'package:score_square/service_locator.dart';
@@ -16,7 +17,7 @@ part 'login_state.dart';
 part 'login_page.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  static Box<dynamic> _loginCredentialsBox =
+  static final Box<dynamic> _loginCredentialsBox =
       Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
 
   bool _passwordVisible = false;
@@ -38,7 +39,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         List<NBAGameModel> nbaGames =
             await locator<NBAService>().getGames(page: 1);
 
-        print(nbaGames);
+        //print(nbaGames);
         //TODO: DELETE
 
         await FirebaseAuth.instance.signInWithEmailAndPassword(

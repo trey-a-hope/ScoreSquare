@@ -28,16 +28,10 @@ class UserService extends IUserService {
 
       final DocumentReference userDocRef = _usersDB.doc(user.uid);
 
-      Map userMap = user.toMap();
-      userMap['blockedUsers'] = [];
-
       batch.set(
         userDocRef,
-        userMap,
+        user.toMap(),
       );
-
-      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
-      batch.update(tableCountsDocRef, {'users': FieldValue.increment(1)});
 
       await batch.commit();
       return;

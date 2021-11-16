@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BetModel {
-  int awayDigit;
-  int homeDigit;
-  String id;
-  DateTime time;
-  String uid;
+  final int awayDigit;
+  final int homeDigit;
+  final String id;
+  final DateTime time;
+  final String uid;
 
   BetModel({
     required this.awayDigit,
@@ -14,13 +14,7 @@ class BetModel {
     required this.id,
     required this.time,
     required this.uid,
-  }) {
-    this.awayDigit = awayDigit;
-    this.homeDigit = homeDigit;
-    this.id = id;
-    this.time = time;
-    this.uid = uid;
-  }
+  });
 
   static BetModel extractDocument(DocumentSnapshot data) {
     return BetModel(
@@ -32,7 +26,6 @@ class BetModel {
     );
   }
 
-  @override
   Map<String, dynamic> toMap() {
     return {
       'awayDigit': awayDigit,

@@ -16,14 +16,20 @@ class UtilService extends IUtilService {
     required String imgUrl,
     required String tag,
   }) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) {
-      return DetailScreen(imgUrl: imgUrl, tag: tag);
-    }));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) {
+          return _DetailScreen(imgUrl: imgUrl, tag: tag);
+        },
+      ),
+    );
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  DetailScreen({required this.tag, required this.imgUrl});
+class _DetailScreen extends StatelessWidget {
+  const _DetailScreen({Key? key, required this.tag, required this.imgUrl})
+      : super(key: key);
 
   final String tag;
   final String imgUrl;

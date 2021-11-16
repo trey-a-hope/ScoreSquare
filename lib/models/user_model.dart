@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:algolia/algolia.dart';
 
 class UserModel {
   String? uid;
-
-  String imgUrl;
+  String? imgUrl;
+  String? fcmToken;
   String email;
   DateTime modified;
   DateTime created;
   String username;
-  String? fcmToken;
 
   UserModel({
     required this.uid,
@@ -32,20 +30,6 @@ class UserModel {
       fcmToken: data['fcmToken'],
     );
   }
-
-  // factory UserModel.fromAlgolia(AlgoliaObjectSnapshot aob) {
-  //   Map<String, dynamic> data = aob.data;
-  //   return UserModel(
-  //     imgUrl: data['imgUrl'],
-  //     email: data['email'],
-  //     created: DateTime.now(),
-  //     modified: DateTime.now(),
-  //     uid: data['uid'],
-  //     username: data['username'],
-  //      fcmToken: data['fcmToken'],
-  //     // watchListCount: data['watchListCount'],
-  //   );
-  // }
 
   Map<String, dynamic> toMap() {
     return {
