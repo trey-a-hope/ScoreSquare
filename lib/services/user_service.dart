@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show json;
 
 import 'package:score_square/models/user_model.dart';
 
@@ -17,9 +14,7 @@ abstract class IUserService {
 
 class UserService extends IUserService {
   final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('Users');
-  final CollectionReference _dataDB =
-      FirebaseFirestore.instance.collection('Data');
+      FirebaseFirestore.instance.collection('users');
 
   @override
   Future<void> createUser({required UserModel user}) async {

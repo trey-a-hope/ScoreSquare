@@ -1,6 +1,8 @@
 part of 'home_bloc.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   State createState() => HomePageState();
 }

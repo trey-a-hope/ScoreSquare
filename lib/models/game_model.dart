@@ -1,17 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GameModel {
+  String? id;
   int awayTeamID;
   int awayTeamScore;
-  double betPrice;
   int homeTeamID;
   int homeTeamScore;
-  String id;
-  bool isActive;
-  double potAmount;
-  DateTime starts;
-  DateTime time;
-  String uid;
+  double betPrice;
+  int status;
 
   GameModel({
     required this.awayTeamID,
@@ -20,14 +16,10 @@ class GameModel {
     required this.homeTeamID,
     required this.homeTeamScore,
     required this.id,
-    required this.isActive,
-    required this.potAmount,
-    required this.starts,
-    required this.time,
-    required this.uid,
+    required this.status,
   });
 
-  static GameModel extractDocument(DocumentSnapshot data) {
+  factory GameModel.fromDoc({required DocumentSnapshot data}) {
     return GameModel(
       awayTeamID: data['awayTeamID'],
       awayTeamScore: data['awayTeamScore'],
@@ -35,15 +27,10 @@ class GameModel {
       homeTeamID: data['homeTeamID'],
       homeTeamScore: data['homeTeamScore'],
       id: data['id'],
-      isActive: data['isActive'],
-      potAmount: data['potAmount'],
-      starts: data['starts'].toDate(),
-      time: data['time'].toDate(),
-      uid: data['uid'],
+      status: data['status'],
     );
   }
 
-  @override
   Map<String, dynamic> toMap() {
     return {
       'awayTeamID': awayTeamID,
@@ -52,11 +39,7 @@ class GameModel {
       'homeTeamID': homeTeamID,
       'homeTeamScore': homeTeamScore,
       'id': id,
-      'isActive': isActive,
-      'potAmount': potAmount,
-      'starts': starts,
-      'time': time,
-      'uid': uid,
+      'status': status,
     };
   }
 }

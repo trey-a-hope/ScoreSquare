@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/nba_service.dart';
 
 import 'services/auth_service.dart';
@@ -11,9 +12,10 @@ import 'services/validation_service.dart';
 
 GetIt locator = GetIt.I;
 
-void setUpLocater() {
+void setUpLocator() {
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => FCMNotificationService());
+  locator.registerLazySingleton(() => GameService());
   locator.registerLazySingleton(() => NBAService());
   locator.registerLazySingleton(() => ModalService());
   locator.registerLazySingleton(() => StorageService());

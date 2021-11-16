@@ -18,7 +18,7 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  setUpLocater();
+  setUpLocator();
 
   bool isWeb;
   try {
