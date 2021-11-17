@@ -19,7 +19,7 @@ abstract class IAuthService {
 class AuthService extends IAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('users');
 
   @override
   Future<UserModel> getCurrentUser() async {

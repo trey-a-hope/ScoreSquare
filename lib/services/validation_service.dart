@@ -13,7 +13,7 @@ abstract class IValidationService {
 class ValidationService extends IValidationService {
   @override
   String? isEmpty(String? value) {
-    if (value == null || value.length == 0) {
+    if (value == null || value.isEmpty) {
       return ('Field cannot be empty.');
     } else {
       return null;
@@ -24,7 +24,7 @@ class ValidationService extends IValidationService {
   String? mobile(String? value) {
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = RegExp(patttern);
-    if (value == null || value.length == 0) {
+    if (value == null || value.isEmpty) {
       return null;
     } else if (!regExp.hasMatch(value)) {
       return 'Enter valid number or leave blank.';
@@ -37,20 +37,22 @@ class ValidationService extends IValidationService {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern);
-    if (value == null || !regex.hasMatch(value))
+    if (value == null || !regex.hasMatch(value)) {
       return 'Enter a valid email.';
-    else
+    } else {
       return null;
+    }
   }
 
   @override
   String? password(String? value) {
     String pattern = '.{6,}';
     RegExp regex = RegExp(pattern);
-    if (value == null || !regex.hasMatch(value))
+    if (value == null || !regex.hasMatch(value)) {
       return 'Enter 6 characters minimum.';
-    else
+    } else {
       return null;
+    }
   }
 
   @override

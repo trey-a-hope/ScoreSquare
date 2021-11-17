@@ -59,9 +59,9 @@ class _GamesPageState extends State<GamesPage> {
               itemBuilder: (context, index) {
                 GameModel game = games[index];
                 NBATeamModel homeTeam =
-                    NBATeams.firstWhere((team) => team.id == game.homeTeamID);
+                    nbaTeams.firstWhere((team) => team.id == game.homeTeamID);
                 NBATeamModel awayTeam =
-                    NBATeams.firstWhere((team) => team.id == game.awayTeamID);
+                    nbaTeams.firstWhere((team) => team.id == game.awayTeamID);
 
                 return ListTile(
                   title: Text('${homeTeam.name} vs. ${awayTeam.name}'),

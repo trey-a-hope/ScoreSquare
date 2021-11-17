@@ -22,6 +22,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+   	<string>Used for assigning profile images.</string>
+   	<key>NSPhotoLibraryAddUsageDescription</key>
+   	<string>Used for downloading images from chat messages.</string>
+   	<key>NSPhotoLibraryUsageDescription</key>
+   	<string>Used for assigning profile images.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

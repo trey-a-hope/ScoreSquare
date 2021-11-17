@@ -21,8 +21,7 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    Box<String> loginCredentialsBox =
-        Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+    Box<String> loginCredentialsBox = Hive.box<String>(hiveBoxLoginCredentials);
 
     //Set form values if present.
     if (loginCredentialsBox.get('email') != null) {

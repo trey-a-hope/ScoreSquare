@@ -51,7 +51,7 @@ class ModalService extends IModalService {
             actions: <Widget>[
               CupertinoDialogAction(
                 isDefaultAction: true,
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -86,7 +86,7 @@ class ModalService extends IModalService {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Change Email'),
+          title: const Text('Change Email'),
           content: Form(
             key: formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -97,7 +97,7 @@ class ModalService extends IModalService {
               onFieldSubmitted: (term) {},
               validator: locator<ValidationService>().email,
               onSaved: (value) {},
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(color: Colors.white),
                 hintText: 'New Email',
                 icon: Icon(Icons.email),
@@ -141,14 +141,14 @@ class ModalService extends IModalService {
             actions: [
               CupertinoDialogAction(
                 isDefaultAction: false,
-                child: Text('No'),
+                child: const Text('No'),
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
               ),
               CupertinoDialogAction(
                 isDefaultAction: true,
-                child: Text('Yes'),
+                child: const Text('Yes'),
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },

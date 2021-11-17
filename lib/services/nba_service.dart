@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:score_square/models/nba_game_model.dart';
-import 'dart:convert' show Encoding, json;
+import 'dart:convert' show json;
 
 import 'package:score_square/models/nba_player_model.dart';
 import 'package:score_square/models/nba_team_model.dart';
@@ -36,10 +35,10 @@ class NBAService extends INBAService {
       Map bodyMap = json.decode(response.body);
       List<dynamic> playersData = bodyMap['data'];
       List<NBAPlayerModel> players = [];
-      playersData.forEach((playerData) {
-        NBAPlayerModel player = NBAPlayerModel.fromJSON(map: playerData);
+      for (int i = 0; i < playersData.length; i++) {
+        NBAPlayerModel player = NBAPlayerModel.fromJSON(map: playersData[i]);
         players.add(player);
-      });
+      }
       return players;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');
@@ -80,10 +79,12 @@ class NBAService extends INBAService {
       Map bodyMap = json.decode(response.body);
       List<dynamic> teamsData = bodyMap['data'];
       List<NBATeamModel> teams = [];
-      teamsData.forEach((teamData) {
-        NBATeamModel team = NBATeamModel.fromJSON(map: teamData);
+
+      for (int i = 0; i < teamsData.length; i++) {
+        NBATeamModel team = NBATeamModel.fromJSON(map: teamsData[i]);
         teams.add(team);
-      });
+      }
+
       return teams;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');
@@ -142,10 +143,12 @@ class NBAService extends INBAService {
       Map bodyMap = json.decode(response.body);
       List<dynamic> gamesData = bodyMap['data'];
       List<NBAGameModel> games = [];
-      gamesData.forEach((gameData) {
-        NBAGameModel game = NBAGameModel.fromJSON(map: gameData);
+
+      for (int i = 0; i < gamesData.length; i++) {
+        NBAGameModel game = NBAGameModel.fromJSON(map: gamesData[i]);
         games.add(game);
-      });
+      }
+
       return games;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');

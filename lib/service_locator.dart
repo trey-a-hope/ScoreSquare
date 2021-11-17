@@ -16,8 +16,8 @@ void setUpLocator() {
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => FCMNotificationService());
   locator.registerLazySingleton(() => GameService());
-  locator.registerLazySingleton(() => NBAService());
   locator.registerLazySingleton(() => ModalService());
+  locator.registerLazySingleton(() => NBAService());
   locator.registerLazySingleton(() => StorageService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => UtilService());

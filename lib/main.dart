@@ -44,7 +44,7 @@ void main() async {
   await Hive.initFlutter();
 
   //Open hive boxes.
-  await Hive.openBox<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+  await Hive.openBox<String>(hiveBoxLoginCredentials);
 
   runApp(
     const MyApp(),
@@ -52,7 +52,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp();
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State createState() => MyAppState(
@@ -92,14 +92,14 @@ class MyAppState extends State<MyApp> {
                     ..add(
                       HomeLoadPageEvent(),
                     ),
-                  child: HomePage(),
+                  child: const HomePage(),
                 )
               : BlocProvider(
                   create: (BuildContext context) => LoginBloc()
                     ..add(
                       LoginLoadPageEvent(),
                     ),
-                  child: LoginPage(),
+                  child: const LoginPage(),
                 );
         },
       ),

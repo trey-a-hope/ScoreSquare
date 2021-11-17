@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage>
                   ),
                 ),
                 SafeArea(
-                  child: Container(
+                  child: SizedBox(
                     height: screenHeight,
                     width: screenWidth,
                     child: Padding(
@@ -166,7 +166,7 @@ class _SignUpPageState extends State<SignUpPage>
                                   onTap: () {
                                     Route route = MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          TermsServicePage(),
+                                          const TermsServicePage(),
                                     );
                                     Navigator.of(context).push(route);
                                   },
@@ -279,7 +279,7 @@ class _SignUpPageState extends State<SignUpPage>
   @override
   void navigateToTermsServicePage() {
     Route route = MaterialPageRoute(
-      builder: (BuildContext context) => TermsServicePage(),
+      builder: (BuildContext context) => const TermsServicePage(),
     );
 
     Navigator.of(context).push(route);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:score_square/blocs/edit_profile/edit_profile_bloc.dart';
 import 'package:score_square/blocs/home/home_bloc.dart';
 import 'package:score_square/blocs/games/games_bloc.dart';
 import 'package:score_square/services/auth_service.dart';
@@ -19,7 +20,7 @@ class CustomAppDrawer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(10.0),
                     child: Text('Hello there!'),
                   ),
                   CircleAvatar(
@@ -70,8 +71,20 @@ class CustomAppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {},
+              title: const Text('Edit Profile'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) => EditProfileBloc()
+                        ..add(
+                          LoadPageEvent(),
+                        ),
+                      child: const EditProfilePage(),
+                    ),
+                  ),
+                );
+              },
             ),
             const Spacer(),
             ListTile(
