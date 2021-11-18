@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:hive/hive.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/terms_service_page.dart';
 import 'package:score_square/services/auth_service.dart';
@@ -18,31 +20,24 @@ part 'sign_up_page.dart';
 part 'sign_up_state.dart';
 
 abstract class SignUpBlocDelegate {
-  void navigateHome();
   void navigateToTermsServicePage();
   void showMessage({required String message});
 }
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc()
-      : super(
-          SignUpStartState(
-            termsServicesChecked: false,
-          ),
-        );
-
   SignUpBlocDelegate? _signUpBlocDelegate;
   bool _termsServicesChecked = false;
+  static final Box<dynamic> _userCredentialsBox =
+      Hive.box<String>(hiveBoxUserCredentials);
 
   void setDelegate({required SignUpBlocDelegate delegate}) {
     _signUpBlocDelegate = delegate;
   }
 
-  @override
-  Stream<SignUpState> mapEventToState(SignUpEvent event) async* {
-    if (event is SignUp) {
+  SignUpBloc() : super(InitialState(termsServicesChecked: false)) {
+    on<SubmitEvent>((event, emit) async {
       try {
-        yield LoadingState();
+        emit(LoadingState());
 
         final String email = event.email;
         final String password = event.password;
@@ -65,6 +60,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
         await locator<UserService>().createUser(user: newUser);
 
+        _userCredentialsBox.put('uid', firebaseUser.uid);
         // final UserModel treyHopeUser =
         //     await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
 
@@ -75,25 +71,24 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         //   notificationData: null,
         // );
 
-        _signUpBlocDelegate!.navigateHome();
-
-        yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
+        Phoenix.rebirth(event.context);
       } catch (error) {
         _signUpBlocDelegate!.showMessage(message: 'Error: ${error.toString()}');
-        yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
+        emit(InitialState(termsServicesChecked: _termsServicesChecked));
       }
-    }
+    });
 
-    if (event is NavigateToTermsServicePageEvent) {
+    on<NavigateToTermsServicePageEvent>((event, emit) async {
       _signUpBlocDelegate!.navigateToTermsServicePage();
-    }
+    });
 
-    if (event is TermsServiceCheckboxEvent) {
+    on<TermsServiceCheckboxEvent>((event, emit) async {
       _termsServicesChecked = event.checked;
-
-      yield SignUpStartState(
-        termsServicesChecked: _termsServicesChecked,
+      emit(
+        InitialState(
+          termsServicesChecked: _termsServicesChecked,
+        ),
       );
-    }
+    });
   }
 }

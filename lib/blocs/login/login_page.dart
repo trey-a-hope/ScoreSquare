@@ -21,12 +21,12 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    Box<String> loginCredentialsBox = Hive.box<String>(hiveBoxLoginCredentials);
+    Box<String> userCredentialsBox = Hive.box<String>(hiveBoxUserCredentials);
 
     //Set form values if present.
-    if (loginCredentialsBox.get('email') != null) {
-      String email = loginCredentialsBox.get('email')!;
-      String password = loginCredentialsBox.get('password')!;
+    if (userCredentialsBox.get('email') != null) {
+      String email = userCredentialsBox.get('email')!;
+      String password = userCredentialsBox.get('password')!;
 
       _emailController.text = email;
       _passwordController.text = password;
@@ -63,11 +63,11 @@ class _LoginPageState extends State<LoginPage>
                   ),
                   BlocConsumer<LoginBloc, LoginState>(
                       builder: (context, state) {
-                    if (state is LoginLoadingState) {
+                    if (state is LoadingState) {
                       return const CircularProgressIndicator();
                     }
 
-                    if (state is LoginErrorState) {
+                    if (state is ErrorState) {
                       final String errorMessage = state.error.message ??
                           'Could not log in at this time.';
 
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage>
                               ),
                               onPressed: () {
                                 context.read<LoginBloc>().add(
-                                      LoginTryAgainEvent(),
+                                      TryAgainEvent(),
                                     );
                               },
                             ),
@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage>
                       );
                     }
 
-                    if (state is LoginInitialState) {
+                    if (state is InitialState) {
                       bool passwordVisible = state.passwordVisible;
                       bool rememberMe = state.rememberMe;
 
@@ -171,8 +171,9 @@ class _LoginPageState extends State<LoginPage>
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      context.read<LoginBloc>().add(
-                                          LoginUpdatePasswordVisibleEvent());
+                                      context
+                                          .read<LoginBloc>()
+                                          .add(UpdatePasswordVisibleEvent());
                                     },
                                   ),
                                   border: const OutlineInputBorder(
@@ -203,7 +204,7 @@ class _LoginPageState extends State<LoginPage>
                                 value: rememberMe,
                                 onChanged: (newValue) {
                                   context.read<LoginBloc>().add(
-                                        LoginUpdateRememberMeEvent(),
+                                        UpdateRememberMeEvent(),
                                       );
                                 },
                               ),
@@ -223,7 +224,7 @@ class _LoginPageState extends State<LoginPage>
                                     _passwordController.text;
 
                                 context.read<LoginBloc>().add(
-                                      LoginSubmitEvent(
+                                      SubmitEvent(
                                         email: email,
                                         password: password,
                                       ),
@@ -294,10 +295,10 @@ class _LoginPageState extends State<LoginPage>
 
                     return Container();
                   }, listener: (context, state) {
-                    if (state == LoginSuccessState()) {
+                    if (state == SuccessState()) {
                       //Navigator.of(context).popUntil((route) => route.isFirst);
                     }
-                    if (state is LoginErrorState) {
+                    if (state is ErrorState) {
                       //todo: Report this sign in failure somewhere perhaps?
                     }
                   })

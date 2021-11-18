@@ -7,12 +7,12 @@ abstract class GamesState extends Equatable {
   List<Object> get props => [];
 }
 
-class GamesInitial extends GamesState {}
+class InitialState extends GamesState {}
 
-class GamesLoadingState extends GamesState {}
+class LoadingState extends GamesState {}
 
-class GamesLoadedState extends GamesState {
-  const GamesLoadedState({required this.games});
+class LoadedState extends GamesState {
+  const LoadedState({required this.games});
 
   final List<GameModel> games;
 

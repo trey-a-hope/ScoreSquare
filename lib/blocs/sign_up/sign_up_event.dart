@@ -5,15 +5,17 @@ class SignUpEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SignUp extends SignUpEvent {
+class SubmitEvent extends SignUpEvent {
   final String username;
   final String email;
   final String password;
+  final BuildContext context;
 
-  SignUp({
+  SubmitEvent({
     required this.username,
     required this.email,
     required this.password,
+    required this.context,
   });
 
   @override
@@ -21,6 +23,7 @@ class SignUp extends SignUpEvent {
         username,
         email,
         password,
+        context,
       ];
 }
 

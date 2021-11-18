@@ -24,11 +24,11 @@ class HomePageState extends State<HomePage> {
       drawer: const CustomAppDrawer(),
       body: BlocConsumer<HomeBloc, HomeState>(
         builder: (context, state) {
-          if (state is HomeLoadingState) {
+          if (state is LoadingState) {
             return const CircularProgressIndicator();
           }
 
-          if (state is HomeLoadedState) {
+          if (state is LoadedState) {
             return const Center(
               child: Text(
                 'Home Page',

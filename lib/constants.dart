@@ -13,7 +13,10 @@ double? screenHeight;
 final HexColor colorNavy = HexColor('#09487e');
 
 //Hive Boxes Names
-const String hiveBoxLoginCredentials = 'HIVE_BOX_LOGIN_CREDENTIALS';
+const String hiveBoxUserCredentials = 'HIVE_BOX_USER_CREDENTIALS';
+
+//Admin uids.
+const List<String> adminUids = ['FXYI9ryoDkWN1GVicsQvp14Zft83'];
 
 //NBA Teams
 List<NBATeamModel> nbaTeams = [

@@ -15,70 +15,67 @@ part 'login_state.dart';
 part 'login_page.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  static final Box<dynamic> _loginCredentialsBox =
-      Hive.box<String>(hiveBoxLoginCredentials);
+  static final Box<dynamic> _userCredentialsBox =
+      Hive.box<String>(hiveBoxUserCredentials);
 
   bool _passwordVisible = false;
-  bool _rememberMe = _loginCredentialsBox.get('email') != null;
+  bool _rememberMe = _userCredentialsBox.get('email') != null;
 
   LoginBloc()
-      : super(LoginInitialState(
+      : super(InitialState(
           passwordVisible: false,
-          rememberMe: _loginCredentialsBox.get('email') != null,
+          rememberMe: _userCredentialsBox.get('email') != null,
         )) {
-    on<LoginSubmitEvent>((event, emit) async {
+    on<SubmitEvent>((event, emit) async {
       final String email = event.email;
       final String password = event.password;
 
       try {
-        emit(LoginLoadingState());
+        emit(LoadingState());
 
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
 
         //Save users email and password if remember me box checked.
         if (_rememberMe) {
-          _loginCredentialsBox.put('email', email);
-          _loginCredentialsBox.put('password', password);
+          _userCredentialsBox.put('email', email);
+          _userCredentialsBox.put('password', password);
         } else {
-          _loginCredentialsBox.clear();
+          _userCredentialsBox.clear();
         }
 
-        emit(
-          LoginInitialState(
-            passwordVisible: _passwordVisible,
-            rememberMe: _rememberMe,
-          ),
-        );
+        //Save users uid.
+        _userCredentialsBox.put('uid', userCredential.user!.uid);
       } catch (error) {
         emit(
-          LoginErrorState(
+          ErrorState(
             error: error,
           ),
         );
       }
     });
-    on<LoginTryAgainEvent>((event, emit) {
+    on<TryAgainEvent>((event, emit) {
       emit(
-        LoginInitialState(
+        InitialState(
           passwordVisible: _passwordVisible,
           rememberMe: _rememberMe,
         ),
       );
     });
-    on<LoginUpdatePasswordVisibleEvent>((event, emit) {
+    on<UpdatePasswordVisibleEvent>((event, emit) {
       _passwordVisible = !_passwordVisible;
       emit(
-        LoginInitialState(
+        InitialState(
             passwordVisible: _passwordVisible, rememberMe: _rememberMe),
       );
     });
-    on<LoginUpdateRememberMeEvent>((event, emit) {
+    on<UpdateRememberMeEvent>((event, emit) {
       _rememberMe = !_rememberMe;
       emit(
-        LoginInitialState(
+        InitialState(
             passwordVisible: _passwordVisible, rememberMe: _rememberMe),
       );
     });

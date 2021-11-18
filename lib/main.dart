@@ -5,13 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:score_square/services/auth_service.dart';
-import 'blocs/home/home_bloc.dart';
-import 'blocs/login/login_bloc.dart';
+import 'blocs/home/home_bloc.dart' as home;
+import 'blocs/login/login_bloc.dart' as login;
 import 'constants.dart';
 import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
+//Notes
+//Use in-app purchases to allow users to buy "coins".
+//Use google ads to make revenue as well.
+//Use Stripe payments to pay customers for their coins.
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,10 +50,12 @@ void main() async {
   await Hive.initFlutter();
 
   //Open hive boxes.
-  await Hive.openBox<String>(hiveBoxLoginCredentials);
+  await Hive.openBox<String>(hiveBoxUserCredentials);
 
   runApp(
-    const MyApp(),
+    Phoenix(
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -77,7 +85,7 @@ class MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Critic',
+      title: 'Score Square',
       // theme: themeData,
       themeMode: ThemeMode.light,
       // darkTheme: darkThemeData,
@@ -88,18 +96,18 @@ class MyAppState extends State<MyApp> {
           screenHeight = MediaQuery.of(context).size.height;
           return snapshot.hasData
               ? BlocProvider(
-                  create: (BuildContext context) => HomeBloc()
+                  create: (BuildContext context) => home.HomeBloc()
                     ..add(
-                      HomeLoadPageEvent(),
+                      home.LoadPageEvent(),
                     ),
-                  child: const HomePage(),
+                  child: const home.HomePage(),
                 )
               : BlocProvider(
-                  create: (BuildContext context) => LoginBloc()
+                  create: (BuildContext context) => login.LoginBloc()
                     ..add(
-                      LoginLoadPageEvent(),
+                      login.LoadPageEvent(),
                     ),
-                  child: const LoginPage(),
+                  child: const login.LoginPage(),
                 );
         },
       ),

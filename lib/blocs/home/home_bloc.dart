@@ -9,7 +9,7 @@ part 'home_state.dart';
 part 'home_page.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeLoadedState()) {
-    on<HomeLoadPageEvent>((event, emit) {});
+  HomeBloc() : super(LoadedState()) {
+    on<LoadPageEvent>((event, emit) {});
   }
 }

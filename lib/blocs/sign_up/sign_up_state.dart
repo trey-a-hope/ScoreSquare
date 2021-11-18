@@ -5,10 +5,10 @@ class SignUpState extends Equatable {
   List<Object> get props => [];
 }
 
-class SignUpStartState extends SignUpState {
+class InitialState extends SignUpState {
   final bool termsServicesChecked;
 
-  SignUpStartState({
+  InitialState({
     required this.termsServicesChecked,
   });
 

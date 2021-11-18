@@ -15,10 +15,11 @@ part 'games_state.dart';
 part 'games_page.dart';
 
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
-  GamesBloc() : super(GamesInitial()) {
-    on<GamesLoadPageEvent>((event, emit) async {
+  GamesBloc() : super(InitialState()) {
+    on<LoadPageEvent>((event, emit) async {
+      emit(LoadingState());
       List<GameModel> games = await locator<GameService>().list();
-      emit(GamesLoadedState(games: games));
+      emit(LoadedState(games: games));
     });
   }
 }

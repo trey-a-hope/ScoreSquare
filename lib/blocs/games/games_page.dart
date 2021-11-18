@@ -22,24 +22,9 @@ class _GamesPageState extends State<GamesPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              GameModel game = GameModel(
-                awayTeamScore: 101,
-                id: null,
-                awayTeamID: 1,
-                homeTeamID: 2,
-                homeTeamScore: 98,
-                betPrice: 1.00,
-                status: 0,
-              );
-              locator<GameService>().create(game: game);
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              context.read<GamesBloc>().add(GamesLoadPageEvent());
+              context.read<GamesBloc>().add(LoadPageEvent());
             },
           )
         ],
@@ -47,11 +32,11 @@ class _GamesPageState extends State<GamesPage> {
       drawer: const CustomAppDrawer(),
       body: BlocConsumer<GamesBloc, GamesState>(
         builder: (context, state) {
-          if (state is GamesLoadingState) {
+          if (state is LoadingState) {
             return const CircularProgressIndicator();
           }
 
-          if (state is GamesLoadedState) {
+          if (state is LoadedState) {
             List<GameModel> games = state.games;
 
             return ListView.builder(

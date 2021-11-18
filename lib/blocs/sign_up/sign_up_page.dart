@@ -32,7 +32,7 @@ class _SignUpPageState extends State<SignUpPage>
             return const CircularProgressIndicator();
           }
 
-          if (state is SignUpStartState) {
+          if (state is InitialState) {
             return Stack(
               children: [
                 Container(
@@ -219,10 +219,11 @@ class _SignUpPageState extends State<SignUpPage>
                                 if (confirm == null || !confirm) return;
 
                                 context.read<SignUpBloc>().add(
-                                      SignUp(
+                                      SubmitEvent(
                                         email: _emailController.text,
                                         password: _passwordController.text,
                                         username: _usernameController.text,
+                                        context: context,
                                       ),
                                     );
                               },
@@ -264,11 +265,6 @@ class _SignUpPageState extends State<SignUpPage>
         },
       ),
     );
-  }
-
-  @override
-  void navigateHome() {
-    Navigator.of(context).pop();
   }
 
   @override
