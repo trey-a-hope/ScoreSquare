@@ -96,7 +96,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: TextField(controller: _usernameController),
                     ),
                     const Spacer(),
-                    CustomButton(
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green),
+                      ),
                       onPressed: () async {
                         bool? confirm = await locator<ModalService>()
                             .showConfirmation(
@@ -114,10 +118,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                             );
                       },
-                      text: 'Save',
-                      buttonColor: Colors.greenAccent,
-                      textColor: Colors.black,
-                    )
+                      icon: const Icon(Icons.save),
+                      label: const Text('Save'),
+                    ),
                   ],
                 ),
               ),

@@ -42,16 +42,33 @@ class _GamesPageState extends State<GamesPage> {
             return ListView.builder(
               itemCount: games.length,
               itemBuilder: (context, index) {
-                GameModel game = games[index];
+                GameModel _game = games[index];
+
                 NBATeamModel homeTeam =
-                    nbaTeams.firstWhere((team) => team.id == game.homeTeamID);
+                    nbaTeams.firstWhere((team) => team.id == _game.homeTeamID);
                 NBATeamModel awayTeam =
-                    nbaTeams.firstWhere((team) => team.id == game.awayTeamID);
+                    nbaTeams.firstWhere((team) => team.id == _game.awayTeamID);
 
                 return ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) => game.GameBloc(
+                            game: _game,
+                            homeTeam: homeTeam,
+                            awayTeam: awayTeam,
+                          )..add(
+                              game.LoadPageEvent(),
+                            ),
+                          child: const game.GamePage(),
+                        ),
+                      ),
+                    );
+                  },
                   title: Text('${homeTeam.name} vs. ${awayTeam.name}'),
                   subtitle:
-                      Text('${game.homeTeamScore} - ${game.awayTeamScore}'),
+                      Text('${_game.homeTeamScore} - ${_game.awayTeamScore}'),
                   trailing: const Icon(Icons.chevron_right),
                 );
               },

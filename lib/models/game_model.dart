@@ -8,6 +8,7 @@ class GameModel {
   int homeTeamScore;
   double betPrice;
   int status;
+  int betCount;
 
   GameModel({
     required this.awayTeamID,
@@ -17,6 +18,7 @@ class GameModel {
     required this.homeTeamScore,
     required this.id,
     required this.status,
+    required this.betCount,
   });
 
   factory GameModel.fromDoc({required DocumentSnapshot data}) {
@@ -28,6 +30,7 @@ class GameModel {
       homeTeamScore: data['homeTeamScore'],
       id: data['id'],
       status: data['status'],
+      betCount: data['betCount'],
     );
   }
 
@@ -40,6 +43,7 @@ class GameModel {
       'homeTeamScore': homeTeamScore,
       'id': id,
       'status': status,
+      'betCount': betCount,
     };
   }
 }

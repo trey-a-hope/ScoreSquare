@@ -30,19 +30,15 @@ class _AdminPageState extends State<AdminPage> {
 
           if (state is LoadedState) {
             return SafeArea(
-              child: ListView(
+              child: Column(
                 children: [
                   const Text('Games'),
-                  CustomButton(
-                    onPressed: () {
-                      context.read<AdminBloc>().add(
-                            const CreateGameEvent(),
-                          );
-                    },
-                    text: 'Create Game',
-                    buttonColor: Colors.black,
-                    textColor: Colors.white,
-                  ),
+                  ElevatedButton.icon(onPressed: (){
+                    context.read<AdminBloc>().add(
+                      const CreateGameEvent(),
+                    );
+                  }, icon: const Icon(Icons.save), label: const Text('Save'),),
+
                   const Divider(),
                 ],
               ),

@@ -18,13 +18,12 @@ import 'package:score_square/services/storage_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/services/util_service.dart';
 import 'package:score_square/widgets/custom_app_drawer.dart';
-import 'package:score_square/widgets/custom_button.dart';
 
 import '../../service_locator.dart';
 
 part 'edit_profile_event.dart';
-part 'edit_profile_state.dart';
 part 'edit_profile_page.dart';
+part 'edit_profile_state.dart';
 
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   late UserModel _user;

@@ -3,16 +3,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:score_square/blocs/game/game_bloc.dart' as game;
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/widgets/custom_app_drawer.dart';
-import '../../service_locator.dart';
+
 import '../../constants.dart';
+import '../../service_locator.dart';
 
 part 'games_event.dart';
-part 'games_state.dart';
 part 'games_page.dart';
+part 'games_state.dart';
 
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
   GamesBloc() : super(InitialState()) {

@@ -6,6 +6,7 @@ class BetModel {
   final String id;
   final DateTime time;
   final String uid;
+  final String gameID;
 
   BetModel({
     required this.awayDigit,
@@ -13,6 +14,7 @@ class BetModel {
     required this.id,
     required this.time,
     required this.uid,
+    required this.gameID,
   });
 
   static BetModel extractDocument(DocumentSnapshot data) {
@@ -22,6 +24,7 @@ class BetModel {
       id: data['id'],
       time: data['time'],
       uid: data['uid'],
+        gameID: data['gameID'],
     );
   }
 
@@ -31,7 +34,8 @@ class BetModel {
       'homeDigit': homeDigit,
       'id': id,
       'time': time,
-      'uid': uid
+      'uid': uid,
+      'gameID': gameID,
     };
   }
 }
