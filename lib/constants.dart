@@ -18,6 +18,9 @@ const String hiveBoxUserCredentials = 'HIVE_BOX_USER_CREDENTIALS';
 //Admin uids.
 const List<String> adminUids = ['FXYI9ryoDkWN1GVicsQvp14Zft83'];
 
+//Squares
+List<String> squares = [];
+
 //NBA Teams
 List<NBATeamModel> nbaTeams = [
   NBATeamModel(

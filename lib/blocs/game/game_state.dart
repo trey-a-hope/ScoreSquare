@@ -32,3 +32,16 @@ class LoadedState extends GameState {
         awayTeam,
       ];
 }
+
+class ErrorState extends GameState {
+  const ErrorState({
+    required this.error,
+  });
+
+  final dynamic error;
+
+  @override
+  List<Object> get props => [
+        error,
+      ];
+}

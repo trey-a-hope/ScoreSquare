@@ -8,3 +8,19 @@ abstract class GameEvent extends Equatable {
 }
 
 class LoadPageEvent extends GameEvent {}
+
+class CreateBetEvent extends GameEvent {
+  final int awayDigit;
+  final int homeDigit;
+
+  const CreateBetEvent({
+    required this.awayDigit,
+    required this.homeDigit,
+  });
+
+  @override
+  List<Object> get props => [
+        awayDigit,
+        homeDigit,
+      ];
+}

@@ -22,6 +22,7 @@ dependencies:
   firebase_auth_web: ^3.2.0
   firebase_core: ^1.0.4
   firebase_messaging: ^11.1.0
+  flutter_layout_grid: ^1.0.3
   flutter_phoenix: ^1.0.0
   flutter_rating_bar: ^4.0.0
   flutter_speed_dial: ^4.6.6

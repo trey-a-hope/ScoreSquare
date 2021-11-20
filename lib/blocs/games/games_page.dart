@@ -67,8 +67,8 @@ class _GamesPageState extends State<GamesPage> {
                     );
                   },
                   title: Text('${homeTeam.name} vs. ${awayTeam.name}'),
-                  subtitle:
-                      Text('${_game.homeTeamScore} - ${_game.awayTeamScore}'),
+                  subtitle: Text(
+                      '${_game.homeTeamScore} - ${_game.awayTeamScore}, ${_game.betCount} bets'),
                   trailing: const Icon(Icons.chevron_right),
                 );
               },
