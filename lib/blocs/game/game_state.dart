@@ -17,12 +17,14 @@ class LoadedState extends GameState {
     required this.bets,
     required this.homeTeam,
     required this.awayTeam,
+    required this.currentUser,
   });
 
   final GameModel game;
   final List<BetModel> bets;
   final NBATeamModel homeTeam;
   final NBATeamModel awayTeam;
+  final UserModel currentUser;
 
   @override
   List<Object> get props => [
@@ -30,7 +32,19 @@ class LoadedState extends GameState {
         bets,
         homeTeam,
         awayTeam,
+        currentUser,
       ];
+}
+
+class BetPurchaseSuccessState extends GameState {
+  const BetPurchaseSuccessState({
+    required this.bet,
+  });
+
+  final BetModel bet;
+
+  @override
+  List<Object> get props => [bet];
 }
 
 class ErrorState extends GameState {

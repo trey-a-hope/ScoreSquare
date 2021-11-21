@@ -21,6 +21,9 @@ const List<String> adminUids = ['FXYI9ryoDkWN1GVicsQvp14Zft83'];
 //Squares
 List<String> squares = [];
 
+//Coins
+int initialCoinStart = 30;
+
 //NBA Teams
 List<NBATeamModel> nbaTeams = [
   NBATeamModel(

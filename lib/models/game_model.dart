@@ -6,7 +6,7 @@ class GameModel {
   int awayTeamScore;
   int homeTeamID;
   int homeTeamScore;
-  double betPrice;
+  int betPrice;
   int status;
   int betCount;
 

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive/hive.dart';
@@ -12,6 +12,7 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/services/validation_service.dart';
 import 'package:score_square/widgets/custom_button.dart';
+
 import '../../constants.dart';
 import '../../service_locator.dart';
 
@@ -21,6 +22,7 @@ part 'sign_up_state.dart';
 
 abstract class SignUpBlocDelegate {
   void navigateToTermsServicePage();
+
   void showMessage({required String message});
 }
 
@@ -56,11 +58,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           uid: firebaseUser.uid,
           username: username,
           fcmToken: null,
+          coins: initialCoinStart,
         );
 
         await locator<UserService>().createUser(user: newUser);
 
         _userCredentialsBox.put('uid', firebaseUser.uid);
+
         // final UserModel treyHopeUser =
         //     await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
 

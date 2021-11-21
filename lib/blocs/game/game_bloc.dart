@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/nba_team_model.dart';
@@ -13,6 +14,7 @@ import 'package:score_square/models/user_model.dart';
 import 'package:score_square/service_locator.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/bet_service.dart';
+import 'package:score_square/services/modal_service.dart';
 
 import '../../constants.dart';
 
@@ -34,8 +36,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }) : super(InitialState()) {
     on<LoadPageEvent>(
       (event, emit) async {
+        //Fetch bets.
         List<BetModel> bets =
             await locator<BetService>().list(gameID: game.id!);
+
+        //Fetch current user.
         _currentUser = await locator<AuthService>().getCurrentUser();
 
         emit(
@@ -44,12 +49,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             bets: bets,
             homeTeam: homeTeam,
             awayTeam: awayTeam,
+            currentUser: _currentUser,
           ),
         );
       },
     );
 
-    on<CreateBetEvent>(
+    on<PurchaseBetEvent>(
       (event, emit) async {
         try {
           //Create bet.
@@ -63,20 +69,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           );
 
           //Add bet to database.
-          await locator<BetService>().create(bet: bet);
-
-          //Fetch bets with newly added bet.
-          List<BetModel> bets =
-              await locator<BetService>().list(gameID: game.id!);
-
-          emit(
-            LoadedState(
-              game: game,
-              bets: bets,
-              homeTeam: homeTeam,
-              awayTeam: awayTeam,
-            ),
+          await locator<BetService>().purchaseBet(
+            uid: _currentUser.uid!,
+            bet: bet,
+            coins: game.betPrice,
           );
+
+          emit(BetPurchaseSuccessState(bet: bet));
         } catch (e) {
           emit(
             ErrorState(error: e),

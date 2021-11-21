@@ -9,11 +9,11 @@ abstract class GameEvent extends Equatable {
 
 class LoadPageEvent extends GameEvent {}
 
-class CreateBetEvent extends GameEvent {
+class PurchaseBetEvent extends GameEvent {
   final int awayDigit;
   final int homeDigit;
 
-  const CreateBetEvent({
+  const PurchaseBetEvent({
     required this.awayDigit,
     required this.homeDigit,
   });
