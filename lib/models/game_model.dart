@@ -9,6 +9,7 @@ class GameModel {
   int betPrice;
   int status;
   int betCount;
+  DateTime starts;
 
   GameModel({
     required this.awayTeamID,
@@ -19,6 +20,7 @@ class GameModel {
     required this.id,
     required this.status,
     required this.betCount,
+    required this.starts,
   });
 
   factory GameModel.fromDoc({required DocumentSnapshot data}) {
@@ -31,6 +33,7 @@ class GameModel {
       id: data['id'],
       status: data['status'],
       betCount: data['betCount'],
+      starts: data['starts'].toDate(),
     );
   }
 
@@ -44,6 +47,7 @@ class GameModel {
       'id': id,
       'status': status,
       'betCount': betCount,
+      'starts': starts,
     };
   }
 }

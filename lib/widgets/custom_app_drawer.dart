@@ -130,6 +130,8 @@ class CustomAppDrawer extends StatelessWidget {
                 //Sign out.
                 await locator<AuthService>().signOut();
 
+                Navigator.of(context).popUntil(ModalRoute.withName(''));
+
                 //Reload app.
                 Phoenix.rebirth(context);
               },

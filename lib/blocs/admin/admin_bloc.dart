@@ -29,8 +29,9 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         homeTeamScore: 70 + random.nextInt(30),
         awayTeamScore: 70 + random.nextInt(30),
         betPrice: 3,
-        status: -1,
+        status: random.nextInt(3) - 1,
         betCount: 0,
+        starts: DateTime.now(),
       );
       locator<GameService>().create(game: game);
     });

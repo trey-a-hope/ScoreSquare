@@ -107,8 +107,44 @@ class _GamePageState extends State<GamePage> {
 
         if (state is BetPurchaseSuccessState) {
           BetModel bet = state.bet;
-          //TODO: Build bet purchase success view.
-          //TODO: Add button to reload the page.
+          return Scaffold(
+            body: Container(
+              color: Colors.white,
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('You have purchased a bet for'),
+                    Text(
+                      '${bet.homeDigit}${bet.awayDigit}',
+                      style: _textStyleForDigit,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'If the home team scores a digit ending in ${bet.homeDigit}, or the away team scores a digit ending in ${bet.awayDigit}, you win!',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      label: const Text('Done'),
+                      icon: const Icon(Icons.done),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green),
+                      ),
+                      onPressed: () {
+                        context.read<GameBloc>().add(
+                              LoadPageEvent(),
+                            );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
 
         if (state is LoadedState) {
@@ -180,6 +216,7 @@ class _GamePageState extends State<GamePage> {
                       const SizedBox(
                         height: 30,
                       ),
+                      Text('Winning Pot: ${bets.length * game.betCount} coins'),
                       SizedBox(
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
@@ -234,7 +271,11 @@ class _GamePageState extends State<GamePage> {
               ));
         }
 
-        return Container();
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       },
       listener: (context, state) {},
     );
