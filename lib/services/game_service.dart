@@ -3,6 +3,8 @@ import 'package:score_square/models/game_model.dart';
 
 abstract class IGameService {
   Future<void> create({required GameModel game});
+  Future<GameModel> read({required String gameID});
+
   Future<List<GameModel>> list();
 }
 
@@ -26,6 +28,17 @@ class GameService implements IGameService {
       await batch.commit();
 
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<GameModel> read({required String gameID}) async {
+    try {
+      return GameModel.fromDoc(data: (await _gamesDB.doc(gameID).get()));
     } catch (e) {
       throw Exception(
         e.toString(),

@@ -19,31 +19,55 @@ class _GamePageState extends State<GamePage> {
     super.initState();
   }
 
-  Widget _section(Color color, Widget child) {
+  Widget _section({
+    required Color color,
+    required String number,
+    required UserModel? user,
+  }) {
     return Container(
       width: double.infinity,
       height: double.infinity,
       color: color,
-      child: Center(child: child),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        if (user != null) ...[
+          CachedNetworkImage(
+            imageUrl: user.imgUrl == null ? dummyProfileImageUrl : user.imgUrl!,
+            imageBuilder: (context, imageProvider) => GFAvatar(
+              radius: 15,
+              backgroundImage: imageProvider,
+            ),
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ],
+        if (user == null) ...[
+          Text(number),
+        ]
+      ]),
     );
   }
 
-  LayoutGrid _buildLayoutGrid({
+  Future<LayoutGrid> _buildLayoutGrid({
     required List<BetModel> bets,
     required String currentBet,
-  }) {
-    //Create arrays for the squares that are claimed and unclaimed.
-    List<String> claimedSquares = [];
-    List<String> unclaimedSquares = List.from(squares);
-
-    //Remove the current bet from the unclaimed.
-    unclaimedSquares.remove(currentBet);
+  }) async {
+    List<SquareModel> claimedSquares = [];
+    List<SquareModel> unclaimedSquares = List.from(squares)
+        .map((square) => SquareModel(user: null, number: square))
+        .toList();
 
     //Remove the claimed bets from the unclaimed bets.
     for (BetModel bet in bets) {
-      String b = '${bet.homeDigit}${bet.awayDigit}';
-      claimedSquares.add(b);
-      unclaimedSquares.remove(b);
+      String curBet = '${bet.homeDigit}${bet.awayDigit}';
+
+      //Fetch the user for this bet.
+      UserModel user = await locator<UserService>().retrieveUser(uid: bet.uid);
+
+      //Add the user and the bet to the claimed square.
+      claimedSquares.add(SquareModel(user: user, number: curBet));
+
+      //Remove the unclaimed square since it is claimed.
+      unclaimedSquares.removeWhere((square) => square.number == curBet);
     }
 
     return LayoutGrid(
@@ -62,17 +86,51 @@ class _GamePageState extends State<GamePage> {
       columnSizes: repeat(10, [(screenWidth! / 10).px]),
       rowSizes: repeat(10, [(screenWidth! / 10).px]),
       children: [
-        for (String claimedSquare in claimedSquares) ...[
-          if (claimedSquare == currentBet)
-            _section(Colors.yellow, Text(claimedSquare))
-                .inGridArea(claimedSquare)
+        for (SquareModel claimedSquare in claimedSquares) ...[
+          //If a user has claimed the current bet...
+          if (claimedSquare.number == currentBet)
+            _section(
+              color: Colors.yellow,
+              user: claimedSquare.user,
+              number: claimedSquare.number,
+            ).inGridArea(claimedSquare.number)
+          //If a user is in the same row or column  as the current bet...
+          else if (claimedSquare.number[0] == currentBet[0] ||
+              claimedSquare.number[1] == currentBet[1])
+            _section(
+              color: Colors.green.shade500,
+              user: claimedSquare.user,
+              number: claimedSquare.number,
+            ).inGridArea(claimedSquare.number)
+          //Otherwise just display the number.
           else
-            _section(Colors.blue.shade100, Text(claimedSquare))
-                .inGridArea(claimedSquare),
+            _section(
+              color: Colors.greenAccent,
+              user: claimedSquare.user,
+              number: claimedSquare.number,
+            ).inGridArea(claimedSquare.number),
         ],
-        for (String unclaimedSquare in unclaimedSquares)
-          _section(Colors.blue.shade700, Text(unclaimedSquare))
-              .inGridArea(unclaimedSquare),
+        for (SquareModel unclaimedSquare in unclaimedSquares) ...[
+          if (unclaimedSquare.number == currentBet)
+            _section(
+              color: Colors.green.shade900,
+              user: null,
+              number: unclaimedSquare.number,
+            ).inGridArea(unclaimedSquare.number)
+          else if (unclaimedSquare.number[0] == currentBet[0] ||
+              unclaimedSquare.number[1] == currentBet[1])
+            _section(
+              color: Colors.green.shade500,
+              user: unclaimedSquare.user,
+              number: unclaimedSquare.number,
+            ).inGridArea(unclaimedSquare.number)
+          else
+            _section(
+              color: Colors.greenAccent,
+              user: null,
+              number: unclaimedSquare.number,
+            ).inGridArea(unclaimedSquare.number)
+        ],
       ],
     );
   }
@@ -153,6 +211,7 @@ class _GamePageState extends State<GamePage> {
           NBATeamModel homeTeam = state.homeTeam;
           NBATeamModel awayTeam = state.awayTeam;
           UserModel currentUser = state.currentUser;
+          List<UserModel> currentWinners = state.currentWinners;
 
           return Scaffold(
               appBar: AppBar(
@@ -163,6 +222,14 @@ class _GamePageState extends State<GamePage> {
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      context.read<GameBloc>().add(LoadPageEvent());
+                    },
+                  )
+                ],
               ),
               // drawer: const CustomAppDrawer(),
               floatingActionButton: FloatingActionButton.extended(
@@ -216,51 +283,105 @@ class _GamePageState extends State<GamePage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      Text('Winning Pot: ${bets.length * game.betCount} coins'),
-                      SizedBox(
-                        child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.green),
-                          ),
-                          onPressed: () async {
-                            if (currentUser.coins >= game.betPrice) {
-                              bool? confirm = await locator<ModalService>()
-                                  .showConfirmation(
-                                      context: context,
-                                      title:
-                                          'Purchase Bet for ${game.betPrice} coins?',
-                                      message:
-                                          'Your bet will be placed at random.');
+                      Text('Winning Pot: ${bets.length * game.betPrice} coins'),
+                      Text('Total Bets:  ${bets.length}/$maxBetsPerGame'),
+                      if (bets.length < maxBetsPerGame) ...[
+                        SizedBox(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green),
+                            ),
+                            onPressed: () async {
+                              if (currentUser.coins >= game.betPrice) {
+                                bool? confirm = await locator<ModalService>()
+                                    .showConfirmation(
+                                        context: context,
+                                        title:
+                                            'Purchase Bet for ${game.betPrice} coins?',
+                                        message:
+                                            'Your bet will be placed at random.');
 
-                              if (confirm == null || confirm == false) {
-                                return;
+                                if (confirm == null || confirm == false) {
+                                  return;
+                                }
+
+                                //TODO: Ensure the bet is random...
+
+                                Random random = Random();
+                                context.read<GameBloc>().add(
+                                      PurchaseBetEvent(
+                                        awayDigit: random.nextInt(10),
+                                        homeDigit: random.nextInt(10),
+                                      ),
+                                    );
+                              } else {
+                                _showPurchaseMoreCoinsModal(
+                                    currentUser: currentUser);
                               }
-
-                              Random random = Random();
-                              context.read<GameBloc>().add(
-                                    PurchaseBetEvent(
-                                      awayDigit: random.nextInt(10),
-                                      homeDigit: random.nextInt(10),
-                                    ),
-                                  );
-                            } else {
-                              _showPurchaseMoreCoinsModal(
-                                  currentUser: currentUser);
-                            }
-                          },
-                          icon: const Icon(MdiIcons.currencyUsd),
-                          label: Text('Purchase Bet - ${game.betPrice} coins'),
+                            },
+                            icon: const Icon(MdiIcons.currencyUsd),
+                            label:
+                                Text('Purchase Bet - ${game.betPrice} coins'),
+                          ),
                         ),
-                      ),
+                      ],
                       const SizedBox(
                         height: 30,
                       ),
-                      _buildLayoutGrid(
-                        bets: bets,
-                        currentBet:
-                            '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
+                      FutureBuilder(
+                        future: _buildLayoutGrid(
+                          bets: bets,
+                          currentBet:
+                              '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
+                        ),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<LayoutGrid> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: Text(
+                                    'Loading current bets for this game...'));
+                          } else {
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else {
+                              return snapshot
+                                  .data!; // snapshot.data  :- get your object which is pass from your downloadData() function
+
+                            }
+                          }
+                        },
                       ),
+                      if (currentWinners.isNotEmpty) ...[
+                        Text('Current Winners - ${currentWinners.length}'),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: currentWinners.length,
+                            itemBuilder: (
+                              context,
+                              index,
+                            ) {
+                              return ListTile(
+                                leading: CachedNetworkImage(
+                                  imageUrl: currentWinners[index].imgUrl == null
+                                      ? dummyProfileImageUrl
+                                      : currentWinners[index].imgUrl!,
+                                  imageBuilder: (context, imageProvider) =>
+                                      GFAvatar(
+                                    radius: 15,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                                title: Text(currentWinners[index].username),
+                              );
+                            })
+                      ],
                       const Padding(
                           padding: EdgeInsets.all(20),
                           child: Text('All bets are placed at random.')),

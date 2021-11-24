@@ -18,6 +18,7 @@ class LoadedState extends GameState {
     required this.homeTeam,
     required this.awayTeam,
     required this.currentUser,
+    required this.currentWinners,
   });
 
   final GameModel game;
@@ -25,6 +26,7 @@ class LoadedState extends GameState {
   final NBATeamModel homeTeam;
   final NBATeamModel awayTeam;
   final UserModel currentUser;
+  final List<UserModel> currentWinners;
 
   @override
   List<Object> get props => [
@@ -33,6 +35,7 @@ class LoadedState extends GameState {
         homeTeam,
         awayTeam,
         currentUser,
+        currentWinners,
       ];
 }
 

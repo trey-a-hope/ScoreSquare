@@ -24,6 +24,9 @@ List<String> squares = [];
 //Coins
 int initialCoinStart = 30;
 
+//Bets
+int maxBetsPerGame = 30;
+
 //NBA Teams
 List<NBATeamModel> nbaTeams = [
   NBATeamModel(

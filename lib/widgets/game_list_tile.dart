@@ -43,7 +43,7 @@ class GameListTile extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => BlocProvider(
               create: (BuildContext context) => GameBloc(
-                game: game,
+                gameID: game.id!,
                 homeTeam: homeTeam,
                 awayTeam: awayTeam,
               )..add(
