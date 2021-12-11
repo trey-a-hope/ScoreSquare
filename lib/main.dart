@@ -13,10 +13,31 @@ import 'constants.dart';
 import 'service_locator.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-//Notes
+//TODO
 //Use in-app purchases to allow users to buy "coins".
 //Use google ads to make revenue as well.
 //Use Stripe payments to pay customers for their coins.
+
+//TODO: Notifications
+// FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+// if (message.notification != null) {
+// String title = message.notification!.title!;
+// String body = message.notification!.body!;
+// _showMessage(title: title, body: body);
+// } else {
+// _showMessage(title: 'Error', body: 'No notification body.');
+// }
+// });
+//
+// FirebaseMessaging.onMessageOpened.listen((RemoteMessage message) {
+// if (message.notification != null) {
+// String title = message.notification!.title!;
+// String body = message.notification!.body!;
+// _showMessage(title: title, body: body);
+// } else {
+// _showMessage(title: 'Error', body: 'No notification body.');
+// }
+// });
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
