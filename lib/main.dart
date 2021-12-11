@@ -6,17 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
-import 'package:score_square/services/auth_service.dart';
-
 import 'blocs/home/home_bloc.dart' as home;
-import 'blocs/login/login_bloc.dart' as login;
 import 'constants.dart';
 import 'service_locator.dart';
 import 'package:flutterfire_ui/auth.dart';
-// import 'firebase_options.dart';
 
 //Notes
 //Use in-app purchases to allow users to buy "coins".
@@ -118,6 +113,9 @@ class MyAppState extends State<MyApp> {
           }
 
           //TODO: Create user when sign up.
+
+          screenWidth = MediaQuery.of(context).size.width;
+          screenHeight = MediaQuery.of(context).size.height;
 
           _userCredentialsBox.put('uid', snapshot.data!.uid);
 

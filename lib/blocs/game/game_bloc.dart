@@ -54,9 +54,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         //Fetch current winners.
         List<UserModel> currentWinners = [];
         for (int i = 0; i < bets.length; i++) {
-          //If the user is in the row or the column, (or both, "JACKPOT"), add them to the list of winners.
-          if (bets[i].homeDigit == _game.homeTeamScore % 10 ||
-              bets[i].awayDigit == _game.awayTeamScore % 10) {
+          //If the user is in the row or the column, (or both, "JACKPOT"), AND this user is not in the list already, add them to the list of winners.
+          if ((bets[i].homeDigit == _game.homeTeamScore % 10 ||
+                  bets[i].awayDigit == _game.awayTeamScore % 10) &&
+              currentWinners.indexWhere(
+                      (currentWinner) => currentWinner.uid == bets[i].uid) <
+                  0) {
             currentWinners.add(
               await locator<UserService>().retrieveUser(uid: bets[i].uid),
             );
