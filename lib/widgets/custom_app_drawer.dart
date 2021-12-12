@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive/hive.dart';
 import 'package:score_square/blocs/admin/admin_bloc.dart' as admin;
 import 'package:score_square/blocs/edit_profile/edit_profile_bloc.dart'
@@ -129,11 +128,6 @@ class CustomAppDrawer extends StatelessWidget {
 
                 //Sign out.
                 await locator<AuthService>().signOut();
-
-                Navigator.of(context).popUntil(ModalRoute.withName(''));
-
-                //Reload app.
-                Phoenix.rebirth(context);
               },
             ),
           ],

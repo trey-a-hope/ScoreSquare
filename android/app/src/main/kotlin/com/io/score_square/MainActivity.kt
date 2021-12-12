@@ -1,4 +1,4 @@
-package com.example.score_square
+package com.io.score_square
 
 import io.flutter.embedding.android.FlutterActivity
 

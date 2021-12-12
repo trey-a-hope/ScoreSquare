@@ -1,43 +1,27 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
+import 'package:score_square/services/user_service.dart';
 import 'blocs/home/home_bloc.dart' as home;
 import 'constants.dart';
+import 'models/user_model.dart';
 import 'service_locator.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'services/modal_service.dart';
 
 //TODO
 //Use in-app purchases to allow users to buy "coins".
 //Use google ads to make revenue as well.
 //Use Stripe payments to pay customers for their coins.
-
-//TODO: Notifications
-// FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-// if (message.notification != null) {
-// String title = message.notification!.title!;
-// String body = message.notification!.body!;
-// _showMessage(title: title, body: body);
-// } else {
-// _showMessage(title: 'Error', body: 'No notification body.');
-// }
-// });
-//
-// FirebaseMessaging.onMessageOpened.listen((RemoteMessage message) {
-// if (message.notification != null) {
-// String title = message.notification!.title!;
-// String body = message.notification!.body!;
-// _showMessage(title: title, body: body);
-// } else {
-// _showMessage(title: 'Error', body: 'No notification body.');
-// }
-// });
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,25 +37,10 @@ void main() async {
     }
   }
 
-  bool isWeb;
-  try {
-    if (Platform.isAndroid || Platform.isIOS) {
-      isWeb = false;
-    } else {
-      isWeb = true;
-    }
-  } catch (e) {
-    isWeb = true;
-  }
-
-  if (!isWeb) {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
-  }
-
-  // final SharedPreferences prefs = await SharedPreferences.getInstance();
-  // final bool isDarkModeEnabled = prefs.getBool('isDarkModeEnabled') ?? false;
+  //Set version and build numbers.
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  version = packageInfo.version;
+  buildNumber = packageInfo.buildNumber;
 
   //Initialize Hive.
   await Hive.initFlutter();
@@ -80,9 +49,7 @@ void main() async {
   await Hive.openBox<String>(hiveBoxUserCredentials);
 
   runApp(
-    Phoenix(
-      child: const MyApp(),
-    ),
+    const MyApp(),
   );
 }
 
@@ -90,10 +57,7 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State createState() => MyAppState(
-      // isDarkModeEnabled: isDarkModeEnabled,
-      // isWeb: isWeb,
-      );
+  State createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
@@ -102,9 +66,70 @@ class MyAppState extends State<MyApp> {
   static final Box<dynamic> _userCredentialsBox =
       Hive.box<String>(hiveBoxUserCredentials);
 
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  final CollectionReference _usersDB =
+      FirebaseFirestore.instance.collection('users');
+
+  late Stream<User?> stream;
+
+  Future<User?> authStateChangesAsyncStream({required User? user}) async {
+    if (user == null) return user;
+
+    DocumentReference userDocRef = _usersDB.doc(user.uid);
+
+    //Check if user already exists.
+    bool userExists = (await userDocRef.get()).exists;
+
+    //Set UID to hive box.
+    _userCredentialsBox.put('uid', user.uid);
+
+    if (userExists) {
+      //Request permission from user.
+      if (Platform.isIOS) {
+        _firebaseMessaging.requestPermission();
+      }
+
+      //Fetch the fcm token for this device.
+      String? token = await _firebaseMessaging.getToken();
+
+      //Validate that it's not null.
+      assert(token != null);
+
+      //Update fcm token for this device in firebase.
+      userDocRef.update({'fcmToken': token});
+
+      return user;
+    }
+
+    //Create user in firebase
+    UserModel newUser = UserModel(
+      imgUrl: null,
+      email: '',
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      uid: user.uid,
+      username: '',
+      fcmToken: null,
+      coins: initialCoinStart,
+    );
+
+    await locator<UserService>().createUser(user: newUser);
+
+    return user;
+  }
+
   @override
   void initState() {
     super.initState();
+
+    //Build stream.
+    stream = FirebaseAuth.instance.authStateChanges().asyncMap(
+          (user) => authStateChangesAsyncStream(user: user),
+        );
   }
 
   @override
@@ -116,11 +141,9 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Score Square',
-      // theme: themeData,
       themeMode: ThemeMode.light,
-      // darkTheme: darkThemeData,
       home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: stream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SignInScreen(
@@ -133,13 +156,6 @@ class MyAppState extends State<MyApp> {
             );
           }
 
-          //TODO: Create user when sign up.
-
-          screenWidth = MediaQuery.of(context).size.width;
-          screenHeight = MediaQuery.of(context).size.height;
-
-          _userCredentialsBox.put('uid', snapshot.data!.uid);
-
           return BlocProvider(
             create: (BuildContext context) => home.HomeBloc()
               ..add(
@@ -149,29 +165,6 @@ class MyAppState extends State<MyApp> {
           );
         },
       ),
-
-      // StreamBuilder(
-      //   stream: locator<AuthService>().onAuthStateChanged(),
-      //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-      //     screenWidth = MediaQuery.of(context).size.width;
-      //     screenHeight = MediaQuery.of(context).size.height;
-      //     return snapshot.hasData
-      //         ? BlocProvider(
-      //             create: (BuildContext context) => home.HomeBloc()
-      //               ..add(
-      //                 home.LoadPageEvent(),
-      //               ),
-      //             child: const home.HomePage(),
-      //           )
-      //         : BlocProvider(
-      //             create: (BuildContext context) => login.LoginBloc()
-      //               ..add(
-      //                 login.LoadPageEvent(),
-      //               ),
-      //             child: const login.LoginPage(),
-      //           );
-      //   },
-      // ),
     );
   }
 }

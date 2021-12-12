@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' show json;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:score_square/constants.dart';
 
 abstract class IFCMNotificationService {
   Future<void> sendNotificationToUser({
@@ -20,8 +21,7 @@ class FCMNotificationService extends IFCMNotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final String _endpoint = 'https://fcm.googleapis.com/fcm/send';
   final String _contentType = 'application/json';
-  final String _authorization =
-      'key=AAAANziSKLs:APA91bHYQGvOjarIPvbuEjSQpxwsQo-h4SMftTD9L-3dxX7ZAjC5KeDPG1Vf7EMf3tuh6LaGBwwHtJUOs9f4Qq5MPkLMdEWt8DCXj0fjmqBiXNjEIooaS3soehfDr3xQ_Hr8cbtN_soU';
+  final String _authorization = 'key=$cloudMessagingServerKey';
 
   Future<http.Response> _sendNotification(
     String to,

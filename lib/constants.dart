@@ -6,9 +6,7 @@ const String dummyProfileImageUrl =
 
 //These are set in main().
 String? version;
-String? buildNumber;
-double? screenWidth;
-double? screenHeight;
+String? buildNumber; 
 
 final HexColor colorNavy = HexColor('#09487e');
 
@@ -300,3 +298,8 @@ List<NBATeamModel> nbaTeams = [
     color: HexColor("002566"),
   )
 ];
+
+//FCM
+
+const String cloudMessagingServerKey =
+    'AAAA58Xkfzw:APA91bHmASsPD8AjaS3WEB6dKiUa6SXwinnUrpFRGJrjEnf2G-2jL666O5IqzDmYEVCGU2gZsRdBwRX-oFLOH4FHw6essi_pjdnYwDY5DKhPEWcbPJrDNQVrrN1pvkzxlwmgPdS7Ga66';

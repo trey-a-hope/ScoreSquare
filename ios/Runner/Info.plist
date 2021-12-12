@@ -23,11 +23,16 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-   	<string>Used for assigning profile images.</string>
-   	<key>NSPhotoLibraryAddUsageDescription</key>
-   	<string>Used for downloading images from chat messages.</string>
-   	<key>NSPhotoLibraryUsageDescription</key>
-   	<string>Used for assigning profile images.</string>
+	<string>Used for assigning profile images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used for downloading images from chat messages.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used for assigning profile images.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -35,8 +40,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
