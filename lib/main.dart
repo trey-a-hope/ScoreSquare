@@ -16,7 +16,6 @@ import 'models/user_model.dart';
 import 'service_locator.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'services/modal_service.dart';
 
 //TODO
 //Use in-app purchases to allow users to buy "coins".
@@ -108,7 +107,6 @@ class MyAppState extends State<MyApp> {
     //Create user in firebase
     UserModel newUser = UserModel(
       imgUrl: null,
-      email: '',
       created: DateTime.now(),
       modified: DateTime.now(),
       uid: user.uid,

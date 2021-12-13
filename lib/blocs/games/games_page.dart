@@ -18,7 +18,11 @@ class _GamesPageState extends State<GamesPage> {
     return BlocConsumer<GamesBloc, GamesState>(
       builder: (context, state) {
         if (state is LoadingState) {
-          return const CircularProgressIndicator();
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
 
         if (state is LoadedState) {

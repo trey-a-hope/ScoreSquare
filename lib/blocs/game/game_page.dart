@@ -285,7 +285,9 @@ class _GamePageState extends State<GamePage> {
                       ),
                       Text('Winning Pot: ${bets.length * game.betPrice} coins'),
                       Text('Total Bets:  ${bets.length}/$maxBetsPerGame'),
-                      if (bets.length < maxBetsPerGame) ...[
+
+                      //If the game has not ended and  the max bet count has not been reached...
+                      if (bets.length < maxBetsPerGame && game.status == 0) ...[
                         SizedBox(
                           child: ElevatedButton.icon(
                             style: ButtonStyle(
@@ -355,7 +357,8 @@ class _GamePageState extends State<GamePage> {
                         },
                       ),
                       if (currentWinners.isNotEmpty) ...[
-                        Text('Current Winners - ${currentWinners.length}'),
+                        Text(
+                            '${game.status == 1 ? 'Final' : 'Current'} Winners - ${currentWinners.length}'),
                         ListView.builder(
                             shrinkWrap: true,
                             itemCount: currentWinners.length,

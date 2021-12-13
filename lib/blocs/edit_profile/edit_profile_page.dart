@@ -93,7 +93,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
-                      child: TextField(controller: _usernameController),
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter username',
+                        ),
+                      ),
                     ),
                     const Spacer(),
                     ElevatedButton.icon(

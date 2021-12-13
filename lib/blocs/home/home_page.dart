@@ -23,6 +23,8 @@ class HomePageState extends State<HomePage> {
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
+
+    //Initialize Flutter Local Notifications Plugin.
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
