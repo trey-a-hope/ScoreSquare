@@ -22,6 +22,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Use google ads to make revenue as well.
 //Use Stripe payments to pay customers for their coins.
 
+//TODO: Keep getting Unhandled Exception: [core/not-initialized] Firebase has not been correctly initialized.
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
