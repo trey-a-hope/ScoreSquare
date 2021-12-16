@@ -6,7 +6,7 @@ const String dummyProfileImageUrl =
 
 //These are set in main().
 String? version;
-String? buildNumber; 
+String? buildNumber;
 
 final HexColor colorNavy = HexColor('#09487e');
 
@@ -24,6 +24,9 @@ int initialCoinStart = 30;
 
 //Bets
 int maxBetsPerGame = 30;
+
+//Assets: Images
+const String appIcon = 'assets/images/app_icon.png';
 
 //NBA Teams
 List<NBATeamModel> nbaTeams = [
@@ -300,6 +303,5 @@ List<NBATeamModel> nbaTeams = [
 ];
 
 //FCM
-
 const String cloudMessagingServerKey =
     'AAAA58Xkfzw:APA91bHmASsPD8AjaS3WEB6dKiUa6SXwinnUrpFRGJrjEnf2G-2jL666O5IqzDmYEVCGU2gZsRdBwRX-oFLOH4FHw6essi_pjdnYwDY5DKhPEWcbPJrDNQVrrN1pvkzxlwmgPdS7Ga66';

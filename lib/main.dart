@@ -22,8 +22,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Use google ads to make revenue as well.
 //Use Stripe payments to pay customers for their coins.
 
-//TODO: Keep getting Unhandled Exception: [core/not-initialized] Firebase has not been correctly initialized.
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -146,12 +144,21 @@ class MyAppState extends State<MyApp> {
         stream: stream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const SignInScreen(
-              providerConfigs: [
+            return SignInScreen(
+              headerBuilder: (context, constraints, _) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.asset(appIcon),
+                  ),
+                );
+              },
+              providerConfigs: const [
                 EmailProviderConfiguration(),
-                GoogleProviderConfiguration(
-                  clientId: 'xxxx-xxxx.apps.googleusercontent.com',
-                ),
+                //  const  GoogleProviderConfiguration(
+                //     clientId: 'xxxx-xxxx.apps.googleusercontent.com',
+                //   ),
               ],
             );
           }
