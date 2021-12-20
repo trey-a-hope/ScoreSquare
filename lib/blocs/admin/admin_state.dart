@@ -11,8 +11,15 @@ class InitialState extends AdminState {}
 
 class LoadingState extends AdminState {}
 
-class LoadedState extends AdminState {
-  const LoadedState();
+class MenuState extends AdminState {
+  const MenuState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CreateGameState extends AdminState {
+  const CreateGameState();
 
   @override
   List<Object> get props => [];

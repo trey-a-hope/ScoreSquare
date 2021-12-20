@@ -23,7 +23,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         title: const Text('Edit Profile'),
         centerTitle: true,
       ),
-      drawer: const CustomAppDrawer(),
       body: BlocConsumer<EditProfileBloc, EditProfileState>(
         builder: (context, state) {
           if (state is LoadingState) {
@@ -92,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(30),
                       child: TextField(
                         controller: _usernameController,
                         decoration: const InputDecoration(

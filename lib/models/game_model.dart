@@ -7,7 +7,7 @@ class GameModel {
   int homeTeamID;
   int homeTeamScore;
   int betPrice;
-  int status;
+  int status; //-1 - Not Started, 0 - In Progress, 1 - Ended, 2 - Claimed.
   int betCount;
   DateTime starts;
 

@@ -117,7 +117,7 @@ class HomePageState extends State<HomePage> {
           if (state is LoadedState) {
             return const Center(
               child: Text(
-                'Home Page',
+                'What content should go on the home page?',
                 style: TextStyle(
                   color: Colors.black,
                 ),

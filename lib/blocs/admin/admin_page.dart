@@ -28,18 +28,91 @@ class _AdminPageState extends State<AdminPage> {
             return const CircularProgressIndicator();
           }
 
-          if (state is LoadedState) {
+          if (state is CreateGameState) {
             return SafeArea(
               child: Column(
                 children: [
-                  const Text('Games'),
-                  ElevatedButton.icon(onPressed: (){
-                    context.read<AdminBloc>().add(
-                      const CreateGameEvent(),
-                    );
-                  }, icon: const Icon(Icons.save), label: const Text('Save'),),
+                  const CustomTextHeader(text: 'Create Game'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          bool? confirm =
+                              await locator<ModalService>().showConfirmation(
+                            context: context,
+                            title: 'Create Game',
+                            message: 'Are you sure?',
+                          );
 
+                          if (confirm == null || !confirm) return;
+
+                          context.read<AdminBloc>().add(
+                                const CreateGameEvent(),
+                              );
+                        },
+                        icon: const Icon(Icons.save),
+                        label: const Text('Save'),
+                      ),
+                      ElevatedButton.icon(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red,
+                          ),
+                        ),
+                        onPressed: () {
+                          context.read<AdminBloc>().add(LoadPageEvent());
+                        },
+                        icon: const Icon(Icons.cancel),
+                        label: const Text('Cancel'),
+                      ),
+                    ],
+                  ),
                   const Divider(),
+                ],
+              ),
+            );
+          }
+
+          if (state is MenuState) {
+            return SafeArea(
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () {
+                      context.read<AdminBloc>().add(
+                            const GoToCreateGameStateEvent(),
+                          );
+                    },
+                    leading: const Icon(Icons.sports_basketball),
+                    subtitle:
+                        const Text('Create a new game for users to bet on.'),
+                    title: const Text('Create Game'),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    leading: const Icon(Icons.face),
+                    subtitle: const Text(
+                        'Give coins to winners and send notification.'),
+                    title: const Text('Claim Winners'),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    leading: const Icon(Icons.update),
+                    subtitle: const Text(
+                        'Modify score, status, and other details about game.'),
+                    title: const Text('Update Game'),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    leading: const Icon(Icons.attach_money),
+                    subtitle: const Text('Add coins to a user account.'),
+                    title: const Text('Give Coins'),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
                 ],
               ),
             );

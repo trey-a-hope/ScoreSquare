@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +16,6 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/storage_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/services/util_service.dart';
-import 'package:score_square/widgets/custom_app_drawer.dart';
 
 import '../../service_locator.dart';
 
@@ -67,7 +65,13 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
         if (file == null) return;
 
-        File? image = await ImageCropper.cropImage(sourcePath: file.path);
+        File? image = await ImageCropper.cropImage(
+          sourcePath: file.path,
+          aspectRatio: const CropAspectRatio(
+            ratioX: 1.0,
+            ratioY: 1.0,
+          ),
+        );
 
         if (image == null) return;
 

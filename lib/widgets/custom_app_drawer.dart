@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:score_square/blocs/admin/admin_bloc.dart' as admin;
-import 'package:score_square/blocs/edit_profile/edit_profile_bloc.dart'
-    as edit_profile;
+
+import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/blocs/games/games_bloc.dart' as games;
+import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/modal_service.dart';
+import 'package:score_square/services/util_service.dart';
 import '../constants.dart';
 import '../service_locator.dart';
 
@@ -16,32 +18,59 @@ class CustomAppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Box<String> userCredentialsBox =
+    final Box<String> _userCredentialsBox =
         Hive.box<String>(hiveBoxUserCredentials);
-    final String uid = userCredentialsBox.get('uid')!;
+    final String uid = _userCredentialsBox.get('uid')!;
 
     return Drawer(
       child: SafeArea(
         child: Column(
           children: <Widget>[
-            DrawerHeader(
-              child: Column(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text('Hello there!'),
-                  ),
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundImage: const NetworkImage(
-                        'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'),
-                    backgroundColor: Colors.transparent,
-                    child: GestureDetector(
-                      onTap: () {},
-                    ),
-                  ),
-                ],
-              ),
+            FutureBuilder<UserModel>(
+              future: locator<AuthService>().getCurrentUser(), // async work
+              builder:
+                  (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const Text('Loading....');
+                  default:
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      UserModel user = snapshot.data!;
+
+                      String imgUrl = user.imgUrl == null
+                          ? 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'
+                          : user.imgUrl!;
+                      return DrawerHeader(
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text('Hello, ${user.username}'),
+                            ),
+                            CircleAvatar(
+                              radius: 50.0,
+                              backgroundImage: NetworkImage(
+                                imgUrl,
+                              ),
+                              backgroundColor: Colors.transparent,
+                              child: GestureDetector(
+                                onTap: () {
+                                  locator<UtilService>().heroToImage(
+                                    context: context,
+                                    imgUrl: imgUrl,
+                                    tag: imgUrl,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                }
+              },
             ),
             ListTile(
               leading: const Icon(Icons.home),
@@ -61,7 +90,7 @@ class CustomAppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.gamepad),
+              leading: const Icon(Icons.sports_basketball),
               title: const Text('Games'),
               onTap: () {
                 Navigator.of(context).pushReplacement(
@@ -79,17 +108,16 @@ class CustomAppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Edit Profile'),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                      create: (BuildContext context) =>
-                          edit_profile.EditProfileBloc()
-                            ..add(
-                              edit_profile.LoadPageEvent(),
-                            ),
-                      child: const edit_profile.EditProfilePage(),
+                      create: (BuildContext context) => profile.ProfileBloc()
+                        ..add(
+                          profile.LoadPageEvent(),
+                        ),
+                      child: const profile.ProfilePage(),
                     ),
                   ),
                 );

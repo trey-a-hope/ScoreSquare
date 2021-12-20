@@ -29,7 +29,7 @@ class _GamesPageState extends State<GamesPage> {
           List<GameModel> games = state.games;
 
           return DefaultTabController(
-            length: 3,
+            length: 4,
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.black,
@@ -44,6 +44,7 @@ class _GamesPageState extends State<GamesPage> {
                   )
                 ],
                 bottom: const TabBar(
+                  isScrollable: true,
                   tabs: [
                     Tab(
                       child: Text('Not Started'),
@@ -53,6 +54,9 @@ class _GamesPageState extends State<GamesPage> {
                     ),
                     Tab(
                       child: Text('Ended'),
+                    ),
+                    Tab(
+                      child: Text('Claimed'),
                     ),
                   ],
                 ),
@@ -71,6 +75,10 @@ class _GamesPageState extends State<GamesPage> {
                   //Ended
                   GamesListView(
                     games: games.where((game) => game.status == 1).toList(),
+                  ),
+                  //Claimed
+                  GamesListView(
+                    games: games.where((game) => game.status == 2).toList(),
                   )
                 ],
               ),
