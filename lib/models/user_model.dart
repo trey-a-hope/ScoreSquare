@@ -8,6 +8,7 @@ class UserModel {
   DateTime created;
   String username;
   int coins;
+  bool isAdmin;
 
   UserModel({
     required this.uid,
@@ -17,6 +18,7 @@ class UserModel {
     required this.username,
     required this.fcmToken,
     required this.coins,
+    required this.isAdmin,
   });
 
   factory UserModel.fromDoc({required DocumentSnapshot data}) {
@@ -28,6 +30,7 @@ class UserModel {
       username: data['username'],
       fcmToken: data['fcmToken'],
       coins: data['coins'],
+      isAdmin: data['isAdmin'],
     );
   }
 
@@ -40,6 +43,7 @@ class UserModel {
       'username': username,
       'fcmToken': fcmToken,
       'coins': coins,
+      'isAdmin': isAdmin,
     };
   }
 }

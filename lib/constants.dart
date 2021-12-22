@@ -13,9 +13,6 @@ final HexColor colorNavy = HexColor('#09487e');
 //Hive Boxes Names
 const String hiveBoxUserCredentials = 'HIVE_BOX_USER_CREDENTIALS';
 
-//Admin uids.
-const List<String> adminUids = ['mDI2IjC0dkVcjvvgm6zTLPiEUMM2'];
-
 //Squares
 List<String> squares = [];
 

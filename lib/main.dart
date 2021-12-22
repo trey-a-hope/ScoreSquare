@@ -113,6 +113,7 @@ class MyAppState extends State<MyApp> {
       username: '',
       fcmToken: null,
       coins: initialCoinStart,
+      isAdmin: false,
     );
 
     await locator<UserService>().createUser(user: newUser);

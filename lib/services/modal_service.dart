@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../service_locator.dart';
 import 'validation_service.dart';
 
@@ -24,11 +23,6 @@ class ModalService extends IModalService {
   @override
   void showInSnackBar(
       {required BuildContext context, required String message}) {
-    // Scaffold.of(context).showSnackBar(
-    //   SnackBar(
-    //     content: Text(message),
-    //   ),
-    // );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),

@@ -36,6 +36,26 @@ class _AdminPageState extends State<AdminPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            // var s = await locator<ModalService>()
+                            //     .showSelectNBATeam(context: context);
+                            // print(s);
+                          },
+                          child: Container(
+                            color: Colors.greenAccent,
+                            height: 100,
+                            width: 100,
+                            child: const Text('Select Team'),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       ElevatedButton.icon(
                         onPressed: () async {
                           bool? confirm =
