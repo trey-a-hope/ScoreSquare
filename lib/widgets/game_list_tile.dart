@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/blocs/game/game_bloc.dart';
 import 'package:score_square/models/game_model.dart';
-import 'package:score_square/models/nba_team_model.dart';
-import 'package:score_square/services/format_service.dart';
-
-import '../constants.dart';
-import '../service_locator.dart';
 
 class GameListTile extends StatelessWidget {
   final GameModel game;
@@ -19,9 +14,9 @@ class GameListTile extends StatelessWidget {
   String _buildSubTitle() {
     switch (game.status) {
       case -1:
-        return 'Game starts at ${locator<FormatService>().yMMMd(date: game.starts)}';
+        return game.startDate();
       case 0:
-        return '${game.homeTeamScore} - ${game.awayTeamScore}, ${game.betCount} bets';
+        return game.details();
       case 1:
         return 'Winner: TODO';
       default:
@@ -31,11 +26,6 @@ class GameListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    NBATeamModel homeTeam =
-        nbaTeams.firstWhere((team) => team.id == game.homeTeamID);
-    NBATeamModel awayTeam =
-        nbaTeams.firstWhere((team) => team.id == game.awayTeamID);
-
     return ListTile(
       onTap: () {
         Navigator.of(context).push(
@@ -43,8 +33,8 @@ class GameListTile extends StatelessWidget {
             builder: (context) => BlocProvider(
               create: (BuildContext context) => GameBloc(
                 gameID: game.id!,
-                homeTeam: homeTeam,
-                awayTeam: awayTeam,
+                homeTeam: game.homeTeam(),
+                awayTeam: game.awayTeam(),
               )..add(
                   LoadPageEvent(),
                 ),
@@ -53,7 +43,7 @@ class GameListTile extends StatelessWidget {
           ),
         );
       },
-      title: Text('${homeTeam.name} vs. ${awayTeam.name}'),
+      title: Text('${game.homeTeam().name} vs. ${game.awayTeam().name}'),
       subtitle: Text(_buildSubTitle()),
       trailing: const Icon(Icons.chevron_right),
     );

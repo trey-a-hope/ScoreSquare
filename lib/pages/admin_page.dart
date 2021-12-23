@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/blocs/create_game/create_game_bloc.dart'
     as create_game;
+import 'package:score_square/blocs/update_game/update_game_bloc.dart'
+    as update_game;
+import 'package:score_square/models/game_model.dart';
+import 'package:score_square/pages/select_game_page.dart';
+import 'package:score_square/services/game_service.dart';
+import '../service_locator.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -55,7 +61,30 @@ class _AdminPageState extends State<AdminPage> {
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () async {
+              List<GameModel> games = await locator<GameService>().list();
+
+              Route route = MaterialPageRoute(
+                builder: (BuildContext context) => SelectGamePage(games: games),
+              );
+
+              final result = await Navigator.push(context, route);
+
+              if (result == null) return;
+
+              final selectedGame = result as GameModel;
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
+                        update_game.UpdateGameBloc(gameID: selectedGame.id!)
+                          ..add(update_game.LoadPageEvent()),
+                    child: const update_game.UpdateGamePage(),
+                  ),
+                ),
+              );
+            },
             leading: const Icon(Icons.update),
             subtitle: const Text(
                 'Modify score, status, and other details about game.'),

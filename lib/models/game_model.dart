@@ -1,4 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:score_square/constants.dart';
+import 'package:score_square/models/nba_team_model.dart';
+import 'package:score_square/services/format_service.dart';
+
+import '../service_locator.dart';
 
 class GameModel {
   String? id;
@@ -50,4 +55,32 @@ class GameModel {
       'starts': starts,
     };
   }
+
+  NBATeamModel homeTeam() {
+    return nbaTeams.firstWhere((nbaTeam) => nbaTeam.id == homeTeamID);
+  }
+
+  NBATeamModel awayTeam() {
+    return nbaTeams.firstWhere((nbaTeam) => nbaTeam.id == awayTeamID);
+  }
+
+  String details() {
+    return 'score: $homeTeamScore - $awayTeamScore, bet price: $betPrice, bet count: $betCount';
+  }
+
+  String startDate() {
+    return 'Game starts ${locator<FormatService>().eMMMddhmmaa(date: starts)}';
+  }
+
+  @override
+  String toString() {
+    return '${homeTeam().name} vs. ${awayTeam().name}';
+  }
+
+  @override
+  operator ==(other) => other is GameModel && other.id == id;
+
+  @override
+  int get hashCode =>
+      id.hashCode; //id.hashCode ^ id.hashCode ^ starts.hashCode;
 }

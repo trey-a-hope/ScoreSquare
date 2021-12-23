@@ -5,6 +5,8 @@ import 'package:score_square/models/user_model.dart';
 abstract class IGameService {
   Future<void> create({required GameModel game});
   Future<GameModel> read({required String gameID});
+  Future<void> update(
+      {required String gameID, required Map<String, dynamic> data});
   Future<List<GameModel>> list();
   Future<void> claimWinners(
       {required List<UserModel> winners, required GameModel game});
@@ -44,6 +46,19 @@ class GameService implements IGameService {
   Future<GameModel> read({required String gameID}) async {
     try {
       return GameModel.fromDoc(data: (await _gamesDB.doc(gameID).get()));
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> update(
+      {required String gameID, required Map<String, dynamic> data}) async {
+    try {
+      await _gamesDB.doc(gameID).update(data);
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),
