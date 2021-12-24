@@ -15,16 +15,12 @@ class LoadedState extends GameState {
   const LoadedState({
     required this.game,
     required this.bets,
-    required this.homeTeam,
-    required this.awayTeam,
     required this.currentUser,
     required this.currentWinners,
   });
 
   final GameModel game;
   final List<BetModel> bets;
-  final NBATeamModel homeTeam;
-  final NBATeamModel awayTeam;
   final UserModel currentUser;
   final List<UserModel> currentWinners;
 
@@ -32,8 +28,6 @@ class LoadedState extends GameState {
   List<Object> get props => [
         game,
         bets,
-        homeTeam,
-        awayTeam,
         currentUser,
         currentWinners,
       ];

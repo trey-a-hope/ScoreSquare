@@ -12,7 +12,6 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
       TextEditingController();
   final TextEditingController _awayTeamScoreController =
       TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
 
   @override
   void initState() {
@@ -35,10 +34,10 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
 
           if (state is LoadedState) {
             GameModel game = state.game;
+            bool isOpen = state.isOpen;
 
             _homeTeamScoreController.text = game.homeTeamScore.toString();
             _awayTeamScoreController.text = game.awayTeamScore.toString();
-            _statusController.text = game.status.toString();
 
             return Column(
               children: [
@@ -49,8 +48,8 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                         padding: const EdgeInsets.all(20),
                         child: TextField(
                           controller: _homeTeamScoreController,
-                          decoration: const InputDecoration(
-                              labelText: 'Home team score.'),
+                          decoration: InputDecoration(
+                              labelText: '${game.homeTeam().name} score'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -64,8 +63,8 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                         padding: const EdgeInsets.all(20),
                         child: TextField(
                           controller: _awayTeamScoreController,
-                          decoration: const InputDecoration(
-                              labelText: 'Away team score.'),
+                          decoration: InputDecoration(
+                              labelText: '${game.awayTeam().name} score'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -75,22 +74,25 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                     )
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: TextField(
-                    controller: _statusController,
-                    decoration: const InputDecoration(
-                        labelText: 'Status, (-1, 0, 1, 2)'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ], // Only numbers can be entered
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        isOpen ? Colors.green : Colors.red),
                   ),
+                  onPressed: () async {
+                    context.read<UpdateGameBloc>().add(
+                          ToggleIsOpenEvent(
+                            isOpen: isOpen,
+                          ),
+                        );
+                  },
+                  icon: Icon(isOpen ? Icons.timelapse : Icons.check),
+                  label: Text('Game ${isOpen ? 'not' : ''} ended'),
                 ),
                 ElevatedButton.icon(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green),
+                        MaterialStateProperty.all<Color>(Colors.black),
                   ),
                   onPressed: () async {
                     bool? confirm = await locator<ModalService>()
@@ -109,7 +111,6 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                                 int.parse(_homeTeamScoreController.text),
                             awayTeamScore:
                                 int.parse(_awayTeamScoreController.text),
-                            status: int.parse(_statusController.text),
                           ),
                         );
                   },

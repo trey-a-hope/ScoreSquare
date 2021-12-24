@@ -15,15 +15,18 @@ class LoadedState extends UpdateGameState {
   const LoadedState({
     required this.game,
     required this.showSnackbarMessage,
+    required this.isOpen,
   });
 
   final GameModel game;
   final bool showSnackbarMessage;
+  final bool isOpen;
 
   @override
   List<Object> get props => [
         game,
         showSnackbarMessage,
+        isOpen,
       ];
 }
 

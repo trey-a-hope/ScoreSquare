@@ -12,18 +12,28 @@ class LoadPageEvent extends UpdateGameEvent {}
 class SubmitEvent extends UpdateGameEvent {
   final int homeTeamScore;
   final int awayTeamScore;
-  final int status;
 
   const SubmitEvent({
     required this.homeTeamScore,
     required this.awayTeamScore,
-    required this.status,
   });
 
   @override
   List<Object> get props => [
         homeTeamScore,
         awayTeamScore,
-        status,
+      ];
+}
+
+class ToggleIsOpenEvent extends UpdateGameEvent {
+  final bool isOpen;
+
+  const ToggleIsOpenEvent({
+    required this.isOpen,
+  });
+
+  @override
+  List<Object> get props => [
+        isOpen,
       ];
 }

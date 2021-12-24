@@ -1,51 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:score_square/blocs/game/game_bloc.dart';
 import 'package:score_square/models/game_model.dart';
 
 class GameListTile extends StatelessWidget {
   final GameModel game;
+  final VoidCallback onTap;
 
   const GameListTile({
     Key? key,
     required this.game,
+    required this.onTap,
   }) : super(key: key);
 
   String _buildSubTitle() {
-    switch (game.status) {
-      case -1:
-        return game.startDate();
+    switch (game.status()) {
       case 0:
-        return game.details();
+        return game.startDate();
       case 1:
+        return game.details();
+      case 2:
         return 'Winner: TODO';
+      case 3:
       default:
-        return '';
+        return 'Winner: TODO';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (BuildContext context) => GameBloc(
-                gameID: game.id!,
-                homeTeam: game.homeTeam(),
-                awayTeam: game.awayTeam(),
-              )..add(
-                  LoadPageEvent(),
-                ),
-              child: const GamePage(),
-            ),
-          ),
-        );
-      },
-      title: Text('${game.homeTeam().name} vs. ${game.awayTeam().name}'),
-      subtitle: Text(_buildSubTitle()),
-      trailing: const Icon(Icons.chevron_right),
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(game.homeTeam().imgUrl),
+      ),
+      trailing: CircleAvatar(
+        backgroundImage: NetworkImage(game.awayTeam().imgUrl),
+      ),
+      title: Text(
+        game.toString(),
+        style: const TextStyle(color: Colors.black),
+        textAlign: TextAlign.center,
+      ),
+      subtitle: Text(
+        _buildSubTitle(),
+        textAlign: TextAlign.center,
+      ),
+      onTap: onTap,
     );
   }
 }

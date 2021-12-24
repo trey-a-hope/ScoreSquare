@@ -60,9 +60,12 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
         homeTeamID: _homeTeam.id,
         homeTeamScore: 0,
         id: null,
-        status: -1,
         betCount: 0,
         starts: DateTime.now(),
+        ends: null,
+        modified: DateTime.now(),
+        created: DateTime.now(),
+        stamped: false,
       );
 
       await locator<GameService>().create(game: game);

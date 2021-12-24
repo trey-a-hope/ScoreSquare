@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/services/format_service.dart';
-
 import '../service_locator.dart';
 
 class GameModel {
@@ -12,9 +11,13 @@ class GameModel {
   int homeTeamID;
   int homeTeamScore;
   int betPrice;
-  int status; //-1 - Not Started, 0 - In Progress, 1 - Ended, 2 - Claimed.
+  //int status; //-1 - Not Started, 0 - In Progress, 1 - Ended, 2 - Claimed.
   int betCount;
   DateTime starts;
+  DateTime? ends;
+  DateTime created;
+  DateTime modified;
+  bool stamped;
 
   GameModel({
     required this.awayTeamID,
@@ -23,9 +26,12 @@ class GameModel {
     required this.homeTeamID,
     required this.homeTeamScore,
     required this.id,
-    required this.status,
     required this.betCount,
     required this.starts,
+    required this.ends,
+    required this.created,
+    required this.modified,
+    required this.stamped,
   });
 
   factory GameModel.fromDoc({required DocumentSnapshot data}) {
@@ -36,9 +42,12 @@ class GameModel {
       homeTeamID: data['homeTeamID'],
       homeTeamScore: data['homeTeamScore'],
       id: data['id'],
-      status: data['status'],
       betCount: data['betCount'],
       starts: data['starts'].toDate(),
+      ends: data['ends']?.toDate(),
+      created: data['created'].toDate(),
+      modified: data['modified'].toDate(),
+      stamped: data['stamped'],
     );
   }
 
@@ -50,10 +59,39 @@ class GameModel {
       'homeTeamID': homeTeamID,
       'homeTeamScore': homeTeamScore,
       'id': id,
-      'status': status,
       'betCount': betCount,
       'starts': starts,
+      'ends': ends,
+      'created': created,
+      'modified': modified,
+      'stamped': stamped,
     };
+  }
+
+  bool isOpen() {
+    return ends == null;
+  }
+
+  //Returns a game status of 0, 1, 2, 3
+  int status() {
+    DateTime now = DateTime.now();
+
+    //If now is before game starts, game HAS NOT STARTED.
+    if (now.isBefore(starts)) {
+      return 0;
+    }
+    //If now is after game starts, but hasn't ended, game IS ACTIVE.
+    else if (now.isAfter(starts) && ends == null) {
+      return 1;
+    }
+    //If now is after game ends, but hasn't been stamped yet, game IS ENDED.
+    else if (now.isAfter(ends!) && stamped == false) {
+      return 2;
+    }
+    //Otherwise, the game IS STAMPED.
+    else {
+      return 3;
+    }
   }
 
   NBATeamModel homeTeam() {

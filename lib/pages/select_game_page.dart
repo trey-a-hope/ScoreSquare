@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:score_square/models/game_model.dart';
+import 'package:score_square/widgets/game_list_tile.dart';
 
 //TODO: Make this generic.
 class SelectGamePage extends StatelessWidget {
@@ -22,17 +23,10 @@ class SelectGamePage extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           GameModel game = games[index];
 
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(game.homeTeam().imgUrl),
-            ),
-            title: Text(
-              game.toString(),
-              style: const TextStyle(color: Colors.black),
-            ),
-            subtitle: Text(game.details()),
+          return GameListTile(
+            game: game,
             onTap: () {
-              Navigator.pop(context, game);
+              Navigator.of(context).pop(game);
             },
           );
         },

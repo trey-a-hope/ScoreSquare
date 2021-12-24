@@ -13,31 +13,57 @@ part 'update_game_page.dart';
 
 class UpdateGameBloc extends Bloc<UpdateGameEvent, UpdateGameState> {
   final String gameID;
+
+  late bool _isOpen;
+  late GameModel _game;
+
   UpdateGameBloc({required this.gameID}) : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
       try {
         //Fetch the game based on ID.
-        GameModel game = await locator<GameService>().read(gameID: gameID);
+        _game = await locator<GameService>().read(gameID: gameID);
+        _isOpen = _game.isOpen();
 
-        emit(LoadedState(game: game, showSnackbarMessage: false));
+        emit(
+          LoadedState(
+            game: _game,
+            showSnackbarMessage: false,
+            isOpen: _isOpen,
+          ),
+        );
       } catch (error) {
         emit(
           ErrorState(error: error),
         );
       }
     });
+    on<ToggleIsOpenEvent>((event, emit) async {
+      _isOpen = !event.isOpen;
+      emit(
+        LoadedState(
+          game: _game,
+          showSnackbarMessage: false,
+          isOpen: _isOpen,
+        ),
+      );
+    });
     on<SubmitEvent>((event, emit) async {
       try {
-        //Update the score of the game.
         await locator<GameService>().update(gameID: gameID, data: {
           'homeTeamScore': event.homeTeamScore,
           'awayTeamScore': event.awayTeamScore,
-          'status': event.status,
+          'ends': _isOpen ? null : DateTime.now()
         });
 
-        GameModel game = await locator<GameService>().read(gameID: gameID);
+        _game = await locator<GameService>().read(gameID: gameID);
 
-        emit(LoadedState(game: game, showSnackbarMessage: true));
+        emit(
+          LoadedState(
+            game: _game,
+            showSnackbarMessage: true,
+            isOpen: _game.isOpen(),
+          ),
+        );
       } catch (error) {
         emit(
           ErrorState(error: error),

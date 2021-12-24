@@ -208,15 +208,14 @@ class _GamePageState extends State<GamePage> {
         if (state is LoadedState) {
           GameModel game = state.game;
           List<BetModel> bets = state.bets;
-          NBATeamModel homeTeam = state.homeTeam;
-          NBATeamModel awayTeam = state.awayTeam;
           UserModel currentUser = state.currentUser;
           List<UserModel> currentWinners = state.currentWinners;
 
           return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.black,
-                title: Text('${homeTeam.name} vs ${awayTeam.name} '),
+                title:
+                    Text('${game.homeTeam().name} vs ${game.awayTeam().name} '),
                 centerTitle: true,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -252,10 +251,10 @@ class _GamePageState extends State<GamePage> {
                           Column(
                             children: [
                               CachedNetworkImage(
-                                imageUrl: homeTeam.imgUrl,
+                                imageUrl: game.homeTeam().imgUrl,
                                 height: 100,
                               ),
-                              Text(homeTeam.name),
+                              Text(game.homeTeam().name),
                               Text('${game.homeTeamScore}'),
                               Text(
                                 '${game.homeTeamScore % 10}',
@@ -267,10 +266,10 @@ class _GamePageState extends State<GamePage> {
                           Column(
                             children: [
                               CachedNetworkImage(
-                                imageUrl: awayTeam.imgUrl,
+                                imageUrl: game.awayTeam().imgUrl,
                                 height: 100,
                               ),
-                              Text(awayTeam.name),
+                              Text(game.awayTeam().name),
                               Text('${game.awayTeamScore}'),
                               Text(
                                 '${game.awayTeamScore % 10}',
@@ -287,7 +286,7 @@ class _GamePageState extends State<GamePage> {
                       Text('Total Bets:  ${bets.length}/$maxBetsPerGame'),
 
                       //If the game has not ended and  the max bet count has not been reached...
-                      if (bets.length < maxBetsPerGame && game.status == 0) ...[
+                      if (bets.length < maxBetsPerGame && game.isOpen()) ...[
                         SizedBox(
                           child: ElevatedButton.icon(
                             style: ButtonStyle(
@@ -308,7 +307,7 @@ class _GamePageState extends State<GamePage> {
                                   return;
                                 }
 
-                                //TODO: Ensure the bet is random...
+                                //TODO: Ensure the bet is random and cannot be duplicated...
 
                                 Random random = Random();
                                 context.read<GameBloc>().add(
@@ -358,7 +357,7 @@ class _GamePageState extends State<GamePage> {
                       ),
                       if (currentWinners.isNotEmpty) ...[
                         Text(
-                            '${game.status == 1 ? 'Final' : 'Current'} Winners - ${currentWinners.length}'),
+                            '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
                         ListView.builder(
                             shrinkWrap: true,
                             itemCount: currentWinners.length,

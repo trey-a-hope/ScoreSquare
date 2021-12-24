@@ -57,6 +57,7 @@ class GameService implements IGameService {
   Future<void> update(
       {required String gameID, required Map<String, dynamic> data}) async {
     try {
+      data['modified'] = DateTime.now();
       await _gamesDB.doc(gameID).update(data);
       return;
     } catch (e) {

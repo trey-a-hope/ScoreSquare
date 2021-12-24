@@ -9,7 +9,6 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
-import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/models/square_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/service_locator.dart';
@@ -27,16 +26,12 @@ part 'game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final String gameID;
-  final NBATeamModel homeTeam;
-  final NBATeamModel awayTeam;
 
   late UserModel _currentUser;
   late GameModel _game;
 
   GameBloc({
     required this.gameID,
-    required this.homeTeam,
-    required this.awayTeam,
   }) : super(InitialState()) {
     on<LoadPageEvent>(
       (event, emit) async {
@@ -69,8 +64,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           LoadedState(
             game: _game,
             bets: bets,
-            homeTeam: homeTeam,
-            awayTeam: awayTeam,
             currentUser: _currentUser,
             currentWinners: currentWinners,
           ),
