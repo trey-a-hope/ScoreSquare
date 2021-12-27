@@ -17,7 +17,7 @@ class GameModel {
   DateTime? ends;
   DateTime created;
   DateTime modified;
-  bool stamped;
+  bool claimed;
 
   GameModel({
     required this.awayTeamID,
@@ -31,7 +31,7 @@ class GameModel {
     required this.ends,
     required this.created,
     required this.modified,
-    required this.stamped,
+    required this.claimed,
   });
 
   factory GameModel.fromDoc({required DocumentSnapshot data}) {
@@ -47,7 +47,7 @@ class GameModel {
       ends: data['ends']?.toDate(),
       created: data['created'].toDate(),
       modified: data['modified'].toDate(),
-      stamped: data['stamped'],
+      claimed: data['claimed'],
     );
   }
 
@@ -64,7 +64,7 @@ class GameModel {
       'ends': ends,
       'created': created,
       'modified': modified,
-      'stamped': stamped,
+      'claimed': claimed,
     };
   }
 
@@ -84,8 +84,8 @@ class GameModel {
     else if (now.isAfter(starts) && ends == null) {
       return 1;
     }
-    //If now is after game ends, but hasn't been stamped yet, game IS ENDED.
-    else if (now.isAfter(ends!) && stamped == false) {
+    //If now is after game ends, but hasn't been claimed yet, game IS ENDED.
+    else if (now.isAfter(ends!) && claimed == false) {
       return 2;
     }
     //Otherwise, the game IS STAMPED.

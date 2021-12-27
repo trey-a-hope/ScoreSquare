@@ -13,7 +13,7 @@ class BetService implements IBetService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final CollectionReference _betsDB = _firestore.collection('bets');
-
+  final CollectionReference _gamesDB = _firestore.collection('games');
   final CollectionReference _usersDB = _firestore.collection('users');
 
   @override
@@ -26,12 +26,20 @@ class BetService implements IBetService {
         final DocumentReference betDocRef = _betsDB.doc();
         bet.id = betDocRef.id;
 
+        //Get reference of game.
+        final DocumentReference gameDocRef = _gamesDB.doc(bet.gameID);
+
         //Get user.
         final DocumentReference userDocRef = _usersDB.doc(uid);
         UserModel user = UserModel.fromDoc(data: await userDocRef.get());
 
         //Create bet.
         transaction.set(betDocRef, bet.toMap());
+
+        //Increment bet count on game.
+        transaction.update(gameDocRef, {
+          'betCount': FieldValue.increment(1),
+        });
 
         //Subtract coins from users account.
         transaction.update(userDocRef, {

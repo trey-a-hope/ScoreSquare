@@ -17,7 +17,6 @@ import 'package:score_square/services/bet_service.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
-
 import '../../constants.dart';
 
 part 'game_event.dart';
@@ -46,19 +45,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
         //Fetch current winners.
-        List<UserModel> currentWinners = [];
-        for (int i = 0; i < bets.length; i++) {
-          //If the user is in the row or the column, (or both, "JACKPOT"), AND this user is not in the list already, add them to the list of winners.
-          if ((bets[i].homeDigit == _game.homeTeamScore % 10 ||
-                  bets[i].awayDigit == _game.awayTeamScore % 10) &&
-              currentWinners.indexWhere(
-                      (currentWinner) => currentWinner.uid == bets[i].uid) <
-                  0) {
-            currentWinners.add(
-              await locator<UserService>().retrieveUser(uid: bets[i].uid),
-            );
-          }
-        }
+        List<UserModel> currentWinners =
+            await locator<GameService>().getWinners(game: _game);
 
         emit(
           LoadedState(

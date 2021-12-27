@@ -65,7 +65,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
         ends: null,
         modified: DateTime.now(),
         created: DateTime.now(),
-        stamped: false,
+        claimed: false,
       );
 
       await locator<GameService>().create(game: game);
