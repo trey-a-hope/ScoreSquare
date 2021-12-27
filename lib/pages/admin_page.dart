@@ -4,6 +4,8 @@ import 'package:score_square/blocs/create_game/create_game_bloc.dart'
     as create_game;
 import 'package:score_square/blocs/update_game/update_game_bloc.dart'
     as update_game;
+import 'package:score_square/blocs/claim_winners/claim_winners_bloc.dart'
+    as claim_winners_game;
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/pages/select_game_page.dart';
 import 'package:score_square/services/game_service.dart';
@@ -53,7 +55,18 @@ class _AdminPageState extends State<AdminPage> {
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
+                        claim_winners_game.ClaimWinnersBloc()
+                          ..add(claim_winners_game.LoadPageEvent()),
+                    child: const claim_winners_game.ClaimWinnersPage(),
+                  ),
+                ),
+              );
+            },
             leading: const Icon(Icons.face),
             subtitle:
                 const Text('Give coins to winners and send notification.'),
