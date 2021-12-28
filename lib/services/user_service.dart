@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:score_square/models/user_model.dart';
 
 abstract class IUserService {
   Future<void> createUser({required UserModel user});
   Future<UserModel> retrieveUser({required String uid});
-  Future<List<UserModel>> retrieveUsers(
-      {required int? limit, required String? orderBy});
+  Future<List<UserModel>> retrieveUsers({int? limit, String? orderBy});
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
       {required String uid, required Map<String, dynamic> data});
@@ -57,6 +55,7 @@ class UserService extends IUserService {
   Future<void> updateUser(
       {required String uid, required Map<String, dynamic> data}) async {
     try {
+      data['modified'] = DateTime.now();
       await _usersDB.doc(uid).update(data);
       return;
     } catch (e) {
@@ -67,8 +66,7 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<List<UserModel>> retrieveUsers(
-      {required int? limit, required String? orderBy}) async {
+  Future<List<UserModel>> retrieveUsers({int? limit, String? orderBy}) async {
     try {
       Query query = _usersDB;
 

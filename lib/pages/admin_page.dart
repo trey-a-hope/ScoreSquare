@@ -4,11 +4,16 @@ import 'package:score_square/blocs/create_game/create_game_bloc.dart'
     as create_game;
 import 'package:score_square/blocs/update_game/update_game_bloc.dart'
     as update_game;
+import 'package:score_square/blocs/give_coins/give_coins_bloc.dart'
+    as give_coins;
 import 'package:score_square/blocs/claim_winners/claim_winners_bloc.dart'
     as claim_winners_game;
 import 'package:score_square/models/game_model.dart';
+import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/select_game_page.dart';
+import 'package:score_square/pages/select_user_page.dart';
 import 'package:score_square/services/game_service.dart';
+import 'package:score_square/services/user_service.dart';
 import '../service_locator.dart';
 
 class AdminPage extends StatefulWidget {
@@ -105,7 +110,31 @@ class _AdminPageState extends State<AdminPage> {
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () async {
+              List<UserModel> users =
+                  await locator<UserService>().retrieveUsers();
+
+              Route route = MaterialPageRoute(
+                builder: (BuildContext context) => SelectUserPage(users: users),
+              );
+
+              final result = await Navigator.push(context, route);
+
+              if (result == null) return;
+
+              final selectedUser = result as UserModel;
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
+                        give_coins.GiveCoinsBloc(uid: selectedUser.uid!)
+                          ..add(give_coins.LoadPageEvent()),
+                    child: const give_coins.GiveCoinsPage(),
+                  ),
+                ),
+              );
+            },
             leading: const Icon(Icons.attach_money),
             subtitle: const Text('Add coins to a user account.'),
             title: const Text('Give Coins'),
