@@ -110,7 +110,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
             if (state.showSnackbarMessage) {
               locator<ModalService>().showInSnackBar(
                 context: context,
-                message: 'Blah blah',
+                message: 'Game successfully created.',
               );
             }
           }

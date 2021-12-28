@@ -1,4 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:score_square/models/game_model.dart';
+import 'package:score_square/services/format_service.dart';
+import 'package:score_square/services/game_service.dart';
+
+import '../service_locator.dart';
 
 class BetModel {
   int awayDigit;
@@ -37,5 +42,18 @@ class BetModel {
       'uid': uid,
       'gameID': gameID,
     };
+  }
+
+  Future<GameModel> game() async {
+    try {
+      GameModel game = await locator<GameService>().read(gameID: gameID);
+      return game;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  String createdString() {
+    return 'Placed ${locator<FormatService>().eMMMddhmmaa(date: created)}';
   }
 }

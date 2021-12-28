@@ -10,11 +10,11 @@ class CustomTextHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(10),
+    return Padding(
+      padding: const EdgeInsets.all(10),
       child: Text(
-        'Create Game',
-        style: TextStyle(
+        text,
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 21,
         ),

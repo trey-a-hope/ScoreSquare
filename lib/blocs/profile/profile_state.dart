@@ -12,12 +12,16 @@ class InitialState extends ProfileState {}
 class LoadingState extends ProfileState {}
 
 class LoadedState extends ProfileState {
-  const LoadedState({required this.user});
+  const LoadedState({
+    required this.user,
+    required this.bets,
+  });
 
   final UserModel user;
+  final List<BetModel> bets;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, bets];
 }
 
 class ErrorState extends ProfileState {

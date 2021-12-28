@@ -14,28 +14,32 @@ class GamesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: games.length,
-      itemBuilder: (context, index) {
-        GameModel game = games[index];
-        return GameListTile(
-          game: games[index],
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (BuildContext context) => GameBloc(
-                    gameID: game.id!,
-                  )..add(
-                      LoadPageEvent(),
+    return games.isEmpty
+        ? const Center(
+            child: Text('No Games'),
+          )
+        : ListView.builder(
+            itemCount: games.length,
+            itemBuilder: (context, index) {
+              GameModel game = games[index];
+              return GameListTile(
+                game: games[index],
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => GameBloc(
+                          gameID: game.id!,
+                        )..add(
+                            LoadPageEvent(),
+                          ),
+                        child: const GamePage(),
+                      ),
                     ),
-                  child: const GamePage(),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+                  );
+                },
+              );
+            },
+          );
   }
 }

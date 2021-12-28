@@ -6,7 +6,8 @@ abstract class IBetService {
   Future<void> purchaseBet(
       {required int coins, required BetModel bet, required String uid});
 
-  Future<List<BetModel>> list({required String gameID});
+  Future<List<BetModel>> listByGame({required String gameID});
+  Future<List<BetModel>> listByUser({required String uid});
 }
 
 class BetService implements IBetService {
@@ -61,7 +62,7 @@ class BetService implements IBetService {
   }
 
   @override
-  Future<List<BetModel>> list({required String gameID}) async {
+  Future<List<BetModel>> listByGame({required String gameID}) async {
     try {
       List<BetModel> bets =
           (await _betsDB.where('gameID', isEqualTo: gameID).get())
@@ -70,6 +71,27 @@ class BetService implements IBetService {
                 (e) => BetModel.fromDoc(data: e),
               )
               .toList();
+
+      return bets;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<BetModel>> listByUser({required String uid}) async {
+    try {
+      List<BetModel> bets = (await _betsDB
+              .where('uid', isEqualTo: uid)
+              .orderBy('created', descending: true)
+              .get())
+          .docs
+          .map(
+            (e) => BetModel.fromDoc(data: e),
+          )
+          .toList();
 
       return bets;
     } catch (e) {

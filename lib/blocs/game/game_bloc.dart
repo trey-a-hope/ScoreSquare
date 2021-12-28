@@ -39,7 +39,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         //Fetch bets.
         List<BetModel> bets =
-            await locator<BetService>().list(gameID: _game.id!);
+            await locator<BetService>().listByGame(gameID: _game.id!);
 
         //Fetch current user.
         _currentUser = await locator<AuthService>().getCurrentUser();

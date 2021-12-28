@@ -55,6 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
           if (state is LoadedState) {
             UserModel user = state.user;
+            List<BetModel> bets = state.bets;
 
             return SafeArea(
               child: Center(
@@ -78,34 +79,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
-                      child: Text(user.username),
+                      child: Text('${user.username} | ${user.coins} coins'),
                     ),
-                    const Spacer(),
-                    // ElevatedButton.icon(
-                    //   style: ButtonStyle(
-                    //     backgroundColor:
-                    //         MaterialStateProperty.all<Color>(Colors.green),
-                    //   ),
-                    //   onPressed: () async {
-                    //     bool? confirm = await locator<ModalService>()
-                    //         .showConfirmation(
-                    //             context: context,
-                    //             title: 'Save Profile',
-                    //             message: 'Are you sure?');
-                    //
-                    //     if (confirm == null || confirm == false) {
-                    //       return;
-                    //     }
-                    //
-                    //     context.read<ProfileBloc>().add(
-                    //           SaveEvent(
-                    //             username: _usernameController.text,
-                    //           ),
-                    //         );
-                    //   },
-                    //   icon: const Icon(Icons.save),
-                    //   label: const Text('E'),
-                    // ),
+                    const CustomTextHeader(text: 'My Bets'),
+                    bets.isEmpty
+                        ? const Text('No bets.')
+                        : SizedBox(
+                            height: 200,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: bets.length,
+                              itemBuilder: (context, index) {
+                                return BetView(bet: bets[index]);
+                              },
+                            ),
+                          ),
                   ],
                 ),
               ),

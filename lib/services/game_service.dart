@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
+import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/services/user_service.dart';
 
 import '../service_locator.dart';
@@ -124,6 +125,16 @@ class GameService implements IGameService {
           transaction.update(userDocRef, {
             'coins': user.coins + splitCoins,
           });
+
+          //Send notification to user.
+          if (user.fcmToken != null) {
+            await locator<FCMNotificationService>().sendNotificationToUser(
+              fcmToken: user.fcmToken!,
+              title: 'YOU WON $splitCoins COINS',
+              body: game.toString(),
+              notificationData: null,
+            );
+          }
         }
 
         //Get game doc.
@@ -150,7 +161,8 @@ class GameService implements IGameService {
   Future<List<UserModel>> getWinners({required GameModel game}) async {
     try {
       //Fetch bets.
-      List<BetModel> bets = await locator<BetService>().list(gameID: game.id!);
+      List<BetModel> bets =
+          await locator<BetService>().listByGame(gameID: game.id!);
 
       //Fetch basic winners or jackpot winner.
       List<UserModel> currentWinners = [];
