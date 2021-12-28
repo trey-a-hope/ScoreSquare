@@ -107,7 +107,7 @@ class HomePageState extends State<HomePage> {
         title: const Text('Home'),
         centerTitle: true,
       ),
-      drawer: const CustomAppDrawer(),
+      drawer: const CustomAppDrawer(pushNewRoute: false),
       body: BlocConsumer<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is LoadingState) {

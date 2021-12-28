@@ -27,4 +27,8 @@ class NBATeamModel {
       imgUrl: map['imgUrl'],
     );
   }
+
+  String fullName() {
+    return '$city $name';
+  }
 }

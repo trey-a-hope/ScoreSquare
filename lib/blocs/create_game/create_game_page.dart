@@ -44,7 +44,9 @@ class _CreateGamePageState extends State<CreateGamePage> {
                           context,
                           label: 'Select Home Team',
                           selectedValue: homeTeam.name,
-                          items: nbaTeams.map((e) => e.name).toList(),
+                          items: nbaTeams
+                              .map((nbaTeam) => nbaTeam.fullName())
+                              .toList(),
                           onChange: (String selected) {
                             NBATeamModel team = nbaTeams.firstWhere(
                                 (nbaTeam) => nbaTeam.name == selected);
@@ -75,6 +77,49 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       },
                     ),
                   ],
+                ),
+                // ElevatedButton.icon(
+                //   style: ButtonStyle(
+                //     backgroundColor:
+                //         MaterialStateProperty.all<Color>(Colors.green),
+                //   ),
+                //   onPressed: () async {
+                //     showDatePicker(
+                //       type: DateTimePickerType.dateTime,
+                //       context: context,
+                //       initialDate: DateTime.now(),
+                //       firstDate: DateTime.now(),
+                //       lastDate: DateTime.now().add(
+                //         const Duration(days: 30),
+                //       ),
+                //     );
+                //   },
+                //   icon: const Icon(Icons.save),
+                //   label: const Text('Show Date Time Picker'),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.dateTime,
+                    initialValue: '',
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(
+                      const Duration(days: 30),
+                    ),
+                    dateLabelText: 'Select start date and time.',
+                    onChanged: (val) {
+                      DateTime dt = DateTime.parse(val);
+
+                      context.read<CreateGameBloc>().add(
+                            ChangeStartDateTimeEvent(dt: dt),
+                          );
+                    },
+                    validator: (val) {
+                      print(val);
+                      return null;
+                    },
+                    onSaved: (val) => print(val),
+                  ),
                 ),
                 ElevatedButton.icon(
                   style: ButtonStyle(

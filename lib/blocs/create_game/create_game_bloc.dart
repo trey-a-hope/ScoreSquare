@@ -1,3 +1,4 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ part 'create_game_page.dart';
 class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
   NBATeamModel _homeTeam = nbaTeams[0];
   NBATeamModel _awayTeam = nbaTeams[29];
+  DateTime _startDateTime = DateTime.now();
 
   CreateGameBloc() : super(InitialState()) {
     on<LoadPageEvent>((event, emit) {
@@ -50,6 +52,17 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
       );
     });
 
+    on<ChangeStartDateTimeEvent>((event, emit) {
+      _startDateTime = event.dt;
+      emit(
+        LoadedState(
+          homeTeam: _homeTeam,
+          awayTeam: _awayTeam,
+          showSnackbarMessage: false,
+        ),
+      );
+    });
+
     on<SubmitEvent>((event, emit) async {
       emit(LoadingState());
 
@@ -61,7 +74,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
         homeTeamScore: 0,
         id: null,
         betCount: 0,
-        starts: DateTime.now(),
+        starts: _startDateTime,
         ends: null,
         modified: DateTime.now(),
         created: DateTime.now(),

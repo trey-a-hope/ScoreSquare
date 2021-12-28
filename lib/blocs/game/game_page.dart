@@ -30,14 +30,31 @@ class _GamePageState extends State<GamePage> {
       color: color,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         if (user != null) ...[
-          CachedNetworkImage(
-            imageUrl: user.imgUrl == null ? dummyProfileImageUrl : user.imgUrl!,
-            imageBuilder: (context, imageProvider) => GFAvatar(
-              radius: 15,
-              backgroundImage: imageProvider,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
+                        profile.ProfileBloc(uid: user.uid!)
+                          ..add(
+                            profile.LoadPageEvent(),
+                          ),
+                    child: const profile.ProfilePage(),
+                  ),
+                ),
+              );
+            },
+            child: CachedNetworkImage(
+              imageUrl:
+                  user.imgUrl == null ? dummyProfileImageUrl : user.imgUrl!,
+              imageBuilder: (context, imageProvider) => GFAvatar(
+                radius: 15,
+                backgroundImage: imageProvider,
+              ),
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ],
         if (user == null) ...[

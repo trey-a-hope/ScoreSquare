@@ -18,6 +18,7 @@ import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
 import '../../constants.dart';
+import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 
 part 'game_event.dart';
 part 'game_page.dart';

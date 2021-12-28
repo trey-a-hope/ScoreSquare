@@ -8,6 +8,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  static final Box<dynamic> _userCredentialsBox =
+      Hive.box<String>(hiveBoxUserCredentials);
+
   @override
   void initState() {
     super.initState();
@@ -15,6 +18,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    //Determine if this is my profile page or not.
+    bool isMine =
+        context.read<ProfileBloc>().uid == _userCredentialsBox.get('uid');
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -27,26 +34,29 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             icon: const Icon(Icons.refresh),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) =>
-                        edit_profile.EditProfileBloc()
-                          ..add(
-                            edit_profile.LoadPageEvent(),
-                          ),
-                    child: const edit_profile.EditProfilePage(),
+          Visibility(
+            visible: isMine,
+            child: IconButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) =>
+                          edit_profile.EditProfileBloc()
+                            ..add(
+                              edit_profile.LoadPageEvent(),
+                            ),
+                      child: const edit_profile.EditProfilePage(),
+                    ),
                   ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.edit),
+                );
+              },
+              icon: const Icon(Icons.edit),
+            ),
           )
         ],
       ),
-      drawer: const CustomAppDrawer(),
+      // drawer: const CustomAppDrawer(),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         builder: (context, state) {
           if (state is LoadingState) {

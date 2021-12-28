@@ -11,7 +11,12 @@ import 'package:score_square/services/util_service.dart';
 import '../service_locator.dart';
 
 class CustomAppDrawer extends StatelessWidget {
-  const CustomAppDrawer({Key? key}) : super(key: key);
+  const CustomAppDrawer({
+    Key? key,
+    this.pushNewRoute,
+  }) : super(key: key);
+
+  final bool? pushNewRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -65,25 +70,28 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.home),
                         title: const Text('Home'),
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (BuildContext context) =>
-                                    home.HomeBloc()
-                                      ..add(
-                                        home.LoadPageEvent(),
-                                      ),
-                                child: const home.HomePage(),
+                          //If already on the home page, prevent pushing a new home page.
+                          if (pushNewRoute != null && pushNewRoute == true) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (BuildContext context) =>
+                                      home.HomeBloc()
+                                        ..add(
+                                          home.LoadPageEvent(),
+                                        ),
+                                  child: const home.HomePage(),
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                       ),
                       ListTile(
                         leading: const Icon(Icons.sports_basketball),
                         title: const Text('Games'),
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => BlocProvider(
                                 create: (BuildContext context) =>
@@ -101,11 +109,11 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.person),
                         title: const Text('Profile'),
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => BlocProvider(
                                 create: (BuildContext context) =>
-                                    profile.ProfileBloc()
+                                    profile.ProfileBloc(uid: user.uid!)
                                       ..add(
                                         profile.LoadPageEvent(),
                                       ),

@@ -55,7 +55,6 @@ class _GamesPageState extends State<GamesPage> {
                   ],
                 ),
               ),
-              drawer: const CustomAppDrawer(),
               body: TabBarView(
                 children: [
                   //Not started.

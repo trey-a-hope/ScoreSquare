@@ -31,4 +31,15 @@ class ChangeAwayTeamEvent extends CreateGameEvent {
   List<Object> get props => [team];
 }
 
+class ChangeStartDateTimeEvent extends CreateGameEvent {
+  final DateTime dt;
+
+  const ChangeStartDateTimeEvent({
+    required this.dt,
+  });
+
+  @override
+  List<Object> get props => [dt];
+}
+
 class SubmitEvent extends CreateGameEvent {}
