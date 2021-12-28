@@ -144,33 +144,47 @@ class MyAppState extends State<MyApp> {
       home: StreamBuilder<User?>(
         stream: stream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return SignInScreen(
-              headerBuilder: (context, constraints, _) {
-                return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.asset(appIcon),
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            default:
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(
+                    child: Text(
+                      snapshot.error.toString(),
+                    ),
                   ),
                 );
-              },
-              providerConfigs: const [
-                EmailProviderConfiguration(),
-                //  const  GoogleProviderConfiguration(
-                //     clientId: 'xxxx-xxxx.apps.googleusercontent.com',
-                //   ),
-              ],
-            );
+              } else if (!snapshot.hasData) {
+                return SignInScreen(
+                  headerBuilder: (context, constraints, _) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Image.asset(appIcon),
+                      ),
+                    );
+                  },
+                  providerConfigs: const [
+                    EmailProviderConfiguration(),
+                  ],
+                );
+              } else {
+                return BlocProvider(
+                  create: (BuildContext context) => home.HomeBloc()
+                    ..add(
+                      home.LoadPageEvent(),
+                    ),
+                  child: const home.HomePage(),
+                );
+              }
           }
-
-          return BlocProvider(
-            create: (BuildContext context) => home.HomeBloc()
-              ..add(
-                home.LoadPageEvent(),
-              ),
-            child: const home.HomePage(),
-          );
         },
       ),
     );
