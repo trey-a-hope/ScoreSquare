@@ -302,3 +302,7 @@ List<NBATeamModel> nbaTeams = [
 //FCM
 const String cloudMessagingServerKey =
     'AAAA58Xkfzw:APA91bHmASsPD8AjaS3WEB6dKiUa6SXwinnUrpFRGJrjEnf2G-2jL666O5IqzDmYEVCGU2gZsRdBwRX-oFLOH4FHw6essi_pjdnYwDY5DKhPEWcbPJrDNQVrrN1pvkzxlwmgPdS7Ga66';
+
+//OAuth
+const String googleProviderConfigurationClientId =
+    '237172304059-dmu4491ov8fiqloss7v7e11gb3smugil.apps.googleusercontent.com';

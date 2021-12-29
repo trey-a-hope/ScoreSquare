@@ -106,11 +106,11 @@ class MyAppState extends State<MyApp> {
 
     //Create user in firebase
     UserModel newUser = UserModel(
-      imgUrl: null,
+      imgUrl: user.photoURL,
       created: DateTime.now(),
       modified: DateTime.now(),
       uid: user.uid,
-      username: '',
+      username: user.displayName!,
       fcmToken: null,
       coins: initialCoinStart,
       isAdmin: false,
@@ -172,7 +172,8 @@ class MyAppState extends State<MyApp> {
                     );
                   },
                   providerConfigs: const [
-                    EmailProviderConfiguration(),
+                    GoogleProviderConfiguration(
+                        clientId: googleProviderConfigurationClientId)
                   ],
                 );
               } else {
