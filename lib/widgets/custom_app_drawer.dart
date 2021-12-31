@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/blocs/games/games_bloc.dart' as games;
+import 'package:score_square/constants.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/admin_page.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/util_service.dart';
+import 'package:score_square/widgets/custom_shimmer.dart';
 import '../service_locator.dart';
 
 class CustomAppDrawer extends StatelessWidget {
@@ -25,7 +27,40 @@ class CustomAppDrawer extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return const Text('Loading....');
+            return Drawer(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    DrawerHeader(
+                      child: Column(
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text('Hello...'),
+                          ),
+                          CustomShimmer(
+                            child: CircleAvatar(
+                              radius: 50.0,
+                              backgroundImage: NetworkImage(
+                                dummyProfileImageUrl,
+                              ),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const CustomShimmer(
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+
           default:
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

@@ -9,7 +9,7 @@ abstract class IFCMNotificationService {
     required String fcmToken,
     required String title,
     required String body,
-    required NotificationData? notificationData,
+    NotificationData? notificationData,
   });
   Future<void> sendNotificationToGroup(
       {required String group, required String title, required String body});
@@ -86,7 +86,7 @@ class FCMNotificationService extends IFCMNotificationService {
     required String fcmToken,
     required String title,
     required String body,
-    required NotificationData? notificationData,
+    NotificationData? notificationData,
   }) {
     return _sendNotification(fcmToken, title, body, notificationData);
   }
