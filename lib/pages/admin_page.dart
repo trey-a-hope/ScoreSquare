@@ -8,13 +8,16 @@ import 'package:score_square/blocs/give_coins/give_coins_bloc.dart'
     as give_coins;
 import 'package:score_square/blocs/claim_winners/claim_winners_bloc.dart'
     as claim_winners_game;
+import 'package:score_square/blocs/delete_game/delete_game_bloc.dart'
+    as delete_game;
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
-import 'package:score_square/pages/select_game_page.dart';
-import 'package:score_square/pages/select_user_page.dart';
+import 'package:score_square/pages/select_item_page.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/user_service.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import '../service_locator.dart';
+import '../theme.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -33,13 +36,15 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text('Admin Page'),
+    return BasicPage(
+      title: 'Admin',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      body: ListView(
+      child: ListView(
         children: [
           ListTile(
             onTap: () {
@@ -56,7 +61,10 @@ class _AdminPageState extends State<AdminPage> {
             },
             leading: const Icon(Icons.sports_basketball),
             subtitle: const Text('Create a new game for users to bet on.'),
-            title: const Text('Create Game'),
+            title: Text(
+              'Create Game',
+              style: textTheme.headline4,
+            ),
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
@@ -75,7 +83,10 @@ class _AdminPageState extends State<AdminPage> {
             leading: const Icon(Icons.face),
             subtitle:
                 const Text('Give coins to winners and send notification.'),
-            title: const Text('Claim Winners'),
+            title: Text(
+              'Claim Winners',
+              style: textTheme.headline4,
+            ),
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
@@ -83,7 +94,10 @@ class _AdminPageState extends State<AdminPage> {
               List<GameModel> games = await locator<GameService>().list();
 
               Route route = MaterialPageRoute(
-                builder: (BuildContext context) => SelectGamePage(games: games),
+                builder: (BuildContext context) => SelectItemPage(
+                  items: games,
+                  type: 'Game',
+                ),
               );
 
               final result = await Navigator.push(context, route);
@@ -106,7 +120,10 @@ class _AdminPageState extends State<AdminPage> {
             leading: const Icon(Icons.update),
             subtitle: const Text(
                 'Modify score, status, and other details about game.'),
-            title: const Text('Update Game'),
+            title: Text(
+              'Update Game',
+              style: textTheme.headline4,
+            ),
             trailing: const Icon(Icons.chevron_right),
           ),
           ListTile(
@@ -115,7 +132,10 @@ class _AdminPageState extends State<AdminPage> {
                   await locator<UserService>().retrieveUsers();
 
               Route route = MaterialPageRoute(
-                builder: (BuildContext context) => SelectUserPage(users: users),
+                builder: (BuildContext context) => SelectItemPage(
+                  items: users,
+                  type: 'User',
+                ),
               );
 
               final result = await Navigator.push(context, route);
@@ -137,7 +157,46 @@ class _AdminPageState extends State<AdminPage> {
             },
             leading: const Icon(Icons.attach_money),
             subtitle: const Text('Add coins to a user account.'),
-            title: const Text('Give Coins'),
+            title: Text(
+              'Give Coins',
+              style: textTheme.headline4,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+          ),
+          ListTile(
+            onTap: () async {
+              List<GameModel> games = await locator<GameService>().list();
+
+              Route route = MaterialPageRoute(
+                builder: (BuildContext context) => SelectItemPage(
+                  items: games,
+                  type: 'Game',
+                ),
+              );
+
+              final result = await Navigator.push(context, route);
+
+              if (result == null) return;
+
+              final selectedGame = result as GameModel;
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
+                        delete_game.DeleteGameBloc(gameID: selectedGame.id!)
+                          ..add(delete_game.LoadPageEvent()),
+                    child: const delete_game.DeleteGamePage(),
+                  ),
+                ),
+              );
+            },
+            leading: const Icon(Icons.delete),
+            subtitle: const Text('Delete a game and it\'s bets.'),
+            title: Text(
+              'Delete Game',
+              style: textTheme.headline4,
+            ),
             trailing: const Icon(Icons.chevron_right),
           ),
         ],

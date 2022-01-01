@@ -16,6 +16,7 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/storage_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/services/util_service.dart';
+import 'package:score_square/widgets/basic_page.dart';
 
 import '../../service_locator.dart';
 
@@ -34,6 +35,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       emit(
         LoadedState(
           user: _user,
+          showSnackbarMessage: false,
         ),
       );
     });
@@ -55,6 +57,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       emit(
         LoadedState(
           user: _user,
+          showSnackbarMessage: true,
         ),
       );
     });
@@ -94,6 +97,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         emit(
           LoadedState(
             user: _user,
+            showSnackbarMessage: false,
           ),
         );
       } catch (error) {

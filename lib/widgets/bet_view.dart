@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
+import 'package:score_square/theme.dart';
 
 class BetView extends StatelessWidget {
   final BetModel bet;
@@ -30,9 +31,15 @@ class BetView extends StatelessWidget {
                 child: Container(
                   height: 200,
                   width: 200,
-                  color: Colors.grey.shade300,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Column(
                     children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -61,30 +68,40 @@ class BetView extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(game.toString()),
+                          Text(
+                            game.toString(),
+                            style: textTheme.headline6,
+                          ),
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(bet.homeDigit.toString()),
-                          Text(bet.awayDigit.toString()),
+                          Text(
+                            bet.homeDigit.toString(),
+                            style: textTheme.headline6,
+                          ),
+                          Text(
+                            bet.awayDigit.toString(),
+                            style: textTheme.headline6,
+                          ),
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Text(
                         bet.createdString(),
                         textAlign: TextAlign.center,
+                        style: textTheme.headline6,
                       )
                     ],
                   ),

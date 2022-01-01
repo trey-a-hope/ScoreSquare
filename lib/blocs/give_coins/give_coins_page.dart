@@ -17,13 +17,15 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Give Coins'),
-        centerTitle: true,
+    return BasicPage(
+      title: 'Give Coins',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      body: BlocConsumer<GiveCoinsBloc, GiveCoinsState>(
+      child: BlocConsumer<GiveCoinsBloc, GiveCoinsState>(
         builder: (context, state) {
           if (state is LoadingState) {
             return const CircularProgressIndicator();
@@ -34,9 +36,12 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomTextHeader(
-                  text:
-                      '${user.username} has ${user.coins} coins, how many coins do you want to give them?',
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    '${user.username} has ${user.coins} coins, how many coins do you want to give them?',
+                    style: textTheme.headline3,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -54,7 +59,7 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
                 ElevatedButton.icon(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green),
+                        MaterialStateProperty.all<Color>(colorDarkBlue),
                   ),
                   onPressed: () async {
                     int? coins = int.tryParse(_coinsController.text);

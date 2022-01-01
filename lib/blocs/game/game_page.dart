@@ -58,7 +58,10 @@ class _GamePageState extends State<GamePage> {
           ),
         ],
         if (user == null) ...[
-          Text(number),
+          Text(
+            number,
+            style: textTheme.headline6,
+          ),
         ]
       ]),
     );
@@ -115,14 +118,14 @@ class _GamePageState extends State<GamePage> {
           else if (claimedSquare.number[0] == currentBet[0] ||
               claimedSquare.number[1] == currentBet[1])
             _section(
-              color: Colors.green.shade500,
+              color: Colors.grey.shade300,
               user: claimedSquare.user,
               number: claimedSquare.number,
             ).inGridArea(claimedSquare.number)
           //Otherwise just display the number.
           else
             _section(
-              color: Colors.greenAccent,
+              color: Colors.white,
               user: claimedSquare.user,
               number: claimedSquare.number,
             ).inGridArea(claimedSquare.number),
@@ -130,20 +133,20 @@ class _GamePageState extends State<GamePage> {
         for (SquareModel unclaimedSquare in unclaimedSquares) ...[
           if (unclaimedSquare.number == currentBet)
             _section(
-              color: Colors.green.shade900,
+              color: Colors.grey.shade500,
               user: null,
               number: unclaimedSquare.number,
             ).inGridArea(unclaimedSquare.number)
           else if (unclaimedSquare.number[0] == currentBet[0] ||
               unclaimedSquare.number[1] == currentBet[1])
             _section(
-              color: Colors.green.shade500,
+              color: Colors.grey.shade300,
               user: unclaimedSquare.user,
               number: unclaimedSquare.number,
             ).inGridArea(unclaimedSquare.number)
           else
             _section(
-              color: Colors.greenAccent,
+              color: Colors.white,
               user: null,
               number: unclaimedSquare.number,
             ).inGridArea(unclaimedSquare.number)
@@ -170,254 +173,260 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GameBloc, GameState>(
-      builder: (context, state) {
-        if (state is LoadingState) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-
-        if (state is BetPurchaseSuccessState) {
-          BetModel bet = state.bet;
-          return Scaffold(
-            body: Container(
-              color: Colors.white,
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('You have purchased a bet for'),
-                    Text(
-                      '${bet.homeDigit}${bet.awayDigit}',
-                      style: _textStyleForDigit,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        'If the home team scores a digit ending in ${bet.homeDigit}, or the away team scores a digit ending in ${bet.awayDigit}, you win!',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      label: const Text('Done'),
-                      icon: const Icon(Icons.done),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.green),
-                      ),
-                      onPressed: () {
-                        context.read<GameBloc>().add(
-                              LoadPageEvent(),
-                            );
-                      },
-                    ),
-                  ],
+    return BasicPage(
+        leftIconButton: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        rightIconButton: IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () {
+            context.read<GameBloc>().add(
+                  LoadPageEvent(),
+                );
+          },
+        ),
+        child: BlocConsumer<GameBloc, GameState>(
+          builder: (context, state) {
+            if (state is LoadingState) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-            ),
-          );
-        }
+              );
+            }
 
-        if (state is LoadedState) {
-          GameModel game = state.game;
-          List<BetModel> bets = state.bets;
-          UserModel currentUser = state.currentUser;
-          List<UserModel> currentWinners = state.currentWinners;
-
-          return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.black,
-                title:
-                    Text('${game.homeTeam().name} vs ${game.awayTeam().name} '),
-                centerTitle: true,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () {
-                      context.read<GameBloc>().add(LoadPageEvent());
-                    },
-                  )
-                ],
-              ),
-              // drawer: const CustomAppDrawer(),
-              floatingActionButton: FloatingActionButton.extended(
-                // isExtended: true,
-                label: Text('You have ${currentUser.coins} coins'),
-                backgroundColor: currentUser.coins >= game.betPrice
-                    ? Colors.green
-                    : Colors.red,
-                onPressed: () async {
-                  _showPurchaseMoreCoinsModal(currentUser: currentUser);
-                },
-              ),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: game.homeTeam().imgUrl,
-                                height: 100,
-                              ),
-                              Text(game.homeTeam().name),
-                              Text('${game.homeTeamScore}'),
-                              Text(
-                                '${game.homeTeamScore % 10}',
-                                style: _textStyleForDigit,
-                              )
-                            ],
-                          ),
-                          const Text('vs.'),
-                          Column(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: game.awayTeam().imgUrl,
-                                height: 100,
-                              ),
-                              Text(game.awayTeam().name),
-                              Text('${game.awayTeamScore}'),
-                              Text(
-                                '${game.awayTeamScore % 10}',
-                                style: _textStyleForDigit,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Text('Winning Pot: ${bets.length * game.betPrice} coins'),
-                      Text('Total Bets:  ${bets.length}/$maxBetsPerGame'),
-
-                      //If the game has not ended and  the max bet count has not been reached...
-                      if (bets.length < maxBetsPerGame && game.isOpen()) ...[
-                        SizedBox(
-                          child: ElevatedButton.icon(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green),
-                            ),
-                            onPressed: () async {
-                              if (currentUser.coins >= game.betPrice) {
-                                bool? confirm = await locator<ModalService>()
-                                    .showConfirmation(
-                                        context: context,
-                                        title:
-                                            'Purchase Bet for ${game.betPrice} coins?',
-                                        message:
-                                            'Your bet will be placed at random.');
-
-                                if (confirm == null || confirm == false) {
-                                  return;
-                                }
-
-                                //TODO: Ensure the bet is random and cannot be duplicated...
-
-                                Random random = Random();
-                                context.read<GameBloc>().add(
-                                      PurchaseBetEvent(
-                                        awayDigit: random.nextInt(10),
-                                        homeDigit: random.nextInt(10),
-                                      ),
-                                    );
-                              } else {
-                                _showPurchaseMoreCoinsModal(
-                                    currentUser: currentUser);
-                              }
-                            },
-                            icon: const Icon(MdiIcons.currencyUsd),
-                            label:
-                                Text('Purchase Bet - ${game.betPrice} coins'),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      FutureBuilder(
-                        future: _buildLayoutGrid(
-                          bets: bets,
-                          currentBet:
-                              '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
-                        ),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<LayoutGrid> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: Text(
-                                    'Loading current bets for this game...'));
-                          } else {
-                            if (snapshot.hasError) {
-                              return Center(
-                                  child: Text('Error: ${snapshot.error}'));
-                            } else {
-                              return snapshot
-                                  .data!; // snapshot.data  :- get your object which is pass from your downloadData() function
-
-                            }
-                          }
-                        },
-                      ),
-                      if (currentWinners.isNotEmpty) ...[
+            if (state is BetPurchaseSuccessState) {
+              BetModel bet = state.bet;
+              return Scaffold(
+                body: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('You have purchased a bet for'),
                         Text(
-                            '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: currentWinners.length,
-                            itemBuilder: (
-                              context,
-                              index,
-                            ) {
-                              return ListTile(
-                                leading: CachedNetworkImage(
-                                  imageUrl: currentWinners[index].imgUrl == null
-                                      ? dummyProfileImageUrl
-                                      : currentWinners[index].imgUrl!,
-                                  imageBuilder: (context, imageProvider) =>
-                                      GFAvatar(
-                                    radius: 15,
-                                    backgroundImage: imageProvider,
-                                  ),
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                                title: Text(currentWinners[index].username),
-                              );
-                            })
+                          '${bet.homeDigit}${bet.awayDigit}',
+                          style: _textStyleForDigit,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            'If the home team scores a digit ending in ${bet.homeDigit}, or the away team scores a digit ending in ${bet.awayDigit}, you win!',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          label: const Text('Done'),
+                          icon: const Icon(Icons.done),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(colorDarkBlue),
+                          ),
+                          onPressed: () {
+                            context.read<GameBloc>().add(
+                                  LoadPageEvent(),
+                                );
+                          },
+                        ),
                       ],
-                      const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text('All bets are placed at random.')),
-                      const SizedBox(height: 200),
-                    ],
+                    ),
                   ),
                 ),
-              ));
-        }
+              );
+            }
 
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
-      listener: (context, state) {},
-    );
+            if (state is LoadedState) {
+              GameModel game = state.game;
+              List<BetModel> bets = state.bets;
+              UserModel currentUser = state.currentUser;
+              List<UserModel> currentWinners = state.currentWinners;
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: game.homeTeam().imgUrl,
+                              height: 100,
+                            ),
+                            Text(
+                              game.homeTeam().name,
+                              style: textTheme.headline3,
+                            ),
+                            Text(
+                              '${game.homeTeamScore}',
+                              style: textTheme.headline4,
+                            ),
+                            Text(
+                              '${game.homeTeamScore % 10}',
+                              style: _textStyleForDigit,
+                            )
+                          ],
+                        ),
+                        Text(
+                          'vs.',
+                          style: textTheme.headline3,
+                        ),
+                        Column(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: game.awayTeam().imgUrl,
+                              height: 100,
+                            ),
+                            Text(
+                              game.awayTeam().name,
+                              style: textTheme.headline3,
+                            ),
+                            Text(
+                              '${game.awayTeamScore}',
+                              style: textTheme.headline4,
+                            ),
+                            Text(
+                              '${game.awayTeamScore % 10}',
+                              style: _textStyleForDigit,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Winning Pot: ${bets.length * game.betPrice} coins',
+                      style: textTheme.headline4,
+                    ),
+                    Text(
+                      'Total Bets:  ${bets.length}/$maxBetsPerGame',
+                      style: textTheme.headline4,
+                    ),
+
+                    //If the game has not ended and  the max bet count has not been reached...
+                    if (bets.length < maxBetsPerGame && game.isOpen()) ...[
+                      SizedBox(
+                        child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              colorDarkBlue,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (currentUser.coins >= game.betPrice) {
+                              bool? confirm = await locator<ModalService>()
+                                  .showConfirmation(
+                                      context: context,
+                                      title:
+                                          'Purchase Bet for ${game.betPrice} coins?',
+                                      message:
+                                          'Your bet will be placed at random.');
+
+                              if (confirm == null || confirm == false) {
+                                return;
+                              }
+
+                              //TODO: Ensure the bet is random and cannot be duplicated...
+
+                              Random random = Random();
+                              context.read<GameBloc>().add(
+                                    PurchaseBetEvent(
+                                      awayDigit: random.nextInt(10),
+                                      homeDigit: random.nextInt(10),
+                                    ),
+                                  );
+                            } else {
+                              _showPurchaseMoreCoinsModal(
+                                  currentUser: currentUser);
+                            }
+                          },
+                          icon: const Icon(MdiIcons.currencyUsd),
+                          label: Text('Purchase Bet - ${game.betPrice} coins'),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    FutureBuilder(
+                      future: _buildLayoutGrid(
+                        bets: bets,
+                        currentBet:
+                            '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
+                      ),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<LayoutGrid> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: Text(
+                                  'Loading current bets for this game...'));
+                        } else {
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else {
+                            return snapshot
+                                .data!; // snapshot.data  :- get your object which is pass from your downloadData() function
+
+                          }
+                        }
+                      },
+                    ),
+                    if (currentWinners.isNotEmpty) ...[
+                      Text(
+                          '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: currentWinners.length,
+                          itemBuilder: (
+                            context,
+                            index,
+                          ) {
+                            return ListTile(
+                              leading: CachedNetworkImage(
+                                imageUrl: currentWinners[index].imgUrl == null
+                                    ? dummyProfileImageUrl
+                                    : currentWinners[index].imgUrl!,
+                                imageBuilder: (context, imageProvider) =>
+                                    GFAvatar(
+                                  radius: 15,
+                                  backgroundImage: imageProvider,
+                                ),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                              title: Text(currentWinners[index].username),
+                            );
+                          })
+                    ],
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text('All bets are placed at random.'),
+                    ),
+                    const SizedBox(height: 200),
+                  ],
+                ),
+              );
+            }
+
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+          listener: (context, state) {},
+        ),
+        title: 'Game');
   }
 }

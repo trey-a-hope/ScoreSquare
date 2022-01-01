@@ -8,8 +8,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class HomePageState extends State<HomePage> {
     );
 
     //Initialize Flutter Local Notifications Plugin.
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
     //Register Firebase onMessage.
@@ -95,33 +96,61 @@ class HomePageState extends State<HomePage> {
       android: androidPlatformChannelSpecifics,
       iOS: iOSChannelSpecifics,
     );
-    await flutterLocalNotificationsPlugin
+    await _flutterLocalNotificationsPlugin
         .show(0, title, body, platformChannelSpecifics, payload: 'test');
+  }
+
+  String _getGreeting() {
+    int hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Home'),
-        centerTitle: true,
+    return BasicPage(
+      title: 'Home',
+      scaffoldKey: _scaffoldKey,
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          _scaffoldKey.currentState!.openDrawer();
+        },
       ),
-      drawer: const CustomAppDrawer(pushNewRoute: false),
-      body: BlocConsumer<HomeBloc, HomeState>(
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.refresh),
+        onPressed: () {
+          context.read<HomeBloc>().add(LoadPageEvent());
+        },
+      ),
+      drawer: const CustomAppDrawer(
+        pushNewRoute: false,
+      ),
+      child: BlocConsumer<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {
-            return const Center(
-              child: Text(
-                'What content should go on the home page?',
-                style: TextStyle(
-                  color: Colors.black,
+            UserModel user = state.user;
+
+            return Column(
+              children: [
+                UserListTile(user: user),
+                const Spacer(),
+                Text(
+                  '${_getGreeting()}, and welcome to Score Square!',
+                  style: textTheme.headline4,
                 ),
-              ),
+              ],
             );
           }
 

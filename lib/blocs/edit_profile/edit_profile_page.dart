@@ -17,13 +17,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Edit Profile'),
-        centerTitle: true,
-      ),
-      body: BlocConsumer<EditProfileBloc, EditProfileState>(
+    return BasicPage(
+      child: BlocConsumer<EditProfileBloc, EditProfileState>(
         builder: (context, state) {
           if (state is LoadingState) {
             return const CircularProgressIndicator();
@@ -99,41 +94,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                       ),
                     ),
-                    const Spacer(),
-                    ElevatedButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.green),
-                      ),
-                      onPressed: () async {
-                        bool? confirm = await locator<ModalService>()
-                            .showConfirmation(
-                                context: context,
-                                title: 'Save Profile',
-                                message: 'Are you sure?');
-
-                        if (confirm == null || confirm == false) {
-                          return;
-                        }
-
-                        context.read<EditProfileBloc>().add(
-                              SaveEvent(
-                                username: _usernameController.text,
-                              ),
-                            );
-                      },
-                      icon: const Icon(Icons.save),
-                      label: const Text('Save'),
-                    ),
                   ],
                 ),
               ),
             );
           }
-
           return Container();
         },
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LoadedState) {
+            if (state.showSnackbarMessage) {
+              locator<ModalService>().showInSnackBar(
+                context: context,
+                message: 'Profile successfully updated.',
+              );
+            }
+          }
+        },
+      ),
+      title: 'Edit Profile',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.check),
+        onPressed: () async {
+          bool? confirm = await locator<ModalService>().showConfirmation(
+              context: context,
+              title: 'Save Profile',
+              message: 'Are you sure?');
+
+          if (confirm == null || confirm == false) {
+            return;
+          }
+
+          context.read<EditProfileBloc>().add(
+                SaveEvent(
+                  username: _usernameController.text,
+                ),
+              );
+        },
       ),
     );
   }

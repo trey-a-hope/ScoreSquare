@@ -22,92 +22,105 @@ class _ProfilePageState extends State<ProfilePage> {
     bool isMine =
         context.read<ProfileBloc>().uid == _userCredentialsBox.get('uid');
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Profile'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<ProfileBloc>().add(LoadPageEvent());
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          Visibility(
-            visible: isMine,
-            child: IconButton(
-              onPressed: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (BuildContext context) =>
-                          edit_profile.EditProfileBloc()
-                            ..add(
-                              edit_profile.LoadPageEvent(),
-                            ),
-                      child: const edit_profile.EditProfilePage(),
-                    ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.edit),
-            ),
-          )
-        ],
+    return BasicPage(
+      title: 'Profile',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      // drawer: const CustomAppDrawer(),
-      body: BlocConsumer<ProfileBloc, ProfileState>(
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.refresh),
+        onPressed: () {
+          context.read<ProfileBloc>().add(
+                LoadPageEvent(),
+              );
+        },
+      ),
+      child: BlocConsumer<ProfileBloc, ProfileState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {
             UserModel user = state.user;
             List<BetModel> bets = state.bets;
 
-            return SafeArea(
-              child: Center(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CachedNetworkImage(
-                        imageUrl: user.imgUrl == null
-                            ? dummyProfileImageUrl
-                            : user.imgUrl!,
-                        imageBuilder: (context, imageProvider) => GFAvatar(
-                          radius: 40,
-                          backgroundImage: imageProvider,
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: CachedNetworkImage(
+                    imageUrl: user.imgUrl == null
+                        ? dummyProfileImageUrl
+                        : user.imgUrl!,
+                    imageBuilder: (context, imageProvider) => GFAvatar(
+                      radius: 40,
+                      backgroundImage: imageProvider,
+                    ),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    '${user.username} | ${user.coins} coins',
+                    style: textTheme.headline4,
+                  ),
+                ),
+                Text(
+                  'My Bets',
+                  style: textTheme.headline2,
+                ),
+                bets.isEmpty
+                    ? const Text('No bets.')
+                    : SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: bets.length,
+                          itemBuilder: (context, index) {
+                            return BetView(bet: bets[index]);
+                          },
                         ),
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      ),
+                Visibility(
+                  visible: isMine,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) =>
+                                edit_profile.EditProfileBloc()
+                                  ..add(
+                                    edit_profile.LoadPageEvent(),
+                                  ),
+                            child: const edit_profile.EditProfilePage(),
+                          ),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        colorDarkBlue,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text('${user.username} | ${user.coins} coins'),
-                    ),
-                    const CustomTextHeader(text: 'My Bets'),
-                    bets.isEmpty
-                        ? const Text('No bets.')
-                        : SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount: bets.length,
-                              itemBuilder: (context, index) {
-                                return BetView(bet: bets[index]);
-                              },
-                            ),
-                          ),
-                  ],
-                ),
-              ),
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit Profile'),
+                  ),
+                )
+              ],
             );
           }
 

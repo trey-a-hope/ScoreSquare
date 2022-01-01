@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:score_square/services/user_service.dart';
+import 'package:score_square/theme.dart';
 import 'blocs/home/home_bloc.dart' as home;
 import 'constants.dart';
 import 'models/user_model.dart';
@@ -140,7 +141,10 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Score Square',
-      themeMode: ThemeMode.light,
+      theme: ThemeData(
+        primaryColor: colorWhite,
+        textTheme: textTheme,
+      ),
       home: StreamBuilder<User?>(
         stream: stream,
         builder: (context, snapshot) {

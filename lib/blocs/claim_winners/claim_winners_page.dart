@@ -17,13 +17,15 @@ class _ClaimWinnersPageState extends State<ClaimWinnersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text('Claim Winners'),
+    return BasicPage(
+      title: 'Claim Winners',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      body: BlocConsumer<ClaimWinnersBloc, ClaimWinnersState>(
+      child: BlocConsumer<ClaimWinnersBloc, ClaimWinnersState>(
         builder: (context, state) {
           if (state is LoadingState) {
             return const CircularProgressIndicator();
@@ -65,7 +67,9 @@ class _ClaimWinnersPageState extends State<ClaimWinnersPage> {
                               message: message,
                             );
 
-                            if (confirm == null || confirm == false) return;
+                            if (confirm == null || confirm == false) {
+                              return;
+                            }
 
                             context.read<ClaimWinnersBloc>().add(
                                   ClaimEvent(game: game),

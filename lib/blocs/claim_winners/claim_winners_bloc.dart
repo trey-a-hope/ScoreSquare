@@ -7,7 +7,8 @@ import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
-import 'package:score_square/widgets/game_list_tile.dart';
+import 'package:score_square/widgets/basic_page.dart';
+import 'package:score_square/widgets/list_tiles/game_list_tile.dart';
 import '../../service_locator.dart';
 
 part 'claim_winners_event.dart';

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import '../../service_locator.dart';
 
 part 'update_game_event.dart';

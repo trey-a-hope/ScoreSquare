@@ -16,17 +16,20 @@ class LoadedState extends CreateGameState {
     required this.homeTeam,
     required this.awayTeam,
     required this.showSnackbarMessage,
+    required this.startDateTime,
   });
 
   final NBATeamModel homeTeam;
   final NBATeamModel awayTeam;
   final bool showSnackbarMessage;
+  final DateTime startDateTime;
 
   @override
   List<Object> get props => [
         homeTeam,
         awayTeam,
         showSnackbarMessage,
+        startDateTime,
       ];
 }
 

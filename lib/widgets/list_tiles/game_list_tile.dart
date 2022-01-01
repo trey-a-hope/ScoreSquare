@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:score_square/theme.dart';
 
 class GameListTile extends StatelessWidget {
   final GameModel game;
@@ -52,11 +53,12 @@ class GameListTile extends StatelessWidget {
         ),
         title: Text(
           game.toString(),
-          style: const TextStyle(color: Colors.black),
+          style: textTheme.headline4,
           textAlign: TextAlign.center,
         ),
         subtitle: Text(
           _buildSubTitle(),
+          style: textTheme.subtitle2,
           textAlign: TextAlign.center,
         ),
         onTap: onTap,

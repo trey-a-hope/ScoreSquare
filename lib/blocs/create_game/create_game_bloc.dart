@@ -5,9 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/nba_team_model.dart';
+import 'package:score_square/pages/select_item_page.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
-import 'package:select_dialog/select_dialog.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import '../../service_locator.dart';
 
 part 'create_game_event.dart';
@@ -26,6 +27,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
           homeTeam: _homeTeam,
           awayTeam: _awayTeam,
           showSnackbarMessage: false,
+          startDateTime: _startDateTime,
         ),
       );
     });
@@ -37,6 +39,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
           homeTeam: _homeTeam,
           awayTeam: _awayTeam,
           showSnackbarMessage: false,
+          startDateTime: _startDateTime,
         ),
       );
     });
@@ -48,6 +51,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
           homeTeam: _homeTeam,
           awayTeam: _awayTeam,
           showSnackbarMessage: false,
+          startDateTime: _startDateTime,
         ),
       );
     });
@@ -59,6 +63,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
           homeTeam: _homeTeam,
           awayTeam: _awayTeam,
           showSnackbarMessage: false,
+          startDateTime: _startDateTime,
         ),
       );
     });
@@ -88,6 +93,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
           homeTeam: _homeTeam,
           awayTeam: _awayTeam,
           showSnackbarMessage: true,
+          startDateTime: _startDateTime,
         ),
       );
     });

@@ -8,7 +8,8 @@ import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
-import 'package:score_square/widgets/custom_text_header.dart';
+import 'package:score_square/theme.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import '../../service_locator.dart';
 
 part 'give_coins_event.dart';

@@ -15,13 +15,8 @@ class _CreateGamePageState extends State<CreateGamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Create Game'),
-        centerTitle: true,
-      ),
-      body: BlocConsumer<CreateGameBloc, CreateGameState>(
+    return BasicPage(
+      child: BlocConsumer<CreateGameBloc, CreateGameState>(
         builder: (context, state) {
           if (state is LoadingState) {
             return const CircularProgressIndicator();
@@ -30,6 +25,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
           if (state is LoadedState) {
             NBATeamModel homeTeam = state.homeTeam;
             NBATeamModel awayTeam = state.awayTeam;
+            DateTime startDateTime = state.startDateTime;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,71 +33,64 @@ class _CreateGamePageState extends State<CreateGamePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    InkWell(
-                      child: Text(homeTeam.name),
-                      onTap: () {
-                        SelectDialog.showModal<String>(
-                          context,
-                          label: 'Select Home Team',
-                          selectedValue: homeTeam.name,
-                          items: nbaTeams
-                              .map((nbaTeam) => nbaTeam.fullName())
-                              .toList(),
-                          onChange: (String selected) {
-                            NBATeamModel team = nbaTeams.firstWhere(
-                                (nbaTeam) => nbaTeam.name == selected);
-                            context.read<CreateGameBloc>().add(
-                                  ChangeHomeTeamEvent(team: team),
-                                );
-                          },
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          homeTeam.color,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Route route = MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SelectItemPage(items: nbaTeams, type: 'Team'),
                         );
+
+                        final result = await Navigator.push(context, route);
+
+                        if (result == null) return;
+
+                        final selectedTeam = result as NBATeamModel;
+
+                        context.read<CreateGameBloc>().add(
+                              ChangeHomeTeamEvent(team: selectedTeam),
+                            );
                       },
+                      icon: const Icon(Icons.sports_basketball),
+                      label: Text(homeTeam.name),
                     ),
                     const Text('vs.'),
-                    InkWell(
-                      child: Text(awayTeam.name),
-                      onTap: () {
-                        SelectDialog.showModal<String>(
-                          context,
-                          label: 'Select Away Team',
-                          selectedValue: awayTeam.name,
-                          items: nbaTeams.map((e) => e.name).toList(),
-                          onChange: (String selected) {
-                            NBATeamModel team = nbaTeams.firstWhere(
-                                (nbaTeam) => nbaTeam.name == selected);
-                            context.read<CreateGameBloc>().add(
-                                  ChangeAwayTeamEvent(team: team),
-                                );
-                          },
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          awayTeam.color,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Route route = MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SelectItemPage(items: nbaTeams, type: 'Team'),
                         );
+
+                        final result = await Navigator.push(context, route);
+
+                        if (result == null) return;
+
+                        final selectedTeam = result as NBATeamModel;
+
+                        context.read<CreateGameBloc>().add(
+                              ChangeAwayTeamEvent(team: selectedTeam),
+                            );
                       },
+                      icon: const Icon(Icons.sports_basketball),
+                      label: Text(awayTeam.name),
                     ),
                   ],
                 ),
-                // ElevatedButton.icon(
-                //   style: ButtonStyle(
-                //     backgroundColor:
-                //         MaterialStateProperty.all<Color>(Colors.green),
-                //   ),
-                //   onPressed: () async {
-                //     showDatePicker(
-                //       type: DateTimePickerType.dateTime,
-                //       context: context,
-                //       initialDate: DateTime.now(),
-                //       firstDate: DateTime.now(),
-                //       lastDate: DateTime.now().add(
-                //         const Duration(days: 30),
-                //       ),
-                //     );
-                //   },
-                //   icon: const Icon(Icons.save),
-                //   label: const Text('Show Date Time Picker'),
-                // ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: DateTimePicker(
                     type: DateTimePickerType.dateTime,
-                    initialValue: '',
+                    initialValue: startDateTime.toString(),
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(
                       const Duration(days: 30),
@@ -115,34 +104,9 @@ class _CreateGamePageState extends State<CreateGamePage> {
                           );
                     },
                     validator: (val) {
-                      print(val);
                       return null;
                     },
-                    onSaved: (val) => print(val),
                   ),
-                ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green),
-                  ),
-                  onPressed: () async {
-                    bool? confirm = await locator<ModalService>()
-                        .showConfirmation(
-                            context: context,
-                            title: 'Submit Game',
-                            message: 'Are you sure?');
-
-                    if (confirm == null || confirm == false) {
-                      return;
-                    }
-
-                    context.read<CreateGameBloc>().add(
-                          SubmitEvent(),
-                        );
-                  },
-                  icon: const Icon(Icons.save),
-                  label: const Text('Save'),
                 ),
               ],
             );
@@ -159,6 +123,28 @@ class _CreateGamePageState extends State<CreateGamePage> {
               );
             }
           }
+        },
+      ),
+      title: 'Create Game',
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.check),
+        onPressed: () async {
+          bool? confirm = await locator<ModalService>().showConfirmation(
+              context: context, title: 'Submit Game', message: 'Are you sure?');
+
+          if (confirm == null || confirm == false) {
+            return;
+          }
+
+          context.read<CreateGameBloc>().add(
+                SubmitEvent(),
+              );
         },
       ),
     );

@@ -11,4 +11,13 @@ class InitialState extends HomeState {}
 
 class LoadingState extends HomeState {}
 
-class LoadedState extends HomeState {}
+class LoadedState extends HomeState {
+  const LoadedState({
+    required this.user,
+  });
+
+  final UserModel user;
+
+  @override
+  List<Object> get props => [user];
+}

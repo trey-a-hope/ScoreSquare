@@ -21,8 +21,7 @@ class BetService implements IBetService {
   Future<void> purchaseBet(
       {required int coins, required BetModel bet, required String uid}) async {
     try {
-      Map<String, dynamic> success =
-          await _firestore.runTransaction((transaction) async {
+      await _firestore.runTransaction((transaction) async {
         //Get reference of new bet.
         final DocumentReference betDocRef = _betsDB.doc();
         bet.id = betDocRef.id;

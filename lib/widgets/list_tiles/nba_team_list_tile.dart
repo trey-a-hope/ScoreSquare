@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:score_square/models/user_model.dart';
-import '../constants.dart';
+import 'package:score_square/models/nba_team_model.dart';
+import 'package:score_square/theme.dart';
 
-class UserListTile extends StatelessWidget {
-  final UserModel user;
+class NBATeamListTile extends StatelessWidget {
+  final NBATeamModel team;
   final VoidCallback? onTap;
   final SlidableAction? slidableAction;
 
-  const UserListTile({
+  const NBATeamListTile({
     Key? key,
-    required this.user,
+    required this.team,
     this.onTap,
     this.slidableAction,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slidable(
       enabled: slidableAction != null,
-      key: ValueKey(user.hashCode),
+      key: ValueKey(team.hashCode),
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
         children: [
@@ -30,17 +30,18 @@ class UserListTile extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.imgUrl ?? dummyProfileImageUrl),
+          backgroundImage: NetworkImage(team.imgUrl),
         ),
         title: Text(
-          user.username,
-          style: const TextStyle(color: Colors.black),
-          textAlign: TextAlign.center,
+          '${team.city} ${team.name}',
+          style: textTheme.headline4,
+          textAlign: TextAlign.start,
         ),
         subtitle: Text(
-          'coins: ${user.coins}',
-          textAlign: TextAlign.center,
+          '${team.conference} Conference',
+          textAlign: TextAlign.start,
         ),
+        trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
       ),
     );

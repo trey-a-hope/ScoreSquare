@@ -9,6 +9,7 @@ import 'package:score_square/pages/admin_page.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/util_service.dart';
+import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/custom_shimmer.dart';
 import '../service_locator.dart';
 
@@ -33,14 +34,17 @@ class CustomAppDrawer extends StatelessWidget {
                   children: [
                     DrawerHeader(
                       child: Column(
-                        children: const [
+                        children: [
                           Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text('Hello...'),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Hello...',
+                              style: textTheme.headline4,
+                            ),
                           ),
-                          CustomShimmer(
+                          const CustomShimmer(
                             child: CircleAvatar(
-                              radius: 50.0,
+                              radius: 40.0,
                               backgroundImage: NetworkImage(
                                 dummyProfileImageUrl,
                               ),
@@ -80,10 +84,13 @@ class CustomAppDrawer extends StatelessWidget {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text('Hello, ${user.username}'),
+                              child: Text(
+                                'Hello, ${user.username}',
+                                style: textTheme.headline4,
+                              ),
                             ),
                             CircleAvatar(
-                              radius: 50.0,
+                              radius: 40.0,
                               backgroundImage: NetworkImage(
                                 imgUrl,
                               ),
@@ -103,7 +110,10 @@ class CustomAppDrawer extends StatelessWidget {
                       ),
                       ListTile(
                         leading: const Icon(Icons.home),
-                        title: const Text('Home'),
+                        title: Text(
+                          'Home',
+                          style: textTheme.headline4,
+                        ),
                         onTap: () {
                           //If already on the home page, prevent pushing a new home page.
                           if (pushNewRoute != null && pushNewRoute == true) {
@@ -124,7 +134,10 @@ class CustomAppDrawer extends StatelessWidget {
                       ),
                       ListTile(
                         leading: const Icon(Icons.sports_basketball),
-                        title: const Text('Games'),
+                        title: Text(
+                          'Games',
+                          style: textTheme.headline4,
+                        ),
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -142,7 +155,10 @@ class CustomAppDrawer extends StatelessWidget {
                       ),
                       ListTile(
                         leading: const Icon(Icons.person),
-                        title: const Text('Profile'),
+                        title: Text(
+                          'Profile',
+                          style: textTheme.headline4,
+                        ),
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -161,7 +177,10 @@ class CustomAppDrawer extends StatelessWidget {
                       if (user.isAdmin) ...[
                         ListTile(
                           leading: const Icon(Icons.admin_panel_settings),
-                          title: const Text('Admin'),
+                          title: Text(
+                            'Admin',
+                            style: textTheme.headline4,
+                          ),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -174,7 +193,10 @@ class CustomAppDrawer extends StatelessWidget {
                       const Spacer(),
                       ListTile(
                         leading: const Icon(Icons.logout),
-                        title: const Text('Logout'),
+                        title: Text(
+                          'Logout',
+                          style: textTheme.headline4,
+                        ),
                         onTap: () async {
                           bool? confirm = await locator<ModalService>()
                               .showConfirmation(

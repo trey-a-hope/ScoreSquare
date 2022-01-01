@@ -12,12 +12,16 @@ class InitialState extends EditProfileState {}
 class LoadingState extends EditProfileState {}
 
 class LoadedState extends EditProfileState {
-  const LoadedState({required this.user});
+  const LoadedState({
+    required this.user,
+    required this.showSnackbarMessage,
+  });
 
   final UserModel user;
+  final bool showSnackbarMessage;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, showSnackbarMessage];
 }
 
 class ErrorState extends EditProfileState {

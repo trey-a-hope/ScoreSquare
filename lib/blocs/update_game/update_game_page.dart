@@ -20,13 +20,32 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Update Game'),
-        centerTitle: true,
+    return BasicPage(
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      body: BlocConsumer<UpdateGameBloc, UpdateGameState>(
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.check),
+        onPressed: () async {
+          bool? confirm = await locator<ModalService>().showConfirmation(
+              context: context, title: 'Update Game', message: 'Are you sure?');
+
+          if (confirm == null || confirm == false) {
+            return;
+          }
+
+          context.read<UpdateGameBloc>().add(
+                SubmitEvent(
+                  homeTeamScore: int.parse(_homeTeamScoreController.text),
+                  awayTeamScore: int.parse(_awayTeamScoreController.text),
+                ),
+              );
+        },
+      ),
+      child: BlocConsumer<UpdateGameBloc, UpdateGameState>(
         builder: (context, state) {
           if (state is LoadingState) {
             return const CircularProgressIndicator();
@@ -89,34 +108,6 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                   icon: Icon(isOpen ? Icons.timelapse : Icons.check),
                   label: Text('Game ${isOpen ? 'not' : ''} ended'),
                 ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
-                  ),
-                  onPressed: () async {
-                    bool? confirm = await locator<ModalService>()
-                        .showConfirmation(
-                            context: context,
-                            title: 'Update Game',
-                            message: 'Are you sure?');
-
-                    if (confirm == null || confirm == false) {
-                      return;
-                    }
-
-                    context.read<UpdateGameBloc>().add(
-                          SubmitEvent(
-                            homeTeamScore:
-                                int.parse(_homeTeamScoreController.text),
-                            awayTeamScore:
-                                int.parse(_awayTeamScoreController.text),
-                          ),
-                        );
-                  },
-                  icon: const Icon(Icons.save),
-                  label: const Text('Save'),
-                ),
               ],
             );
           }
@@ -134,6 +125,7 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
           }
         },
       ),
+      title: 'Update Game',
     );
   }
 }

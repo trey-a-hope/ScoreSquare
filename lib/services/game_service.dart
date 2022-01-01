@@ -17,11 +17,14 @@ abstract class IGameService {
   Future<void> claimWinners(
       {required List<UserModel> winners, required GameModel game});
   Future<List<UserModel>> getWinners({required GameModel game});
+  Future<void> deleteGame({required String gameID});
 }
 
 class GameService implements IGameService {
   final CollectionReference _gamesDB =
       FirebaseFirestore.instance.collection('games');
+  final CollectionReference _betsDB =
+      FirebaseFirestore.instance.collection('bets');
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('users');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -110,11 +113,17 @@ class GameService implements IGameService {
       int totalCoins = game.betCount * game.betPrice;
 
       //Each user gets their piece of the pot.
-      int splitCoins = (totalCoins / winners.length).round();
+      int splitCoins =
+          winners.isEmpty ? 0 : (totalCoins / winners.length).round();
 
       //Run transactions to update each users pot amount.
-      Map<String, dynamic> success =
-          await _firestore.runTransaction((transaction) async {
+      await _firestore.runTransaction((transaction) async {
+        //Get game doc.
+        final DocumentReference gameDocRef = _gamesDB.doc(game.id);
+
+        //Set game to claimed.
+        transaction.update(gameDocRef, {'claimed': true});
+
         //Iterate over each winner.
         for (int i = 0; i < winners.length; i++) {
           //Get user.
@@ -136,12 +145,6 @@ class GameService implements IGameService {
             );
           }
         }
-
-        //Get game doc.
-        final DocumentReference gameDocRef = _gamesDB.doc(game.id);
-
-        //Set game to claimed.
-        transaction.update(gameDocRef, {'claimed': true});
 
         return {
           // any data related to transaction success
@@ -190,6 +193,51 @@ class GameService implements IGameService {
       return currentWinners;
     } catch (e) {
       throw Exception((e.toString));
+    }
+  }
+
+  @override
+  Future<void> deleteGame({required String gameID}) async {
+    try {
+      //Run transactions to delete game and all of its bets.
+      try {
+        await _firestore.runTransaction((transaction) async {
+          //Get game doc.
+          final DocumentReference gameDocRef = _gamesDB.doc(gameID);
+
+          //Delete game.
+          transaction.delete(gameDocRef);
+
+          //Fetch all bets for this game.
+          List<BetModel> bets =
+              await locator<BetService>().listByGame(gameID: gameID);
+
+          //Delete each bet.
+          for (int i = 0; i < bets.length; i++) {
+            //Get bet doc.
+            QuerySnapshot<Object?> doc =
+                (await _betsDB.where('gameID', isEqualTo: gameID).get());
+            DocumentReference betDocRef = doc.docs.first.reference;
+
+            transaction.delete(betDocRef);
+          }
+
+          return {
+            // any data related to transaction success
+          };
+        }, timeout: const Duration(seconds: 10));
+      } catch (e) {
+        throw Exception(
+          e.toString(),
+        );
+      }
+
+      // handle your app state here,outside the transaction handler
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
     }
   }
 }

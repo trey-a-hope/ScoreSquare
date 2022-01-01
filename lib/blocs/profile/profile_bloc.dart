@@ -9,10 +9,11 @@ import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/bet_service.dart';
 import 'package:score_square/services/user_service.dart';
+import 'package:score_square/theme.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/bet_view.dart';
 import 'package:score_square/blocs/edit_profile/edit_profile_bloc.dart'
     as edit_profile;
-import 'package:score_square/widgets/custom_text_header.dart';
 import '../../service_locator.dart';
 
 part 'profile_event.dart';

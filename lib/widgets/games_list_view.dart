@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/models/game_model.dart';
-import 'package:score_square/widgets/game_list_tile.dart';
 import 'package:score_square/blocs/game/game_bloc.dart';
+
+import 'list_tiles/game_list_tile.dart';
 
 class GamesListView extends StatelessWidget {
   final List<GameModel> games;
