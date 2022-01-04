@@ -10,18 +10,25 @@ abstract class UpdateGameEvent extends Equatable {
 class LoadPageEvent extends UpdateGameEvent {}
 
 class SubmitEvent extends UpdateGameEvent {
-  final int homeTeamScore;
-  final int awayTeamScore;
+  const SubmitEvent();
 
-  const SubmitEvent({
-    required this.homeTeamScore,
-    required this.awayTeamScore,
+  @override
+  List<Object> get props => [];
+}
+
+class UpdateScoreEvent extends UpdateGameEvent {
+  final bool isHome;
+  final int score;
+
+  const UpdateScoreEvent({
+    required this.isHome,
+    required this.score,
   });
 
   @override
   List<Object> get props => [
-        homeTeamScore,
-        awayTeamScore,
+        isHome,
+        score,
       ];
 }
 

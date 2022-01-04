@@ -136,7 +136,7 @@ class HomePageState extends State<HomePage> {
               children: [
                 UserListTile(user: user),
                 Text(
-                  'My Bets',
+                  'My Active Bets - ${bets.length}',
                   style: textTheme.headline4,
                 ),
                 bets.isEmpty

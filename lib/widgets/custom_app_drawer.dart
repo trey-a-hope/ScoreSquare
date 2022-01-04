@@ -129,6 +129,8 @@ class CustomAppDrawer extends StatelessWidget {
                                 ),
                               ),
                             );
+                          } else {
+                            Navigator.of(context).pop();
                           }
                         },
                       ),

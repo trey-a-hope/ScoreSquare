@@ -31,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _user = await locator<AuthService>().getCurrentUser();
 
       //Fetch bets for this user.
-      _bets = await locator<BetService>().listByUser(uid: _user.uid!);
+      _bets = await locator<BetService>().listByUserID(uid: _user.uid!);
 
       emit(
         LoadedState(

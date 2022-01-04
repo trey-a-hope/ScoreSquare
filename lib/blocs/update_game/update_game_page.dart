@@ -38,10 +38,7 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
           }
 
           context.read<UpdateGameBloc>().add(
-                SubmitEvent(
-                  homeTeamScore: int.parse(_homeTeamScoreController.text),
-                  awayTeamScore: int.parse(_awayTeamScoreController.text),
-                ),
+                const SubmitEvent(),
               );
         },
       ),
@@ -68,6 +65,20 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: TextField(
+                          onChanged: (val) {
+                            int? newHomeScore = int.tryParse(val);
+
+                            if (newHomeScore == null) {
+                              return;
+                            }
+
+                            context.read<UpdateGameBloc>().add(
+                                  UpdateScoreEvent(
+                                    isHome: true,
+                                    score: newHomeScore,
+                                  ),
+                                );
+                          },
                           controller: _homeTeamScoreController,
                           decoration: InputDecoration(
                               labelText: '${game.homeTeam().name} score'),
@@ -83,6 +94,20 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: TextField(
+                          onChanged: (val) {
+                            int? newAwayScore = int.tryParse(val);
+
+                            if (newAwayScore == null) {
+                              return;
+                            }
+
+                            context.read<UpdateGameBloc>().add(
+                                  UpdateScoreEvent(
+                                    isHome: false,
+                                    score: newAwayScore,
+                                  ),
+                                );
+                          },
                           controller: _awayTeamScoreController,
                           decoration: InputDecoration(
                               labelText: '${game.awayTeam().name} score'),
@@ -95,20 +120,22 @@ class _UpdateGamePageState extends State<UpdateGamePage> {
                     )
                   ],
                 ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        isOpen ? Colors.green : Colors.red),
-                  ),
-                  onPressed: () async {
-                    context.read<UpdateGameBloc>().add(
-                          ToggleIsOpenEvent(
-                            isOpen: isOpen,
-                          ),
-                        );
-                  },
-                  icon: Icon(isOpen ? Icons.timelapse : Icons.check),
-                  label: Text('Game ${isOpen ? 'not' : ''} ended'),
+                Row(
+                  children: [
+                    Text('Game ${isOpen ? '' : 'not'} open'),
+                    Switch(
+                      value: isOpen,
+                      onChanged: (value) {
+                        context.read<UpdateGameBloc>().add(
+                              ToggleIsOpenEvent(
+                                isOpen: value,
+                              ),
+                            );
+                      },
+                      activeTrackColor: Colors.lightGreenAccent,
+                      activeColor: Colors.green,
+                    ),
+                  ],
                 ),
               ],
             );

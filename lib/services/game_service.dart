@@ -165,7 +165,7 @@ class GameService implements IGameService {
     try {
       //Fetch bets.
       List<BetModel> bets =
-          await locator<BetService>().listByGame(gameID: game.id!);
+          await locator<BetService>().listByGameID(gameID: game.id!);
 
       //Fetch basic winners or jackpot winner.
       List<UserModel> currentWinners = [];
@@ -210,14 +210,12 @@ class GameService implements IGameService {
 
           //Fetch all bets for this game.
           List<BetModel> bets =
-              await locator<BetService>().listByGame(gameID: gameID);
+              await locator<BetService>().listByGameID(gameID: gameID);
 
           //Delete each bet.
           for (int i = 0; i < bets.length; i++) {
             //Get bet doc.
-            QuerySnapshot<Object?> doc =
-                (await _betsDB.where('gameID', isEqualTo: gameID).get());
-            DocumentReference betDocRef = doc.docs.first.reference;
+            DocumentReference betDocRef = _betsDB.doc(bets[i].id);
 
             transaction.delete(betDocRef);
           }

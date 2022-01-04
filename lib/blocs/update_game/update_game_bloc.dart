@@ -39,7 +39,25 @@ class UpdateGameBloc extends Bloc<UpdateGameEvent, UpdateGameState> {
       }
     });
     on<ToggleIsOpenEvent>((event, emit) async {
-      _isOpen = !event.isOpen;
+      _isOpen = event.isOpen;
+      emit(
+        LoadedState(
+          game: _game,
+          showSnackbarMessage: false,
+          isOpen: _isOpen,
+        ),
+      );
+    });
+    on<UpdateScoreEvent>((event, emit) async {
+      bool isHome = event.isHome;
+      int score = event.score;
+
+      if (isHome) {
+        _game.homeTeamScore = score;
+      } else {
+        _game.awayTeamScore = score;
+      }
+
       emit(
         LoadedState(
           game: _game,
@@ -51,8 +69,8 @@ class UpdateGameBloc extends Bloc<UpdateGameEvent, UpdateGameState> {
     on<SubmitEvent>((event, emit) async {
       try {
         await locator<GameService>().update(gameID: gameID, data: {
-          'homeTeamScore': event.homeTeamScore,
-          'awayTeamScore': event.awayTeamScore,
+          'homeTeamScore': _game.homeTeamScore,
+          'awayTeamScore': _game.awayTeamScore,
           'ends': _isOpen ? null : DateTime.now()
         });
 

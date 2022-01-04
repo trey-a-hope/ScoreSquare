@@ -131,6 +131,9 @@ class _AdminPageState extends State<AdminPage> {
               List<UserModel> users =
                   await locator<UserService>().retrieveUsers();
 
+              //Sort users by most recent.
+              users.sort((a, b) => b.created.compareTo(a.created));
+
               Route route = MaterialPageRoute(
                 builder: (BuildContext context) => SelectItemPage(
                   items: users,

@@ -8,6 +8,8 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final TextStyle _textStyleForDigit = const TextStyle(
     fontSize: 75,
     fontWeight: FontWeight.bold,
@@ -188,6 +190,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
+        scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -396,7 +399,6 @@ class _GamePageState extends State<GamePage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Divider(),
 
                     FutureBuilder(
                       future: _buildLayoutGrid(
@@ -455,7 +457,6 @@ class _GamePageState extends State<GamePage> {
                         }
                       },
                     ),
-                    const Divider(),
                     if (currentWinners.isNotEmpty) ...[
                       Text(
                           '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
@@ -468,47 +469,50 @@ class _GamePageState extends State<GamePage> {
                             shrinkWrap: true,
                             itemCount: currentWinners.length,
                             scrollDirection: Axis.horizontal,
-                            itemBuilder: (
-                              context,
-                              index,
-                            ) {
-                              return Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (BuildContext context) =>
-                                                profile.ProfileBloc(
-                                                    uid: currentWinners[index]
-                                                        .uid!)
-                                                  ..add(
-                                                    profile.LoadPageEvent(),
-                                                  ),
-                                            child: const profile.ProfilePage(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => BlocProvider(
+                                              create: (BuildContext context) =>
+                                                  profile.ProfileBloc(
+                                                      uid: currentWinners[index]
+                                                          .uid!)
+                                                    ..add(
+                                                      profile.LoadPageEvent(),
+                                                    ),
+                                              child:
+                                                  const profile.ProfilePage(),
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            currentWinners[index].imgUrl == null
+                                                ? dummyProfileImageUrl
+                                                : currentWinners[index].imgUrl!,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                GFAvatar(
+                                          radius: 30,
+                                          backgroundImage: imageProvider,
                                         ),
-                                      );
-                                    },
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          currentWinners[index].imgUrl == null
-                                              ? dummyProfileImageUrl
-                                              : currentWinners[index].imgUrl!,
-                                      imageBuilder: (context, imageProvider) =>
-                                          GFAvatar(
-                                        radius: 30,
-                                        backgroundImage: imageProvider,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
-                                      placeholder: (context, url) =>
-                                          const CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
                                     ),
-                                  ),
-                                  Text(currentWinners[index].username),
-                                ],
+                                    Text(currentWinners[index].username),
+                                  ],
+                                ),
                               );
                             },
                           ),
