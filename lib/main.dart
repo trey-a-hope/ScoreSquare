@@ -7,16 +7,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutterfire_ui/auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/theme.dart';
+
 import 'blocs/home/home_bloc.dart' as home;
 import 'constants.dart';
 import 'models/user_model.dart';
 import 'service_locator.dart';
-import 'package:flutterfire_ui/auth.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 //TODO
 //Use in-app purchases to allow users to buy "coins".
@@ -29,13 +30,6 @@ void main() async {
   await Firebase.initializeApp();
 
   setUpLocator();
-
-  //Build squares.
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 10; j++) {
-      squares.add('$i$j');
-    }
-  }
 
   //Set version and build numbers.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -126,7 +120,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    //Build stream.
+    //Build stream for listening to user authentication states.
     stream = FirebaseAuth.instance.authStateChanges().asyncMap(
           (user) => authStateChangesAsyncStream(user: user),
         );
