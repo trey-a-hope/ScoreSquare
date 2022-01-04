@@ -28,7 +28,9 @@ class _ClaimWinnersPageState extends State<ClaimWinnersPage> {
       child: BlocConsumer<ClaimWinnersBloc, ClaimWinnersState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {

@@ -19,6 +19,7 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/basic_page.dart';
+import 'package:score_square/widgets/custom_shimmer.dart';
 import '../../constants.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 

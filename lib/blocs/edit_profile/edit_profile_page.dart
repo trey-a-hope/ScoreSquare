@@ -21,7 +21,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {

@@ -48,24 +48,34 @@ class _ProfilePageState extends State<ProfilePage> {
 
           if (state is LoadedState) {
             UserModel user = state.user;
-            List<BetModel> bets = state.bets;
 
             return Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: CachedNetworkImage(
-                    imageUrl: user.imgUrl == null
-                        ? dummyProfileImageUrl
-                        : user.imgUrl!,
-                    imageBuilder: (context, imageProvider) => GFAvatar(
-                      radius: 40,
-                      backgroundImage: imageProvider,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (user.imgUrl != null) {
+                        locator<UtilService>().heroToImage(
+                          context: context,
+                          imgUrl: user.imgUrl!,
+                          tag: user.imgUrl!,
+                        );
+                      }
+                    },
+                    child: CachedNetworkImage(
+                      imageUrl: user.imgUrl == null
+                          ? dummyProfileImageUrl
+                          : user.imgUrl!,
+                      imageBuilder: (context, imageProvider) => GFAvatar(
+                        radius: 40,
+                        backgroundImage: imageProvider,
+                      ),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
                 ),
                 Padding(
@@ -75,23 +85,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: textTheme.headline4,
                   ),
                 ),
-                Text(
-                  'My Bets',
-                  style: textTheme.headline2,
-                ),
-                bets.isEmpty
-                    ? const Text('No bets.')
-                    : SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: bets.length,
-                          itemBuilder: (context, index) {
-                            return BetView(bet: bets[index]);
-                          },
-                        ),
-                      ),
                 Visibility(
                   visible: isMine,
                   child: ElevatedButton.icon(

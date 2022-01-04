@@ -6,6 +6,8 @@ abstract class IUtilService {
     required String imgUrl,
     required String tag,
   });
+
+  String getGreeting();
 }
 
 class UtilService extends IUtilService {
@@ -23,6 +25,18 @@ class UtilService extends IUtilService {
         },
       ),
     );
+  }
+
+  @override
+  String getGreeting() {
+    int hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
   }
 }
 
