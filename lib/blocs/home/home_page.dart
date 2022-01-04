@@ -100,17 +100,6 @@ class HomePageState extends State<HomePage> {
         .show(0, title, body, platformChannelSpecifics, payload: 'test');
   }
 
-  String _getGreeting() {
-    int hour = DateTime.now().hour;
-    if (hour < 12) {
-      return 'Good Morning';
-    }
-    if (hour < 17) {
-      return 'Good Afternoon';
-    }
-    return 'Good Evening';
-  }
-
   @override
   Widget build(BuildContext context) {
     return BasicPage(
@@ -141,13 +130,31 @@ class HomePageState extends State<HomePage> {
 
           if (state is LoadedState) {
             UserModel user = state.user;
+            List<BetModel> bets = state.bets;
 
             return Column(
               children: [
                 UserListTile(user: user),
+                Text(
+                  'My Bets',
+                  style: textTheme.headline4,
+                ),
+                bets.isEmpty
+                    ? const Text('No bets.')
+                    : SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: bets.length,
+                          itemBuilder: (context, index) {
+                            return BetView(bet: bets[index]);
+                          },
+                        ),
+                      ),
                 const Spacer(),
                 Text(
-                  '${_getGreeting()}, and welcome to Score Square!',
+                  '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
                   style: textTheme.headline4,
                 ),
               ],

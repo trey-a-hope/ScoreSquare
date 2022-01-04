@@ -12,12 +12,11 @@ class InitialState extends HomeState {}
 class LoadingState extends HomeState {}
 
 class LoadedState extends HomeState {
-  const LoadedState({
-    required this.user,
-  });
+  const LoadedState({required this.user, required this.bets});
 
   final UserModel user;
+  final List<BetModel> bets;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, bets];
 }

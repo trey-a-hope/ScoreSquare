@@ -106,7 +106,6 @@ class MyAppState extends State<MyApp> {
       modified: DateTime.now(),
       uid: user.uid,
       username: user.displayName!,
-      fcmToken: null,
       coins: initialCoinStart,
       isAdmin: false,
     );

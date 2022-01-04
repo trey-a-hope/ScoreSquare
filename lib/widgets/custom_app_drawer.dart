@@ -210,6 +210,7 @@ class CustomAppDrawer extends StatelessWidget {
                           await locator<AuthService>().signOut();
                         },
                       ),
+                      Text('Version $version + $buildNumber')
                     ],
                   ),
                 ),

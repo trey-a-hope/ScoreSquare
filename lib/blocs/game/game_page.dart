@@ -171,6 +171,20 @@ class _GamePageState extends State<GamePage> {
         message: 'Setup [purchase more coins] feature.');
   }
 
+  //Return true if the list of bets do no contain the digit combination.
+  bool _betIsUnique(
+      {required List<BetModel> bets,
+      required int homeDigit,
+      required int awayDigit}) {
+    for (int i = 0; i < bets.length; i++) {
+      if (bets[i].homeDigit == homeDigit && bets[i].awayDigit == awayDigit) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BasicPage(
@@ -298,18 +312,32 @@ class _GamePageState extends State<GamePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      'Winning Pot: ${bets.length * game.betPrice} coins',
-                      style: textTheme.headline4,
-                    ),
-                    Text(
-                      'Total Bets:  ${bets.length}/$maxBetsPerGame',
-                      style: textTheme.headline4,
-                    ),
 
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.attach_money),
+                      title: Text(
+                        'Winning Pot',
+                        style: textTheme.headline3,
+                      ),
+                      subtitle: Text(
+                        '${bets.length * game.betPrice} coins',
+                        style: textTheme.headline4,
+                      ),
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: Text(
+                        'Total Bets',
+                        style: textTheme.headline3,
+                      ),
+                      subtitle: Text(
+                        '${bets.length} / $maxBetsPerGame',
+                        style: textTheme.headline4,
+                      ),
+                    ),
+                    const Divider(),
                     //If the game has not ended and  the max bet count has not been reached...
                     if (bets.length < maxBetsPerGame && game.isOpen()) ...[
                       SizedBox(
@@ -321,6 +349,7 @@ class _GamePageState extends State<GamePage> {
                           ),
                           onPressed: () async {
                             if (currentUser.coins >= game.betPrice) {
+                              //Prompt user for purchasing this bet.
                               bool? confirm = await locator<ModalService>()
                                   .showConfirmation(
                                       context: context,
@@ -333,13 +362,25 @@ class _GamePageState extends State<GamePage> {
                                 return;
                               }
 
-                              //TODO: Ensure the bet is random and cannot be duplicated...
-
+                              //Create random bet.
                               Random random = Random();
+
+                              late int awayDigit;
+                              late int homeDigit;
+
+                              //Generate new random bets until a unique one is found.
+                              do {
+                                awayDigit = random.nextInt(10);
+                                homeDigit = random.nextInt(10);
+                              } while (!_betIsUnique(
+                                  bets: bets,
+                                  awayDigit: awayDigit,
+                                  homeDigit: homeDigit));
+
                               context.read<GameBloc>().add(
                                     PurchaseBetEvent(
-                                      awayDigit: random.nextInt(10),
-                                      homeDigit: random.nextInt(10),
+                                      awayDigit: awayDigit,
+                                      homeDigit: homeDigit,
                                     ),
                                   );
                             } else {
@@ -355,6 +396,8 @@ class _GamePageState extends State<GamePage> {
                     const SizedBox(
                       height: 30,
                     ),
+                    const Divider(),
+
                     FutureBuilder(
                       future: _buildLayoutGrid(
                         bets: bets,
@@ -365,9 +408,42 @@ class _GamePageState extends State<GamePage> {
                           AsyncSnapshot<LayoutGrid> snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: Text(
-                                  'Loading current bets for this game...'));
+                          return Column(
+                            children: [
+                              const Text('Loading bets for this game...'),
+                              CustomShimmer(
+                                child: LayoutGrid(
+                                  areas: '''
+                    00 01 02 03 04 05 06 07 08 09
+                    10 11 12 13 14 15 16 17 18 19
+                    20 21 22 23 24 25 26 27 28 29
+                    30 31 32 33 34 35 36 37 38 39
+                    40 41 42 43 44 45 46 47 48 49
+                    50 51 52 53 54 55 56 57 58 59
+                    60 61 62 63 64 65 66 67 68 69
+                    70 71 72 73 74 75 76 77 78 79
+                    80 81 82 83 84 85 86 87 88 89
+                    90 91 92 93 94 95 96 97 98 99
+                  ''',
+                                  columnSizes: repeat(10, [
+                                    (MediaQuery.of(context).size.width / 10).px
+                                  ]),
+                                  rowSizes: repeat(10, [
+                                    (MediaQuery.of(context).size.width / 10).px
+                                  ]),
+                                  children: [
+                                    for (int i = 0; i < 100; i++) ...[
+                                      _section(
+                                        color: Colors.grey.shade300,
+                                        user: null,
+                                        number: '$i',
+                                      ).inGridArea('$i')
+                                    ]
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
                         } else {
                           if (snapshot.hasError) {
                             return Center(
@@ -375,45 +451,74 @@ class _GamePageState extends State<GamePage> {
                           } else {
                             return snapshot
                                 .data!; // snapshot.data  :- get your object which is pass from your downloadData() function
-
                           }
                         }
                       },
                     ),
+                    const Divider(),
                     if (currentWinners.isNotEmpty) ...[
                       Text(
                           '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: currentWinners.length,
-                          itemBuilder: (
-                            context,
-                            index,
-                          ) {
-                            return ListTile(
-                              leading: CachedNetworkImage(
-                                imageUrl: currentWinners[index].imgUrl == null
-                                    ? dummyProfileImageUrl
-                                    : currentWinners[index].imgUrl!,
-                                imageBuilder: (context, imageProvider) =>
-                                    GFAvatar(
-                                  radius: 15,
-                                  backgroundImage: imageProvider,
-                                ),
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                              title: Text(currentWinners[index].username),
-                            );
-                          })
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SizedBox(
+                          height: 90,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: currentWinners.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (
+                              context,
+                              index,
+                            ) {
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                            create: (BuildContext context) =>
+                                                profile.ProfileBloc(
+                                                    uid: currentWinners[index]
+                                                        .uid!)
+                                                  ..add(
+                                                    profile.LoadPageEvent(),
+                                                  ),
+                                            child: const profile.ProfilePage(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          currentWinners[index].imgUrl == null
+                                              ? dummyProfileImageUrl
+                                              : currentWinners[index].imgUrl!,
+                                      imageBuilder: (context, imageProvider) =>
+                                          GFAvatar(
+                                        radius: 30,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                  ),
+                                  Text(currentWinners[index].username),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      )
                     ],
                     const Padding(
                       padding: EdgeInsets.all(20),
                       child: Text('All bets are placed at random.'),
                     ),
-                    const SizedBox(height: 200),
                   ],
                 ),
               );

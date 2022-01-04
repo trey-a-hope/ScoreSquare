@@ -19,7 +19,9 @@ class _DeleteGamePageState extends State<DeleteGamePage> {
       child: BlocConsumer<DeleteGameBloc, DeleteGameState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {

@@ -16,7 +16,7 @@ class UserModel {
     required this.modified,
     required this.created,
     required this.username,
-    required this.fcmToken,
+    this.fcmToken,
     required this.coins,
     required this.isAdmin,
   });

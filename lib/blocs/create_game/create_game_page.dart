@@ -19,7 +19,9 @@ class _CreateGamePageState extends State<CreateGamePage> {
       child: BlocConsumer<CreateGameBloc, CreateGameState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {

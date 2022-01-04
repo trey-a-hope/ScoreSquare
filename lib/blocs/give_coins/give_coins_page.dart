@@ -25,10 +25,35 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
           Navigator.of(context).pop();
         },
       ),
+      rightIconButton: IconButton(
+        icon: const Icon(Icons.check),
+        onPressed: () async {
+          int? coins = int.tryParse(_coinsController.text);
+
+          if (coins == null) return;
+
+          bool? confirm = await locator<ModalService>().showConfirmation(
+              context: context,
+              title: 'Send $coins coins to this user?',
+              message: 'Are you sure?');
+
+          if (confirm == null || confirm == false) {
+            return;
+          }
+
+          context.read<GiveCoinsBloc>().add(
+                SubmitEvent(
+                  coins: coins,
+                ),
+              );
+        },
+      ),
       child: BlocConsumer<GiveCoinsBloc, GiveCoinsState>(
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is LoadedState) {
@@ -55,35 +80,6 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
                       FilteringTextInputFormatter.digitsOnly
                     ], // Only numbers can be entered
                   ),
-                ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(colorDarkBlue),
-                  ),
-                  onPressed: () async {
-                    int? coins = int.tryParse(_coinsController.text);
-
-                    if (coins == null) return;
-
-                    bool? confirm = await locator<ModalService>()
-                        .showConfirmation(
-                            context: context,
-                            title: 'Send ${user.username} $coins coins?',
-                            message: 'Are you sure?');
-
-                    if (confirm == null || confirm == false) {
-                      return;
-                    }
-
-                    context.read<GiveCoinsBloc>().add(
-                          SubmitEvent(
-                            coins: coins,
-                          ),
-                        );
-                  },
-                  icon: const Icon(Icons.attach_money),
-                  label: const Text('Send Coins'),
                 ),
               ],
             );
