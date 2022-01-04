@@ -21,7 +21,7 @@ class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
 
   GiveCoinsBloc({required String uid}) : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
-      _user = await locator<AuthService>().getCurrentUser();
+      _user = await locator<UserService>().retrieveUser(uid: uid);
 
       emit(
         LoadedState(user: _user),
@@ -48,7 +48,7 @@ class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
       }
 
       //Fetch updated user.
-      _user = await locator<AuthService>().getCurrentUser();
+      _user = await locator<UserService>().retrieveUser(uid: uid);
 
       emit(
         LoadedState(user: _user, snackbarMessage: 'Coins given successfully.'),
