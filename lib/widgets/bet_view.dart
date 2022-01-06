@@ -120,7 +120,7 @@ class BetView extends StatelessWidget {
                             height: 5,
                           ),
                           Text(
-                            bet.createdString(),
+                            bet.placedTimeAgo(),
                             textAlign: TextAlign.center,
                             style: textTheme.headline6,
                           )

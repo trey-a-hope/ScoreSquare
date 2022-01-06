@@ -56,4 +56,8 @@ class BetModel {
   String createdString() {
     return 'Placed ${locator<FormatService>().eMMMddhmmaa(date: created)}';
   }
+
+  String placedTimeAgo() {
+    return 'Bet placed ${locator<FormatService>().timeAgo(date: created)}';
+  }
 }

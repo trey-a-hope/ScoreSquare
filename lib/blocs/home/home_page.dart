@@ -139,20 +139,20 @@ class HomePageState extends State<HomePage> {
                   'My Active Bets - ${bets.length}',
                   style: textTheme.headline4,
                 ),
-                bets.isEmpty
-                    ? const Text('No bets.')
-                    : SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
+                Expanded(
+                  child: bets.isEmpty
+                      ? const Text('No bets.')
+                      : GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200,
+                                  childAspectRatio: 1,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20),
                           itemCount: bets.length,
-                          itemBuilder: (context, index) {
-                            return BetView(bet: bets[index]);
-                          },
-                        ),
-                      ),
-                const Spacer(),
+                          itemBuilder: (BuildContext ctx, index) =>
+                              BetView(bet: bets[index])),
+                ),
                 Text(
                   '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
                   style: textTheme.headline4,
