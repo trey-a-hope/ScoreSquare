@@ -13,11 +13,37 @@ part 'games_page.dart';
 part 'games_state.dart';
 
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
+  late List<GameModel> _games;
   GamesBloc() : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
       emit(LoadingState());
-      List<GameModel> games = await locator<GameService>().list();
-      emit(LoadedState(games: games));
+      _games = await locator<GameService>().list();
+      emit(LoadedState(games: _games));
+    });
+    on<UpdateSortEvent>((event, emit) async {
+      emit(LoadingState());
+
+      //Update sort order.
+      switch (event.sort) {
+        case 'created':
+          if (event.descending) {
+            _games.sort((a, b) => b.created.compareTo(a.created));
+          } else {
+            _games.sort((a, b) => a.created.compareTo(b.created));
+          }
+          break;
+        case 'betCount':
+          if (event.descending) {
+            _games.sort((a, b) => a.betCount.compareTo(b.betCount));
+          } else {
+            _games.sort((a, b) => b.betCount.compareTo(a.betCount));
+          }
+          break;
+        default:
+          break;
+      }
+
+      emit(LoadedState(games: _games));
     });
   }
 }

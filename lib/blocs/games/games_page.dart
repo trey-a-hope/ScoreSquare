@@ -8,6 +8,11 @@ class GamesPage extends StatefulWidget {
 }
 
 class _GamesPageState extends State<GamesPage> {
+  List<bool> isSelected = [
+    false,
+    false,
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -16,6 +21,68 @@ class _GamesPageState extends State<GamesPage> {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.sort),
+        onPressed: () {
+          showModalBottomSheet<void>(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            context: context,
+            builder: (BuildContext _) {
+              return SizedBox(
+                height: 200,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          'Sort games by...',
+                          style: textTheme.headline4,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                              context.read<GamesBloc>().add(
+                                    const UpdateSortEvent(
+                                      sort: 'created',
+                                      descending: false,
+                                    ),
+                                  );
+                            },
+                            child: const Text('Created Date'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                              context.read<GamesBloc>().add(
+                                    const UpdateSortEvent(
+                                      sort: 'betCount',
+                                      descending: false,
+                                    ),
+                                  );
+                            },
+                            child: const Text('Bet Count'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
       title: 'Games',
       leftIconButton: IconButton(
         icon: const Icon(Icons.chevron_left),
