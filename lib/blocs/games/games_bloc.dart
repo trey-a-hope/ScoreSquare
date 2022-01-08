@@ -25,11 +25,11 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
 
       //Update sort order.
       switch (event.sort) {
-        case 'created':
+        case 'starts':
           if (event.descending) {
-            _games.sort((a, b) => b.created.compareTo(a.created));
+            _games.sort((a, b) => b.starts.compareTo(a.starts));
           } else {
-            _games.sort((a, b) => a.created.compareTo(b.created));
+            _games.sort((a, b) => a.starts.compareTo(b.starts));
           }
           break;
         case 'betCount':

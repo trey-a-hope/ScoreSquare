@@ -14,6 +14,7 @@ import 'package:score_square/widgets/bet_view.dart';
 import 'package:score_square/widgets/custom_app_drawer.dart';
 import 'package:score_square/widgets/list_tiles/user_list_tile.dart';
 import '../../service_locator.dart';
+import 'package:score_square/blocs/game/game_bloc.dart' as game;
 
 part 'home_event.dart';
 part 'home_state.dart';

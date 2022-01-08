@@ -150,8 +150,18 @@ class HomePageState extends State<HomePage> {
                                   crossAxisSpacing: 20,
                                   mainAxisSpacing: 20),
                           itemCount: bets.length,
-                          itemBuilder: (BuildContext ctx, index) =>
-                              BetView(bet: bets[index])),
+                          itemBuilder: (BuildContext ctx, index) => BetView(
+                            bet: bets[index],
+                            openBuilder: BlocProvider(
+                              create: (BuildContext context) => game.GameBloc(
+                                gameID: bets[index].gameID,
+                              )..add(
+                                  game.LoadPageEvent(),
+                                ),
+                              child: const game.GamePage(),
+                            ),
+                          ),
+                        ),
                 ),
                 Text(
                   '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',

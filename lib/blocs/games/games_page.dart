@@ -53,12 +53,12 @@ class _GamesPageState extends State<GamesPage> {
 
                               context.read<GamesBloc>().add(
                                     const UpdateSortEvent(
-                                      sort: 'created',
+                                      sort: 'starts',
                                       descending: false,
                                     ),
                                   );
                             },
-                            child: const Text('Created Date'),
+                            child: const Text('Start Date'),
                           ),
                           ElevatedButton(
                             onPressed: () {
