@@ -409,4 +409,4 @@ const String googleProviderConfigurationClientId =
     '237172304059-dmu4491ov8fiqloss7v7e11gb3smugil.apps.googleusercontent.com';
 
 //Durations
-const int transitionDuration = 1000;
+const int transitionDuration = 500;

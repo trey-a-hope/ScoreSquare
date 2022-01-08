@@ -42,6 +42,12 @@ void main() async {
   //Open hive boxes.
   await Hive.openBox<String>(hiveBoxUserCredentials);
 
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.green,
+    ),
+  );
+
   runApp(
     const MyApp(),
   );
@@ -137,6 +143,9 @@ class MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: colorWhite,
         textTheme: textTheme,
+        appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
       ),
       home: StreamBuilder<User?>(
         stream: stream,
