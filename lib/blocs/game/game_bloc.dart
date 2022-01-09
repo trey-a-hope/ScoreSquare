@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
@@ -20,6 +19,7 @@ import 'package:score_square/services/user_service.dart';
 import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/custom_shimmer.dart';
+import 'package:score_square/widgets/user_circle_avatar.dart';
 import '../../constants.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 

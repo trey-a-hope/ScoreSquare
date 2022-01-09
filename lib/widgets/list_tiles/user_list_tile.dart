@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/format_service.dart';
-import '../../constants.dart';
+import 'package:score_square/services/util_service.dart';
 import '../../service_locator.dart';
+import '../user_circle_avatar.dart';
 
 class UserListTile extends StatelessWidget {
   final UserModel user;
@@ -31,8 +32,17 @@ class UserListTile extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.imgUrl ?? dummyProfileImageUrl),
+        leading: UserCircleAvatar(
+          uid: user.uid!,
+          onTap: () {
+            if (user.imgUrl != null) {
+              locator<UtilService>().heroToImage(
+                context: context,
+                imgUrl: user.imgUrl!,
+                tag: user.imgUrl!,
+              );
+            }
+          },
         ),
         title: Text(
           user.username,

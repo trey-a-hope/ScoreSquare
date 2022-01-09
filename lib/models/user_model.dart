@@ -9,6 +9,7 @@ class UserModel {
   String username;
   int coins;
   bool isAdmin;
+  bool isOnline;
 
   UserModel({
     required this.uid,
@@ -19,6 +20,7 @@ class UserModel {
     this.fcmToken,
     required this.coins,
     required this.isAdmin,
+    required this.isOnline,
   });
 
   factory UserModel.fromDoc({required DocumentSnapshot data}) {
@@ -31,6 +33,7 @@ class UserModel {
       fcmToken: data['fcmToken'],
       coins: data['coins'],
       isAdmin: data['isAdmin'],
+      isOnline: data['isOnline'],
     );
   }
 
@@ -44,6 +47,7 @@ class UserModel {
       'fcmToken': fcmToken,
       'coins': coins,
       'isAdmin': isAdmin,
+      'isOnline': isOnline,
     };
   }
 }

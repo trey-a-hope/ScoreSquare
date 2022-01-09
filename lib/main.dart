@@ -13,7 +13,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/theme.dart';
-
 import 'blocs/home/home_bloc.dart' as home;
 import 'constants.dart';
 import 'models/user_model.dart';
@@ -114,6 +113,7 @@ class MyAppState extends State<MyApp> {
       username: user.displayName!,
       coins: initialCoinStart,
       isAdmin: false,
+      isOnline: true,
     );
 
     await locator<UserService>().createUser(user: newUser);

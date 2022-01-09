@@ -7,14 +7,38 @@ class HomePage extends StatefulWidget {
   State createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  static final Box<dynamic> _userCredentialsBox =
+      Hive.box<String>(hiveBoxUserCredentials);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        locator<UserService>().updateUser(
+          uid: _userCredentialsBox.get('uid'),
+          data: {'isOnline': true},
+        );
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        locator<UserService>().updateUser(
+          uid: _userCredentialsBox.get('uid'),
+          data: {'isOnline': false},
+        );
+        break;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance!.addObserver(this);
 
     //Setup Flutter Local Notifications
     const initializationSettingsAndroid =
@@ -62,6 +86,12 @@ class HomePageState extends State<HomePage> {
         body,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   Future<String?> onSelectNotification(String? payload) async {

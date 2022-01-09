@@ -11,6 +11,7 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/util_service.dart';
 import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/custom_shimmer.dart';
+import 'package:score_square/widgets/user_circle_avatar.dart';
 import '../service_locator.dart';
 
 class CustomAppDrawer extends StatelessWidget {
@@ -71,10 +72,6 @@ class CustomAppDrawer extends StatelessWidget {
             } else {
               UserModel user = snapshot.data!;
 
-              String imgUrl = user.imgUrl == null
-                  ? 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'
-                  : user.imgUrl!;
-
               return Drawer(
                 child: SafeArea(
                   child: Column(
@@ -89,22 +86,19 @@ class CustomAppDrawer extends StatelessWidget {
                                 style: textTheme.headline4,
                               ),
                             ),
-                            CircleAvatar(
-                              radius: 40.0,
-                              backgroundImage: NetworkImage(
-                                imgUrl,
-                              ),
-                              backgroundColor: Colors.transparent,
-                              child: GestureDetector(
-                                onTap: () {
+                            UserCircleAvatar(
+                              uid: user.uid!,
+                              radius: 40,
+                              onTap: () {
+                                if (user.imgUrl != null) {
                                   locator<UtilService>().heroToImage(
                                     context: context,
-                                    imgUrl: imgUrl,
-                                    tag: imgUrl,
+                                    imgUrl: user.imgUrl!,
+                                    tag: user.imgUrl!,
                                   );
-                                },
-                              ),
-                            ),
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),

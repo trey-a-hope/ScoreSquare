@@ -53,7 +53,9 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: GestureDetector(
+                  child: UserCircleAvatar(
+                    uid: user.uid!,
+                    radius: 40,
                     onTap: () {
                       if (user.imgUrl != null) {
                         locator<UtilService>().heroToImage(
@@ -63,19 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       }
                     },
-                    child: CachedNetworkImage(
-                      imageUrl: user.imgUrl == null
-                          ? dummyProfileImageUrl
-                          : user.imgUrl!,
-                      imageBuilder: (context, imageProvider) => GFAvatar(
-                        radius: 40,
-                        backgroundImage: imageProvider,
-                      ),
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
                   ),
                 ),
                 Padding(

@@ -32,7 +32,9 @@ class _GamePageState extends State<GamePage> {
       color: color,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         if (user != null) ...[
-          GestureDetector(
+          UserCircleAvatar(
+            uid: user.uid!,
+            radius: 15,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -47,16 +49,6 @@ class _GamePageState extends State<GamePage> {
                 ),
               );
             },
-            child: CachedNetworkImage(
-              imageUrl:
-                  user.imgUrl == null ? dummyProfileImageUrl : user.imgUrl!,
-              imageBuilder: (context, imageProvider) => GFAvatar(
-                radius: 15,
-                backgroundImage: imageProvider,
-              ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-            ),
           ),
         ],
         if (user == null) ...[
@@ -475,7 +467,8 @@ class _GamePageState extends State<GamePage> {
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 child: Column(
                                   children: [
-                                    GestureDetector(
+                                    UserCircleAvatar(
+                                      uid: currentWinners[index].uid!,
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
@@ -493,22 +486,6 @@ class _GamePageState extends State<GamePage> {
                                           ),
                                         );
                                       },
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            currentWinners[index].imgUrl == null
-                                                ? dummyProfileImageUrl
-                                                : currentWinners[index].imgUrl!,
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                GFAvatar(
-                                          radius: 30,
-                                          backgroundImage: imageProvider,
-                                        ),
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ),
                                     ),
                                     Text(currentWinners[index].username),
                                   ],
