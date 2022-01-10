@@ -307,7 +307,50 @@ class _GamePageState extends State<GamePage> {
                         ),
                       ],
                     ),
-
+                    const Divider(),
+                    //If the game has not started...
+                    if (game.starts.isBefore(DateTime.now())) ...[
+                      ListTile(
+                        leading: const Icon(Icons.timer),
+                        title: Text(
+                          'Game Starts',
+                          style: textTheme.headline3,
+                        ),
+                        subtitle: Text(
+                          locator<FormatService>()
+                              .eMMMddhmmaa(date: game.starts),
+                          style: textTheme.headline4,
+                        ),
+                      ),
+                    ],
+                    //If the game has started...
+                    if (game.starts.isAfter(DateTime.now())) ...[
+                      ListTile(
+                        leading: const Icon(Icons.timer),
+                        title: Text(
+                          'Game Started',
+                          style: textTheme.headline3,
+                        ),
+                        subtitle: Text(
+                          locator<FormatService>().timeAgo(date: game.starts),
+                          style: textTheme.headline4,
+                        ),
+                      ),
+                    ],
+                    //If game has ended...
+                    if (!game.isOpen()) ...[
+                      ListTile(
+                        leading: const Icon(Icons.timer),
+                        title: Text(
+                          'Game Ended',
+                          style: textTheme.headline3,
+                        ),
+                        subtitle: Text(
+                          locator<FormatService>().timeAgo(date: game.ends!),
+                          style: textTheme.headline4,
+                        ),
+                      ),
+                    ],
                     const Divider(),
                     ListTile(
                       leading: const Icon(Icons.attach_money),
