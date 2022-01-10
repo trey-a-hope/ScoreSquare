@@ -64,66 +64,80 @@ class BetView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: game.homeTeam().imgUrl,
-                              imageBuilder: (context, imageProvider) =>
-                                  GFAvatar(
-                                backgroundColor: Colors.transparent,
-                                radius: 30,
-                                backgroundImage: imageProvider,
-                              ),
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                            //Home Team
+                            Column(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: game.homeTeam().imgUrl,
+                                  imageBuilder: (context, imageProvider) =>
+                                      GFAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    radius: 30,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      game.homeTeam().name,
+                                      style: textTheme.headline6,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  bet.homeDigit.toString(),
+                                  style: textTheme.headline2,
+                                ),
+                              ],
                             ),
-                            CachedNetworkImage(
-                              imageUrl: game.awayTeam().imgUrl,
-                              imageBuilder: (context, imageProvider) =>
-                                  GFAvatar(
-                                backgroundColor: Colors.transparent,
-                                radius: 30,
-                                backgroundImage: imageProvider,
-                              ),
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              game.toString(),
-                              style: textTheme.headline6,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              bet.homeDigit.toString(),
-                              style: textTheme.headline6,
-                            ),
-                            Text(
-                              bet.awayDigit.toString(),
-                              style: textTheme.headline6,
+                            //Away Team
+                            Column(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: game.awayTeam().imgUrl,
+                                  imageBuilder: (context, imageProvider) =>
+                                      GFAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    radius: 30,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      game.awayTeam().name,
+                                      style: textTheme.headline6,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  bet.awayDigit.toString(),
+                                  style: textTheme.headline2,
+                                ),
+                              ],
                             ),
                           ],
                         ),

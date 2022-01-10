@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:score_square/services/user_service.dart';
+import '../service_locator.dart';
 
 abstract class IUtilService {
   void heroToImage({
@@ -8,6 +10,8 @@ abstract class IUtilService {
   });
 
   String getGreeting();
+
+  void setOnlineStatus({required String? uid, required bool isOnline});
 }
 
 class UtilService extends IUtilService {
@@ -37,6 +41,13 @@ class UtilService extends IUtilService {
       return 'Good Afternoon';
     }
     return 'Good Evening';
+  }
+
+  @override
+  void setOnlineStatus({required String? uid, required bool isOnline}) {
+    if (uid != null) {
+      locator<UserService>().updateUser(uid: uid, data: {'isOnline': isOnline});
+    }
   }
 }
 

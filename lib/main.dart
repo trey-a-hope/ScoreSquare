@@ -12,6 +12,7 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:score_square/services/user_service.dart';
+import 'package:score_square/services/util_service.dart';
 import 'package:score_square/theme.dart';
 import 'blocs/home/home_bloc.dart' as home;
 import 'constants.dart';
@@ -142,12 +143,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     String? uid = _userCredentialsBox.get('uid');
-    if (uid != null) {
-      if (state == AppLifecycleState.resumed) {
-        locator<UserService>().updateUser(uid: uid, data: {'isOnline': true});
-      } else {
-        locator<UserService>().updateUser(uid: uid, data: {'isOnline': false});
-      }
+    if (state == AppLifecycleState.resumed) {
+      locator<UtilService>().setOnlineStatus(uid: uid, isOnline: true);
+    } else {
+      locator<UtilService>().setOnlineStatus(uid: uid, isOnline: false);
     }
   }
 
@@ -203,6 +202,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   ],
                 );
               } else {
+                String? uid = _userCredentialsBox.get('uid');
+                locator<UtilService>()
+                    .setOnlineStatus(uid: uid, isOnline: true);
+
                 return BlocProvider(
                   create: (BuildContext context) => home.HomeBloc()
                     ..add(

@@ -68,6 +68,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Text(
+                    user.isOnline ? 'Online' : 'Offline',
+                    style: TextStyle(
+                      color: user.isOnline ? Colors.lightGreen : Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     '${user.username} | ${user.coins} coins',

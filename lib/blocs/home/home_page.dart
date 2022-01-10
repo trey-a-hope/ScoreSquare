@@ -166,6 +166,7 @@ class HomePageState extends State<HomePage> {
                 Text(
                   '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
                   style: textTheme.headline4,
+                  textAlign: TextAlign.center,
                 ),
               ],
             );
