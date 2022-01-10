@@ -43,7 +43,7 @@ void main() async {
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.green,
+      statusBarColor: Colors.black,
     ),
   );
 
@@ -59,7 +59,7 @@ class MyApp extends StatefulWidget {
   State createState() => MyAppState();
 }
 
-class MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   MyAppState();
 
   static final Box<dynamic> _userCredentialsBox =
@@ -129,6 +129,26 @@ class MyAppState extends State<MyApp> {
     stream = FirebaseAuth.instance.authStateChanges().asyncMap(
           (user) => authStateChangesAsyncStream(user: user),
         );
+
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    String? uid = _userCredentialsBox.get('uid');
+    if (uid != null) {
+      if (state == AppLifecycleState.resumed) {
+        locator<UserService>().updateUser(uid: uid, data: {'isOnline': true});
+      } else {
+        locator<UserService>().updateUser(uid: uid, data: {'isOnline': false});
+      }
+    }
   }
 
   @override
@@ -144,7 +164,7 @@ class MyAppState extends State<MyApp> {
         primaryColor: colorWhite,
         textTheme: textTheme,
         appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
       home: StreamBuilder<User?>(

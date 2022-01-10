@@ -72,9 +72,11 @@ class GameListTile extends StatelessWidget {
           },
           closedBuilder: (context, action) => ListTile(
             leading: CircleAvatar(
+              backgroundColor: Colors.transparent,
               backgroundImage: NetworkImage(game.homeTeam().imgUrl),
             ),
             trailing: CircleAvatar(
+              backgroundColor: Colors.transparent,
               backgroundImage: NetworkImage(game.awayTeam().imgUrl),
             ),
             title: Text(

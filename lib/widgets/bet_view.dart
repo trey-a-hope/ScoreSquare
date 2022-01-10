@@ -75,7 +75,8 @@ class BetView extends StatelessWidget {
                               imageUrl: game.homeTeam().imgUrl,
                               imageBuilder: (context, imageProvider) =>
                                   GFAvatar(
-                                radius: 40,
+                                backgroundColor: Colors.transparent,
+                                radius: 30,
                                 backgroundImage: imageProvider,
                               ),
                               placeholder: (context, url) =>
@@ -87,7 +88,8 @@ class BetView extends StatelessWidget {
                               imageUrl: game.awayTeam().imgUrl,
                               imageBuilder: (context, imageProvider) =>
                                   GFAvatar(
-                                radius: 40,
+                                backgroundColor: Colors.transparent,
+                                radius: 30,
                                 backgroundImage: imageProvider,
                               ),
                               placeholder: (context, url) =>
