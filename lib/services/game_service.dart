@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
+import 'package:score_square/models/notification_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/services/user_service.dart';
@@ -10,13 +11,23 @@ import 'bet_service.dart';
 
 abstract class IGameService {
   Future<void> create({required GameModel game});
+
   Future<GameModel> read({required String gameID});
+
   Future<void> update(
       {required String gameID, required Map<String, dynamic> data});
+
   Future<List<GameModel>> list({bool? closed, bool? claimed});
-  Future<void> claimWinners(
-      {required List<UserModel> winners, required GameModel game});
+
+  Future<void> claimGame(
+      {required List<UserModel> winners,
+      required List<UserModel> losers,
+      required GameModel game});
+
   Future<List<UserModel>> getWinners({required GameModel game});
+
+  Future<List<UserModel>> getParticipants({required GameModel game});
+
   Future<void> deleteGame({required String gameID});
 }
 
@@ -106,8 +117,11 @@ class GameService implements IGameService {
   }
 
   @override
-  Future<void> claimWinners(
-      {required List<UserModel> winners, required GameModel game}) async {
+  Future<void> claimGame({
+    required List<UserModel> winners,
+    required List<UserModel> losers,
+    required GameModel game,
+  }) async {
     try {
       //Determine how big the pot is.
       int totalCoins = game.betCount * game.betPrice;
@@ -137,11 +151,55 @@ class GameService implements IGameService {
 
           //Send notification to user.
           if (user.fcmToken != null) {
+            String title = 'YOU WON $splitCoins COINS';
+            String message = game.toString();
+
+            //Send push notification.
             await locator<FCMNotificationService>().sendNotificationToUser(
               fcmToken: user.fcmToken!,
-              title: 'YOU WON $splitCoins COINS',
-              body: game.toString(),
+              title: title,
+              body: message,
               notificationData: null,
+            );
+
+            //Add notification to database.
+            await locator<UserService>().createNotification(
+              uid: user.uid!,
+              notification: NotificationModel(
+                title: title,
+                message: message,
+                isRead: false,
+                created: DateTime.now(),
+              ),
+            );
+          }
+        }
+
+        //Iterate over each loser.
+        for (int i = 0; i < losers.length; i++) {
+          UserModel loser = losers[i];
+          //Send notification to user.
+          if (loser.fcmToken != null) {
+            String title = 'Sorry, you did not win this game.';
+            String message = game.toString();
+
+            //Send push notification.
+            await locator<FCMNotificationService>().sendNotificationToUser(
+              fcmToken: loser.fcmToken!,
+              title: title,
+              body: message,
+              notificationData: null,
+            );
+
+            //Add notification to database.
+            await locator<UserService>().createNotification(
+              uid: loser.uid!,
+              notification: NotificationModel(
+                title: title,
+                message: message,
+                isRead: false,
+                created: DateTime.now(),
+              ),
             );
           }
         }
@@ -236,6 +294,31 @@ class GameService implements IGameService {
       throw Exception(
         e.toString(),
       );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> getParticipants({required GameModel game}) async {
+    try {
+      //Fetch bets.
+      List<BetModel> bets =
+          await locator<BetService>().listByGameID(gameID: game.id!);
+
+      //Fetch all participants.
+      List<UserModel> participants = [];
+      for (int i = 0; i < bets.length; i++) {
+        //If this user is not in the list already, add them to the list of participants.
+        if (participants
+                .indexWhere((participant) => participant.uid == bets[i].uid) <
+            0) {
+          participants.add(
+            await locator<UserService>().retrieveUser(uid: bets[i].uid),
+          );
+        }
+      }
+      return participants;
+    } catch (e) {
+      throw Exception((e.toString));
     }
   }
 }
