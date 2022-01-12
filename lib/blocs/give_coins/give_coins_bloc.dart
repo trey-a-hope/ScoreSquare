@@ -3,17 +3,19 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:score_square/models/notification_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/basic_page.dart';
+
 import '../../service_locator.dart';
 
 part 'give_coins_event.dart';
-part 'give_coins_state.dart';
 part 'give_coins_page.dart';
+part 'give_coins_state.dart';
 
 class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
   late UserModel _user;
@@ -39,10 +41,24 @@ class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
 
       //Send notification to user.
       if (_user.fcmToken != null) {
+        const String title = 'YOU JUST GOT SOME COINS';
+        final String message = '$coins to be exact.';
+
         await locator<FCMNotificationService>().sendNotificationToUser(
           fcmToken: _user.fcmToken!,
-          title: 'YOU JUST GOT SOME COINS',
-          body: '$coins to be exact.',
+          title: title,
+          body: message,
+        );
+
+        //Add notification to database.
+        await locator<UserService>().createNotification(
+          uid: _user.uid!,
+          notification: NotificationModel(
+            title: title,
+            message: message,
+            isRead: false,
+            created: DateTime.now(),
+          ),
         );
       }
 
