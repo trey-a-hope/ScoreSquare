@@ -1,8 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:score_square/models/game_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:score_square/models/game_model.dart';
 import 'package:score_square/theme.dart';
+
 import '../../constants.dart';
 
 class GameListTile extends StatelessWidget {
@@ -19,21 +20,6 @@ class GameListTile extends StatelessWidget {
     this.openBuilder,
   }) : super(key: key);
 
-  String _buildSubTitle() {
-    switch (game.status()) {
-      //Not started.
-      case 0:
-        return game.startDate();
-      //Active.
-      case 1:
-      //Ended.
-      case 2:
-      //Claimed.
-      case 3:
-      default:
-        return game.details();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +41,9 @@ class GameListTile extends StatelessWidget {
           closedShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: game.homeTeam().color,
+              color: game
+                  .homeTeam()
+                  .color,
               width: 2,
             ),
           ),
@@ -70,27 +58,32 @@ class GameListTile extends StatelessWidget {
               return Container();
             }
           },
-          closedBuilder: (context, action) => ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              backgroundImage: NetworkImage(game.homeTeam().imgUrl),
-            ),
-            trailing: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              backgroundImage: NetworkImage(game.awayTeam().imgUrl),
-            ),
-            title: Text(
-              game.toString(),
-              style: textTheme.headline4,
-              textAlign: TextAlign.center,
-            ),
-            subtitle: Text(
-              _buildSubTitle(),
-              style: textTheme.subtitle2,
-              textAlign: TextAlign.center,
-            ),
-            onTap: onTap,
-          ),
+          closedBuilder: (context, action) =>
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(game
+                      .homeTeam()
+                      .imgUrl),
+                ),
+                trailing: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(game
+                      .awayTeam()
+                      .imgUrl),
+                ),
+                title: Text(
+                  game.toString(),
+                  style: textTheme.headline4,
+                  textAlign: TextAlign.center,
+                ),
+                subtitle: Text(
+                  '${game.startDateRelation()}\n${game.details()}',
+                  style: textTheme.subtitle1,
+                  textAlign: TextAlign.center,
+                ),
+                onTap: onTap,
+              ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/services/format_service.dart';
+
 import '../service_locator.dart';
 
 class GameModel {
@@ -11,7 +12,6 @@ class GameModel {
   int homeTeamID;
   int homeTeamScore;
   int betPrice;
-  //int status; //-1 - Not Started, 0 - In Progress, 1 - Ended, 2 - Claimed.
   int betCount;
   DateTime starts;
   DateTime? ends;
@@ -103,11 +103,25 @@ class GameModel {
   }
 
   String details() {
-    return 'score: $homeTeamScore - $awayTeamScore, bet price: $betPrice, bet count: $betCount';
+    return 'score ($homeTeamScore - $awayTeamScore) bets ($betCount/$maxBetsPerGame)';
   }
 
-  String startDate() {
-    return 'Game starts ${locator<FormatService>().eMMMddhmmaa(date: starts)}';
+  String startDateRelation() {
+    switch (status()) {
+      //Not started.
+      case 0:
+        return 'Game starts ${locator<FormatService>().eMMMddhmmaa(date: starts)}';
+      //Active.
+      case 1:
+        return 'Game started ${locator<FormatService>().timeAgo(date: starts)}';
+      //Ended.
+      case 2:
+      //Claimed.
+      case 3:
+        return 'Game ended ${locator<FormatService>().timeAgo(date: ends!)}';
+      default:
+        return 'YOU SHOULDN\'T SEE THIS';
+    }
   }
 
   @override

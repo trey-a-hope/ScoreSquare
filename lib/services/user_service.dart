@@ -1,13 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:score_square/models/notification_model.dart';
 import 'package:score_square/models/user_model.dart';
 
 abstract class IUserService {
   Future<void> createUser({required UserModel user});
+
   Future<UserModel> retrieveUser({required String uid});
+
   Future<List<UserModel>> retrieveUsers({int? limit, String? orderBy});
+
   Stream<QuerySnapshot> streamUsers();
+
   Future<void> updateUser(
       {required String uid, required Map<String, dynamic> data});
+
+  Future<void> createNotification(
+      {required String uid, required NotificationModel notification});
+
+  Future<List<NotificationModel>> listNotifications({required String uid});
+
+    Future<void> updateNotification(
+      {required String uid, required String notificationID, required Map<String, dynamic> data});
+
+
+    Future<void> deleteNotification(
+      {required String uid, required String notificationID,});
 }
 
 class UserService extends IUserService {
@@ -82,6 +99,66 @@ class UserService extends IUserService {
           .docs
           .map((doc) => UserModel.fromDoc(data: doc))
           .toList();
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> createNotification(
+      {required String uid, required NotificationModel notification}) async {
+    try {
+      DocumentReference<Map<String, dynamic>> notificationDocRef =
+          _usersDB.doc(uid).collection('notifications').doc();
+
+      notification.id = notificationDocRef.id;
+
+      await notificationDocRef.set(notification.toMap());
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<NotificationModel>> listNotifications(
+      {required String uid}) async {
+    try {
+      Query query = _usersDB.doc(uid).collection('notifications');
+
+      return (await query.get())
+          .docs
+          .map((doc) => NotificationModel.fromDoc(data: doc))
+          .toList();
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> updateNotification({required String uid, required String notificationID, required Map<String, dynamic> data}) async  {
+    try {
+       await _usersDB.doc(uid).collection('notifications').doc(notificationID).update(data);
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteNotification({required String uid, required String notificationID}) async {
+    try {
+       await _usersDB.doc(uid).collection('notifications').doc(notificationID).delete();
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),

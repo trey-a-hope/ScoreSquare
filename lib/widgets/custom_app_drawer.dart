@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/blocs/games/games_bloc.dart' as games;
+import 'package:score_square/blocs/notifications/notifications_bloc.dart' as notifications;
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/admin_page.dart';
@@ -165,6 +167,27 @@ class CustomAppDrawer extends StatelessWidget {
                                         profile.LoadPageEvent(),
                                       ),
                                 child: const profile.ProfilePage(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(MdiIcons.bellAlert),
+                        title: Text(
+                          'Notifications',
+                          style: textTheme.headline4,
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                notifications.NotificationsBloc(uid: user.uid!)
+                                  ..add(
+                                    notifications.LoadPageEvent(),
+                                  ),
+                                child:   notifications.NotificationsPage(uid: user.uid!),
                               ),
                             ),
                           );
