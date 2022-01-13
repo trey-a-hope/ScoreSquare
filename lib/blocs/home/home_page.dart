@@ -163,11 +163,13 @@ class HomePageState extends State<HomePage> {
                           ),
                         ),
                 ),
-                Text(
-                  '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
-                  style: textTheme.headline4,
-                  textAlign: TextAlign.center,
-                ),
+                Center(
+                  child: Text(
+                    '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
+                    style: textTheme.headline4,
+                    textAlign: TextAlign.center,
+                  ),
+                )
               ],
             );
           }
