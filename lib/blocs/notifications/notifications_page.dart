@@ -28,19 +28,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
       rightIconButton: IconButton(
         icon: const Icon(Icons.check),
         onPressed: () async {
+          bool? confirm = await locator<ModalService>().showConfirmation(
+            context: context,
+            title: 'Mark All As Read',
+            message: 'Are you sure?',
+          );
 
-
-                            bool? confirm =
-                                await locator<ModalService>().showConfirmation(
-                              context: context,
-                              title: 'Mark All As Read',
-                              message: 'Are you sure?',
-                            );
-
-                            if (confirm == null || confirm == false) {
-                              return;
-                            }
-                                      context.read<NotificationsBloc>().add(
+          if (confirm == null || confirm == false) {
+            return;
+          }
+          context.read<NotificationsBloc>().add(
                 MarkAllAsReadEvent(),
               );
         },
@@ -55,11 +52,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
           if (state is LoadedState) {
             List<NotificationModel> notifications = state.notifications;
-            return notifications.isEmpty ? const Center(child: Text('No notifications.')) : ListView.builder(itemCount: notifications.length, itemBuilder: (context, index) {
-              return NotificationListTile(uid: widget.uid, notification: notifications[index], refreshPage: (){
-                context.read<NotificationsBloc>().add(LoadPageEvent());
-              },);
-            });
+            return notifications.isEmpty
+                ? const Center(child: Text('No notifications.'))
+                : ListView.builder(
+                    itemCount: notifications.length,
+                    itemBuilder: (context, index) {
+                      return NotificationListTile(
+                        uid: widget.uid,
+                        notification: notifications[index],
+                        refreshPage: () {
+                          context
+                              .read<NotificationsBloc>()
+                              .add(LoadPageEvent());
+                        },
+                      );
+                    },
+                  );
           }
 
           return Container();

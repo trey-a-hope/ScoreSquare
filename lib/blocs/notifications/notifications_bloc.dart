@@ -20,29 +20,36 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   late List<NotificationModel> _notifications;
 
   NotificationsBloc({required this.uid}) : super(InitialState()) {
-    on<LoadPageEvent>((event, emit) async  {
-      emit(LoadingState());
+    on<LoadPageEvent>(
+      (event, emit) async {
+        emit(LoadingState());
 
+        _notifications =
+            await locator<UserService>().listNotifications(uid: uid);
 
+        emit(LoadedState(notifications: _notifications));
+      },
+    );
 
-  _notifications =     await locator<UserService>().listNotifications(uid: uid);
+    on<MarkAllAsReadEvent>(
+      (event, emit) async {
+        emit(LoadingState());
 
-      emit(  LoadedState(notifications: _notifications));
-    },);
+        //Mark all as read.
+        for (int i = 0; i < _notifications.length; i++) {
+          await locator<UserService>().updateNotification(
+            uid: uid,
+            notificationID: _notifications[i].id!,
+            data: {'isRead': true},
+          );
+        }
 
-        on<MarkAllAsReadEvent>((event, emit) async  {
-      emit(LoadingState());
+        //Reload notifications.
+        _notifications =
+            await locator<UserService>().listNotifications(uid: uid);
 
-//Mark all as read.
-for(int i = 0; i < _notifications.length; i++){
-  await locator<UserService>().updateNotification(uid: uid, notificationID:   _notifications[i].id!, data: {'isRead': true},);
- }
-
-//Reload notifications.
-   _notifications =     await locator<UserService>().listNotifications(uid: uid);
-
-
-      emit(  LoadedState(notifications: _notifications));
-    },);
+        emit(LoadedState(notifications: _notifications));
+      },
+    );
   }
 }

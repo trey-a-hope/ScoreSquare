@@ -19,12 +19,15 @@ abstract class IUserService {
 
   Future<List<NotificationModel>> listNotifications({required String uid});
 
-    Future<void> updateNotification(
-      {required String uid, required String notificationID, required Map<String, dynamic> data});
+  Future<void> updateNotification(
+      {required String uid,
+      required String notificationID,
+      required Map<String, dynamic> data});
 
-
-    Future<void> deleteNotification(
-      {required String uid, required String notificationID,});
+  Future<void> deleteNotification({
+    required String uid,
+    required String notificationID,
+  });
 }
 
 class UserService extends IUserService {
@@ -131,7 +134,7 @@ class UserService extends IUserService {
     try {
       Query query = _usersDB.doc(uid).collection('notifications');
 
-      return (await query.get())
+      return (await query.orderBy('created', descending: true).get())
           .docs
           .map((doc) => NotificationModel.fromDoc(data: doc))
           .toList();
@@ -143,9 +146,16 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<void> updateNotification({required String uid, required String notificationID, required Map<String, dynamic> data}) async  {
+  Future<void> updateNotification(
+      {required String uid,
+      required String notificationID,
+      required Map<String, dynamic> data}) async {
     try {
-       await _usersDB.doc(uid).collection('notifications').doc(notificationID).update(data);
+      await _usersDB
+          .doc(uid)
+          .collection('notifications')
+          .doc(notificationID)
+          .update(data);
       return;
     } catch (e) {
       throw Exception(
@@ -155,9 +165,14 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<void> deleteNotification({required String uid, required String notificationID}) async {
+  Future<void> deleteNotification(
+      {required String uid, required String notificationID}) async {
     try {
-       await _usersDB.doc(uid).collection('notifications').doc(notificationID).delete();
+      await _usersDB
+          .doc(uid)
+          .collection('notifications')
+          .doc(notificationID)
+          .delete();
       return;
     } catch (e) {
       throw Exception(

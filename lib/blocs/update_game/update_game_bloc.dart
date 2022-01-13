@@ -20,6 +20,8 @@ class UpdateGameBloc extends Bloc<UpdateGameEvent, UpdateGameState> {
 
   UpdateGameBloc({required this.gameID}) : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
+      emit(LoadingState());
+
       try {
         //Fetch the game based on ID.
         _game = await locator<GameService>().read(gameID: gameID);
@@ -67,6 +69,8 @@ class UpdateGameBloc extends Bloc<UpdateGameEvent, UpdateGameState> {
       );
     });
     on<SubmitEvent>((event, emit) async {
+      emit(LoadingState());
+
       try {
         await locator<GameService>().update(gameID: gameID, data: {
           'homeTeamScore': _game.homeTeamScore,

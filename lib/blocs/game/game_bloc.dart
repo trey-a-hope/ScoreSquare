@@ -39,6 +39,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }) : super(InitialState()) {
     on<LoadPageEvent>(
       (event, emit) async {
+        emit(LoadingState());
+
         //Fetch game.
         _game = await locator<GameService>().read(gameID: gameID);
 
@@ -66,6 +68,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     on<PurchaseBetEvent>(
       (event, emit) async {
+        emit(LoadingState());
+
         try {
           //Create bet.
           BetModel bet = BetModel(

@@ -32,6 +32,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       emit(LoadingState());
 
       _user = await locator<AuthService>().getCurrentUser();
+
       emit(
         LoadedState(
           user: _user,

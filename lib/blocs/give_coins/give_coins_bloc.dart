@@ -22,6 +22,8 @@ class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
 
   GiveCoinsBloc({required String uid}) : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
+      emit(LoadingState());
+
       _user = await locator<UserService>().retrieveUser(uid: uid);
 
       emit(
@@ -29,6 +31,8 @@ class GiveCoinsBloc extends Bloc<GiveCoinsEvent, GiveCoinsState> {
       );
     });
     on<SubmitEvent>((event, emit) async {
+      emit(LoadingState());
+
       int coins = event.coins;
 
       //Send coins to users account.

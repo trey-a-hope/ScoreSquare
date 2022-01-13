@@ -19,6 +19,8 @@ class DeleteGameBloc extends Bloc<DeleteGameEvent, DeleteGameState> {
 
   DeleteGameBloc({required this.gameID}) : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
+      emit(LoadingState());
+
       try {
         //Fetch the game based on ID.
         _game = await locator<GameService>().read(gameID: gameID);
@@ -36,6 +38,8 @@ class DeleteGameBloc extends Bloc<DeleteGameEvent, DeleteGameState> {
       }
     });
     on<DeleteEvent>((event, emit) async {
+      emit(LoadingState());
+
       try {
         await locator<GameService>().deleteGame(gameID: gameID);
 

@@ -21,6 +21,8 @@ class ClaimWinnersBloc extends Bloc<ClaimWinnersEvent, ClaimWinnersState> {
 
   ClaimWinnersBloc() : super(ClaimWinnersInitial()) {
     on<LoadPageEvent>((event, emit) async {
+      emit(LoadingState());
+
       try {
         _games =
             await locator<GameService>().list(closed: true, claimed: false);
@@ -34,6 +36,9 @@ class ClaimWinnersBloc extends Bloc<ClaimWinnersEvent, ClaimWinnersState> {
     });
     on<ClaimEvent>((event, emit) async {
       GameModel game = event.game;
+
+      emit(LoadingState());
+
       try {
         //Fetch all participants. //TODO: Find more efficient way to get losers and winners.
         List<UserModel> participants =
