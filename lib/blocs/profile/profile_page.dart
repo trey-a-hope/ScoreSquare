@@ -56,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: UserCircleAvatar(
                     uid: user.uid!,
                     radius: 40,
+                    showOnlineBadge: true,
                     onTap: () {
                       if (user.imgUrl != null) {
                         locator<UtilService>().heroToImage(

@@ -37,10 +37,10 @@ class AuthService extends IAuthService {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
     //Set user online status to false.
     String uid = _auth.currentUser!.uid;
-    locator<UtilService>().setOnlineStatus(uid: uid, isOnline: false);
+    await locator<UtilService>().setOnlineStatus(uid: uid, isOnline: false);
 
     //Sign user out.
     return _auth.signOut();

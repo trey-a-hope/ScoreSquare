@@ -44,9 +44,16 @@ class UtilService extends IUtilService {
   }
 
   @override
-  void setOnlineStatus({required String? uid, required bool isOnline}) {
+  Future<void> setOnlineStatus(
+      {required String? uid, required bool isOnline}) async {
     if (uid != null) {
-      locator<UserService>().updateUser(uid: uid, data: {'isOnline': isOnline});
+      await locator<UserService>().updateUser(
+        uid: uid,
+        data: {
+          'isOnline': isOnline,
+        },
+      );
+      return;
     }
   }
 }

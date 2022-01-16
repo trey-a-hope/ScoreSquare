@@ -4,7 +4,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/blocs/games/games_bloc.dart' as games;
-import 'package:score_square/blocs/notifications/notifications_bloc.dart' as notifications;
+import 'package:score_square/blocs/notifications/notifications_bloc.dart'
+    as notifications;
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/admin_page.dart';
@@ -91,6 +92,7 @@ class CustomAppDrawer extends StatelessWidget {
                             UserCircleAvatar(
                               uid: user.uid!,
                               radius: 40,
+                              showOnlineBadge: true,
                               onTap: () {
                                 if (user.imgUrl != null) {
                                   locator<UtilService>().heroToImage(
@@ -183,11 +185,13 @@ class CustomAppDrawer extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => BlocProvider(
                                 create: (BuildContext context) =>
-                                notifications.NotificationsBloc(uid: user.uid!)
-                                  ..add(
-                                    notifications.LoadPageEvent(),
-                                  ),
-                                child:   notifications.NotificationsPage(uid: user.uid!),
+                                    notifications.NotificationsBloc(
+                                        uid: user.uid!)
+                                      ..add(
+                                        notifications.LoadPageEvent(),
+                                      ),
+                                child: notifications.NotificationsPage(
+                                    uid: user.uid!),
                               ),
                             ),
                           );

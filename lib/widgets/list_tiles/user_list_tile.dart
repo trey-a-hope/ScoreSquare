@@ -34,6 +34,7 @@ class UserListTile extends StatelessWidget {
       child: ListTile(
         leading: UserCircleAvatar(
           uid: user.uid!,
+          showOnlineBadge: true,
           onTap: () {
             if (user.imgUrl != null) {
               locator<UtilService>().heroToImage(

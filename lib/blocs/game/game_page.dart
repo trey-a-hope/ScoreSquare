@@ -35,18 +35,18 @@ class _GamePageState extends State<GamePage> {
           UserCircleAvatar(
             uid: user.uid!,
             radius: 15,
+            showOnlineBadge: false,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) =>
-                      BlocProvider(
-                        create: (BuildContext context) =>
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) =>
                         profile.ProfileBloc(uid: user.uid!)
                           ..add(
                             profile.LoadPageEvent(),
                           ),
-                        child: const profile.ProfilePage(),
-                      ),
+                    child: const profile.ProfilePage(),
+                  ),
                 ),
               );
             },
@@ -98,16 +98,8 @@ class _GamePageState extends State<GamePage> {
                     80 81 82 83 84 85 86 87 88 89
                     90 91 92 93 94 95 96 97 98 99
                   ''',
-      columnSizes: repeat(10, [(MediaQuery
-          .of(context)
-          .size
-          .width / 10).px
-      ]),
-      rowSizes: repeat(10, [(MediaQuery
-          .of(context)
-          .size
-          .width / 10).px
-      ]),
+      columnSizes: repeat(10, [(MediaQuery.of(context).size.width / 10).px]),
+      rowSizes: repeat(10, [(MediaQuery.of(context).size.width / 10).px]),
       children: [
         for (SquareModel claimedSquare in claimedSquares) ...[
           //If a user has claimed the current bet...
@@ -118,21 +110,20 @@ class _GamePageState extends State<GamePage> {
               number: claimedSquare.number,
             ).inGridArea(claimedSquare.number)
           //If a user is in the same row or column  as the current bet...
+          else if (claimedSquare.number[0] == currentBet[0] ||
+              claimedSquare.number[1] == currentBet[1])
+            _section(
+              color: Colors.grey.shade300,
+              user: claimedSquare.user,
+              number: claimedSquare.number,
+            ).inGridArea(claimedSquare.number)
+          //Otherwise just display the number.
           else
-            if (claimedSquare.number[0] == currentBet[0] ||
-                claimedSquare.number[1] == currentBet[1])
-              _section(
-                color: Colors.grey.shade300,
-                user: claimedSquare.user,
-                number: claimedSquare.number,
-              ).inGridArea(claimedSquare.number)
-            //Otherwise just display the number.
-            else
-              _section(
-                color: Colors.white,
-                user: claimedSquare.user,
-                number: claimedSquare.number,
-              ).inGridArea(claimedSquare.number),
+            _section(
+              color: Colors.white,
+              user: claimedSquare.user,
+              number: claimedSquare.number,
+            ).inGridArea(claimedSquare.number),
         ],
         for (SquareModel unclaimedSquare in unclaimedSquares) ...[
           if (unclaimedSquare.number == currentBet)
@@ -141,20 +132,19 @@ class _GamePageState extends State<GamePage> {
               user: null,
               number: unclaimedSquare.number,
             ).inGridArea(unclaimedSquare.number)
+          else if (unclaimedSquare.number[0] == currentBet[0] ||
+              unclaimedSquare.number[1] == currentBet[1])
+            _section(
+              color: Colors.grey.shade300,
+              user: unclaimedSquare.user,
+              number: unclaimedSquare.number,
+            ).inGridArea(unclaimedSquare.number)
           else
-            if (unclaimedSquare.number[0] == currentBet[0] ||
-                unclaimedSquare.number[1] == currentBet[1])
-              _section(
-                color: Colors.grey.shade300,
-                user: unclaimedSquare.user,
-                number: unclaimedSquare.number,
-              ).inGridArea(unclaimedSquare.number)
-            else
-              _section(
-                color: Colors.white,
-                user: null,
-                number: unclaimedSquare.number,
-              ).inGridArea(unclaimedSquare.number)
+            _section(
+              color: Colors.white,
+              user: null,
+              number: unclaimedSquare.number,
+            ).inGridArea(unclaimedSquare.number)
         ],
       ],
     );
@@ -177,9 +167,10 @@ class _GamePageState extends State<GamePage> {
   }
 
   //Return true if the list of bets do no contain the digit combination.
-  bool _betIsUnique({required List<BetModel> bets,
-    required int homeDigit,
-    required int awayDigit}) {
+  bool _betIsUnique(
+      {required List<BetModel> bets,
+      required int homeDigit,
+      required int awayDigit}) {
     for (int i = 0; i < bets.length; i++) {
       if (bets[i].homeDigit == homeDigit && bets[i].awayDigit == awayDigit) {
         return false;
@@ -203,8 +194,8 @@ class _GamePageState extends State<GamePage> {
           icon: const Icon(Icons.refresh),
           onPressed: () {
             context.read<GameBloc>().add(
-              LoadPageEvent(),
-            );
+                  LoadPageEvent(),
+                );
           },
         ),
         child: BlocConsumer<GameBloc, GameState>(
@@ -235,9 +226,7 @@ class _GamePageState extends State<GamePage> {
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: Text(
-                            'If the home team scores a digit ending in ${bet
-                                .homeDigit}, or the away team scores a digit ending in ${bet
-                                .awayDigit}, you win!',
+                            'If the home team scores a digit ending in ${bet.homeDigit}, or the away team scores a digit ending in ${bet.awayDigit}, you win!',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -246,12 +235,12 @@ class _GamePageState extends State<GamePage> {
                           icon: const Icon(Icons.done),
                           style: ButtonStyle(
                             backgroundColor:
-                            MaterialStateProperty.all<Color>(colorDarkBlue),
+                                MaterialStateProperty.all<Color>(colorDarkBlue),
                           ),
                           onPressed: () {
                             context.read<GameBloc>().add(
-                              LoadPageEvent(),
-                            );
+                                  LoadPageEvent(),
+                                );
                           },
                         ),
                       ],
@@ -276,15 +265,11 @@ class _GamePageState extends State<GamePage> {
                         Column(
                           children: [
                             CachedNetworkImage(
-                              imageUrl: game
-                                  .homeTeam()
-                                  .imgUrl,
+                              imageUrl: game.homeTeam().imgUrl,
                               height: 100,
                             ),
                             Text(
-                              game
-                                  .homeTeam()
-                                  .name,
+                              game.homeTeam().name,
                               style: textTheme.headline3,
                             ),
                             Text(
@@ -304,15 +289,11 @@ class _GamePageState extends State<GamePage> {
                         Column(
                           children: [
                             CachedNetworkImage(
-                              imageUrl: game
-                                  .awayTeam()
-                                  .imgUrl,
+                              imageUrl: game.awayTeam().imgUrl,
                               height: 100,
                             ),
                             Text(
-                              game
-                                  .awayTeam()
-                                  .name,
+                              game.awayTeam().name,
                               style: textTheme.headline3,
                             ),
                             Text(
@@ -412,11 +393,11 @@ class _GamePageState extends State<GamePage> {
                               //Prompt user for purchasing this bet.
                               bool? confirm = await locator<ModalService>()
                                   .showConfirmation(
-                                  context: context,
-                                  title:
-                                  'Purchase Bet for ${game.betPrice} coins?',
-                                  message:
-                                  'Your bet will be placed at random.');
+                                      context: context,
+                                      title:
+                                          'Purchase Bet for ${game.betPrice} coins?',
+                                      message:
+                                          'Your bet will be placed at random.');
 
                               if (confirm == null || confirm == false) {
                                 return;
@@ -438,11 +419,11 @@ class _GamePageState extends State<GamePage> {
                                   homeDigit: homeDigit));
 
                               context.read<GameBloc>().add(
-                                PurchaseBetEvent(
-                                  awayDigit: awayDigit,
-                                  homeDigit: homeDigit,
-                                ),
-                              );
+                                    PurchaseBetEvent(
+                                      awayDigit: awayDigit,
+                                      homeDigit: homeDigit,
+                                    ),
+                                  );
                             } else {
                               _showPurchaseMoreCoinsModal(
                                   currentUser: currentUser);
@@ -461,7 +442,7 @@ class _GamePageState extends State<GamePage> {
                       future: _buildLayoutGrid(
                         bets: bets,
                         currentBet:
-                        '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
+                            '${game.homeTeamScore % 10}${game.awayTeamScore % 10}',
                       ),
                       builder: (BuildContext context,
                           AsyncSnapshot<LayoutGrid> snapshot) {
@@ -485,16 +466,10 @@ class _GamePageState extends State<GamePage> {
                     90 91 92 93 94 95 96 97 98 99
                   ''',
                                   columnSizes: repeat(10, [
-                                    (MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 10).px
+                                    (MediaQuery.of(context).size.width / 10).px
                                   ]),
                                   rowSizes: repeat(10, [
-                                    (MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 10).px
+                                    (MediaQuery.of(context).size.width / 10).px
                                   ]),
                                   children: [
                                     for (int i = 0; i < 100; i++) ...[
@@ -522,9 +497,7 @@ class _GamePageState extends State<GamePage> {
                     ),
                     if (currentWinners.isNotEmpty) ...[
                       Text(
-                          '${game.isOpen()
-                              ? 'Current'
-                              : 'Final'} Winners - ${currentWinners.length}'),
+                          '${game.isOpen() ? 'Current' : 'Final'} Winners - ${currentWinners.length}'),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: SizedBox(
@@ -537,27 +510,26 @@ class _GamePageState extends State<GamePage> {
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 10),
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Column(
                                   children: [
                                     UserCircleAvatar(
+                                      showOnlineBadge: true,
                                       uid: currentWinners[index].uid!,
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                BlocProvider(
-                                                  create: (
-                                                      BuildContext context) =>
+                                            builder: (context) => BlocProvider(
+                                              create: (BuildContext context) =>
                                                   profile.ProfileBloc(
                                                       uid: currentWinners[index]
                                                           .uid!)
                                                     ..add(
                                                       profile.LoadPageEvent(),
                                                     ),
-                                                  child:
+                                              child:
                                                   const profile.ProfilePage(),
-                                                ),
+                                            ),
                                           ),
                                         );
                                       },
