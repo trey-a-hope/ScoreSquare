@@ -118,13 +118,13 @@ class _GamesPageState extends State<GamesPage> {
                     tabs: [
                       Tab(
                         child: Text(
-                          'Open',
+                          'Open Games',
                           style: textTheme.bodyText2,
                         ),
                       ),
                       Tab(
                         child: Text(
-                          'Closed',
+                          'Closed Games',
                           style: textTheme.bodyText2,
                         ),
                       ),

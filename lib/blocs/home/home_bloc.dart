@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:score_square/models/bet_model.dart';
+import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/bet_service.dart';
@@ -21,23 +22,35 @@ part 'home_state.dart';
 part 'home_page.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  late UserModel _user;
-  late List<BetModel> _bets;
-
   HomeBloc() : super(InitialState()) {
     on<LoadPageEvent>((event, emit) async {
       emit(LoadingState());
 
       //Fetch user.
-      _user = await locator<AuthService>().getCurrentUser();
+      UserModel user = await locator<AuthService>().getCurrentUser();
 
       //Fetch bets for this user.
-      _bets = await locator<BetService>().listByUserID(uid: _user.uid!);
+      List<BetModel> bets =
+          await locator<BetService>().listByUserID(uid: user.uid!);
+
+      //Split bets into open and closed.
+      List<BetModel> openBets = [];
+      List<BetModel> closedBets = [];
+
+      for (int i = 0; i < bets.length; i++) {
+        GameModel game = await bets[i].game();
+        if (game.isOpen()) {
+          openBets.add(bets[i]);
+        } else {
+          closedBets.add(bets[i]);
+        }
+      }
 
       emit(
         LoadedState(
-          user: _user,
-          bets: _bets,
+          user: user,
+          openBets: openBets,
+          closedBets: closedBets,
         ),
       );
     });

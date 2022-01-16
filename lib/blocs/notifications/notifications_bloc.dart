@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/list_tiles/notification_list_tile.dart';
-
 import '../../service_locator.dart';
 
 part 'notifications_event.dart';

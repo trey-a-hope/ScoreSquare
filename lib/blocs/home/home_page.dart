@@ -130,38 +130,99 @@ class HomePageState extends State<HomePage> {
 
           if (state is LoadedState) {
             UserModel user = state.user;
-            List<BetModel> bets = state.bets;
+            List<BetModel> openBets = state.openBets;
+            List<BetModel> closedBets = state.closedBets;
 
             return Column(
               children: [
                 UserListTile(user: user),
-                Text(
-                  'My Active Bets - ${bets.length}',
-                  style: textTheme.headline4,
-                ),
-                Expanded(
-                  child: bets.isEmpty
-                      ? const Text('No bets.')
-                      : GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 200,
-                                  childAspectRatio: 1,
-                                  crossAxisSpacing: 20,
-                                  mainAxisSpacing: 20),
-                          itemCount: bets.length,
-                          itemBuilder: (BuildContext ctx, index) => BetView(
-                            bet: bets[index],
-                            openBuilder: BlocProvider(
-                              create: (BuildContext context) => game.GameBloc(
-                                gameID: bets[index].gameID,
-                              )..add(
-                                  game.LoadPageEvent(),
-                                ),
-                              child: const game.GamePage(),
+                DefaultTabController(
+                  length: 2,
+                  child: Expanded(
+                    child: Column(
+                      children: [
+                        TabBar(
+                          isScrollable: true,
+                          tabs: [
+                            Tab(
+                              child: Text(
+                                'Open Bets',
+                                style: textTheme.bodyText2,
+                              ),
                             ),
+                            Tab(
+                              child: Text(
+                                'Closed Bets',
+                                style: textTheme.bodyText2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              //Open Bets
+                              openBets.isEmpty
+                                  ? const Center(
+                                      child: Text('No open bets.'),
+                                    )
+                                  : GridView.builder(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 200,
+                                        childAspectRatio: 1,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 20,
+                                      ),
+                                      itemCount: openBets.length,
+                                      itemBuilder: (BuildContext ctx, index) =>
+                                          BetView(
+                                        bet: openBets[index],
+                                        openBuilder: BlocProvider(
+                                          create: (BuildContext context) =>
+                                              game.GameBloc(
+                                            gameID: openBets[index].gameID,
+                                          )..add(
+                                                  game.LoadPageEvent(),
+                                                ),
+                                          child: const game.GamePage(),
+                                        ),
+                                      ),
+                                    ),
+                              //Closed Bets
+                              closedBets.isEmpty
+                                  ? const Center(
+                                      child: Text('No closed bets.'),
+                                    )
+                                  : GridView.builder(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 200,
+                                        childAspectRatio: 1,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 20,
+                                      ),
+                                      itemCount: closedBets.length,
+                                      itemBuilder: (BuildContext ctx, index) =>
+                                          BetView(
+                                        bet: closedBets[index],
+                                        openBuilder: BlocProvider(
+                                          create: (BuildContext context) =>
+                                              game.GameBloc(
+                                            gameID: closedBets[index].gameID,
+                                          )..add(
+                                                  game.LoadPageEvent(),
+                                                ),
+                                          child: const game.GamePage(),
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
                 ),
                 Center(
                   child: Text(
