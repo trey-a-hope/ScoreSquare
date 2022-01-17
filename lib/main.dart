@@ -198,7 +198,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   },
                   providerConfigs: const [
                     GoogleProviderConfiguration(
-                        clientId: googleProviderConfigurationClientId)
+                      clientId: googleProviderConfigurationClientId,
+                    ),
+                    AppleProviderConfiguration()
                   ],
                 );
               } else {

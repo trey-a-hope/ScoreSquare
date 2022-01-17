@@ -34,13 +34,13 @@ class UtilService extends IUtilService {
   @override
   String getGreeting() {
     int hour = DateTime.now().hour;
+    if (hour < 5 || hour > 16) {
+      return 'Good Evening';
+    }
     if (hour < 12) {
       return 'Good Morning';
     }
-    if (hour < 17) {
-      return 'Good Afternoon';
-    }
-    return 'Good Evening';
+    return 'Good Afternoon';
   }
 
   @override
