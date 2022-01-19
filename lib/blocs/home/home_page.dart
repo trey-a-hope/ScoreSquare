@@ -102,6 +102,9 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //Prompt user for update of app if present.
+    NewVersion().showAlertIfNecessary(context: context);
+
     return BasicPage(
       title: 'Home',
       scaffoldKey: _scaffoldKey,

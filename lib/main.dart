@@ -187,12 +187,16 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 );
               } else if (!snapshot.hasData) {
                 return SignInScreen(
+                  showAuthActionSwitch: false,
                   headerBuilder: (context, constraints, _) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Image.asset(appIcon),
+                    return AspectRatio(
+                      aspectRatio: 1,
+                      child: CircleAvatar(
+                        backgroundImage: Image.asset(
+                          appIcon,
+                          width: 200,
+                          fit: BoxFit.fitHeight,
+                        ).image,
                       ),
                     );
                   },
