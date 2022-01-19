@@ -111,7 +111,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       created: DateTime.now(),
       modified: DateTime.now(),
       uid: user.uid,
-      username: user.displayName!,
+      username: user.displayName ?? 'John Doe',
       coins: initialCoinStart,
       isAdmin: false,
       isOnline: true,
