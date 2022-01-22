@@ -14,7 +14,7 @@ class SearchUsersRepository {
     if (cache.contains(term)) {
       return cache.get(term);
     } else {
-      AlgoliaQuery query = _algolia.instance.index('Users').query(term);
+      AlgoliaQuery query = _algolia.instance.index('users').query(term);
       // query = query.setFacetFilter('isGem:$_isSearchingGems');
 
       final List<AlgoliaObjectSnapshot> results =

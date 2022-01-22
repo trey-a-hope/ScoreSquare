@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:score_square/blocs/search_users/search_users_bloc.dart';
+import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/user_service.dart';
 import '../service_locator.dart';
 
@@ -12,6 +15,8 @@ abstract class IUtilService {
   String getGreeting();
 
   void setOnlineStatus({required String? uid, required bool isOnline});
+
+  Future<UserModel?> searchForUser({required BuildContext context});
 }
 
 class UtilService extends IUtilService {
@@ -55,6 +60,27 @@ class UtilService extends IUtilService {
       );
       return;
     }
+  }
+
+  @override
+  Future<UserModel?> searchForUser({required BuildContext context}) async {
+    dynamic result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => SearchUsersBloc()
+            ..add(
+              const LoadPageEvent(),
+            ),
+          child: const SearchUsersPage(),
+        ),
+      ),
+    );
+
+    if (result == null) {
+      return result;
+    }
+
+    return result as UserModel;
   }
 }
 

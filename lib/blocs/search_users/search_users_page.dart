@@ -1,19 +1,24 @@
 part of 'search_users_bloc.dart';
 
 class SearchUsersPage extends StatelessWidget {
-  final bool returnUser;
-
-  const SearchUsersPage({Key? key, required this.returnUser}) : super(key: key);
+  const SearchUsersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Users'),
+    return BasicPage(
+      leftIconButton: IconButton(
+        icon: const Icon(Icons.chevron_left),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
-      body: Column(
-        children: <Widget>[_SearchBar(), _SearchBody(returnUser: returnUser)],
+      child: Column(
+        children: <Widget>[
+          _SearchBar(),
+          const _SearchBody(),
+        ],
       ),
+      title: 'Search Users',
     );
   }
 }
@@ -40,7 +45,7 @@ class _SearchBarState extends State<_SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),
+      style: Theme.of(context).textTheme.headline4!,
       controller: _textController,
       autocorrect: false,
       onChanged: (text) {
@@ -63,9 +68,8 @@ class _SearchBarState extends State<_SearchBar> {
           onTap: _onClearTapped,
         ),
         border: InputBorder.none,
-        hintText: 'Enter a search term',
-        hintStyle:
-            TextStyle(color: Theme.of(context).textTheme.headline6!.color),
+        hintText: 'Enter username',
+        hintStyle: Theme.of(context).textTheme.headline4!,
       ),
     );
   }
@@ -77,9 +81,7 @@ class _SearchBarState extends State<_SearchBar> {
 }
 
 class _SearchBody extends StatelessWidget {
-  final bool returnUser;
-
-  const _SearchBody({required this.returnUser});
+  const _SearchBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -134,18 +136,7 @@ class _SearchBody extends StatelessWidget {
                 return UserListTile(
                   user: user,
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (BuildContext context) =>
-                              profile.ProfileBloc(uid: user.uid!)
-                                ..add(
-                                  profile.LoadPageEvent(),
-                                ),
-                          child: const profile.ProfilePage(),
-                        ),
-                      ),
-                    );
+                    Navigator.of(context).pop(user);
                   },
                 );
               },
@@ -153,9 +144,7 @@ class _SearchBody extends StatelessWidget {
           );
         }
 
-        return const Center(
-          child: Text('YOU SHOULD NEVER SEE THIS...'),
-        );
+        return Container();
       },
     );
   }

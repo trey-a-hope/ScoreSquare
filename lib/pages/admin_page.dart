@@ -14,7 +14,7 @@ import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/select_item_page.dart';
 import 'package:score_square/services/game_service.dart';
-import 'package:score_square/services/user_service.dart';
+import 'package:score_square/services/util_service.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import '../service_locator.dart';
 import '../theme.dart';
@@ -128,30 +128,18 @@ class _AdminPageState extends State<AdminPage> {
           ),
           ListTile(
             onTap: () async {
-              List<UserModel> users =
-                  await locator<UserService>().retrieveUsers();
+              UserModel? user =
+                  await locator<UtilService>().searchForUser(context: context);
 
-              //Sort users by most recent.
-              users.sort((a, b) => b.created.compareTo(a.created));
-
-              Route route = MaterialPageRoute(
-                builder: (BuildContext context) => SelectItemPage(
-                  items: users,
-                  type: 'User',
-                ),
-              );
-
-              final result = await Navigator.push(context, route);
-
-              if (result == null) return;
-
-              final selectedUser = result as UserModel;
+              if (user == null) {
+                return;
+              }
 
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
                     create: (BuildContext context) =>
-                        give_coins.GiveCoinsBloc(uid: selectedUser.uid!)
+                        give_coins.GiveCoinsBloc(uid: user.uid!)
                           ..add(give_coins.LoadPageEvent()),
                     child: const give_coins.GiveCoinsPage(),
                   ),

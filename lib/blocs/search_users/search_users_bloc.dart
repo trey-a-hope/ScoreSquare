@@ -6,9 +6,9 @@ import 'package:algolia/algolia.dart';
 import 'package:score_square/constants.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
+import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/list_tiles/user_list_tile.dart';
 import '../../service_locator.dart';
-import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 
 part 'search_users_cache.dart';
 part 'search_users_event.dart';
@@ -17,11 +17,11 @@ part 'search_users_repository.dart';
 part 'search_users_state.dart';
 
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
-  final SearchUsersRepository searchUsersRepository;
+  final SearchUsersRepository _searchUsersRepository =
+      SearchUsersRepository(cache: SearchUsersCache());
   late UserModel _currentUser;
 
-  SearchUsersBloc({required this.searchUsersRepository})
-      : super(SearchUsersStateStart()) {
+  SearchUsersBloc() : super(SearchUsersStateStart()) {
     on<LoadPageEvent>((event, emit) async {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
@@ -37,7 +37,7 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
         emit(SearchUsersStateLoading());
         try {
           final List<UserModel> results =
-              await searchUsersRepository.search(searchTerm);
+              await _searchUsersRepository.search(searchTerm);
 
           results.removeWhere((user) => user.uid == _currentUser.uid);
 
@@ -52,24 +52,4 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
       }
     });
   }
-
-  // @override
-  // Stream<Transition<SearchUsersEvent, SearchUsersState>> transformEvents(
-  //   Stream<SearchUsersEvent> events,
-  //   Stream<Transition<SearchUsersEvent, SearchUsersState>> Function(
-  //     SearchUsersEvent event,
-  //   )
-  //       transitionFn,
-  // ) {
-  //   return events
-  //       .debounceTime(const Duration(milliseconds: 300))
-  //       .switchMap(transitionFn);
-  // }
-  //
-  // @override
-  // void onTransition(Transition<SearchUsersEvent, SearchUsersState> transition) {
-  //   print(transition);
-  //   super.onTransition(transition);
-  // }
-
 }

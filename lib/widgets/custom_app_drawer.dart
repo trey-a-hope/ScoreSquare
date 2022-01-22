@@ -197,6 +197,34 @@ class CustomAppDrawer extends StatelessWidget {
                           );
                         },
                       ),
+                      ListTile(
+                        leading: const Icon(Icons.search),
+                        title: Text(
+                          'Search Users',
+                          style: textTheme.headline4,
+                        ),
+                        onTap: () async {
+                          UserModel? user = await locator<UtilService>()
+                              .searchForUser(context: context);
+
+                          if (user == null) {
+                            return;
+                          }
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                    profile.ProfileBloc(uid: user.uid!)
+                                      ..add(
+                                        profile.LoadPageEvent(),
+                                      ),
+                                child: const profile.ProfilePage(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       if (user.isAdmin) ...[
                         ListTile(
                           leading: const Icon(Icons.admin_panel_settings),
