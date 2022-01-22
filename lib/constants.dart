@@ -410,3 +410,7 @@ const String googleProviderConfigurationClientId =
 
 //Durations
 const int transitionDuration = 500;
+
+//Algolia
+const String algoliaAppID = 'SUIQ4Z4MUA';
+const String algoliaSearchOnlyAPIKey = '5ba403bd8af320d070ea6ff74b056865';
