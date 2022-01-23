@@ -6,13 +6,6 @@ import 'package:score_square/services/game_service.dart';
 import '../service_locator.dart';
 
 class BetModel {
-  int awayDigit;
-  int homeDigit;
-  String? id;
-  DateTime created;
-  String uid;
-  String gameID;
-
   BetModel({
     required this.awayDigit,
     required this.homeDigit,
@@ -44,6 +37,7 @@ class BetModel {
     };
   }
 
+  /// Get the game associated with this bet.
   Future<GameModel> game() async {
     try {
       GameModel game = await locator<GameService>().read(gameID: gameID);
@@ -53,11 +47,31 @@ class BetModel {
     }
   }
 
+  /// Creates string representation of when the bet was placed.
   String createdString() {
     return 'Placed ${locator<FormatService>().eMMMddhmmaa(date: created)}';
   }
 
+  /// Creates string representation of how long ago the bet was placed.
   String placedTimeAgo() {
     return 'Bet placed ${locator<FormatService>().timeAgo(date: created)}';
   }
+
+  /// Last digit of the away team's score.
+  int awayDigit;
+
+  /// Last digit of the home team's score.
+  int homeDigit;
+
+  /// ID of the game.
+  String? id;
+
+  /// Time the game was created.
+  DateTime created;
+
+  /// The id of the user who placed the bet.
+  String uid;
+
+  /// The unique id of the game.
+  String gameID;
 }

@@ -1,12 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NotificationModel {
-  String? id;
-  String title;
-  String message;
-  bool isRead;
-  DateTime created;
-
   NotificationModel({
     this.id,
     required this.title,
@@ -34,4 +28,19 @@ class NotificationModel {
       'created': created,
     };
   }
+
+  /// Id of the notification.
+  String? id;
+
+  /// Title of the notification.
+  String title;
+
+  /// Message of the notification.
+  String message;
+
+  /// Determines if the notification has been read or not.
+  bool isRead;
+
+  /// Time the notification was created.
+  DateTime created;
 }

@@ -1,13 +1,6 @@
 import 'dart:ui';
 
 class NBATeamModel {
-  final int id;
-  final String city;
-  final String conference;
-  final String name;
-  final Color color;
-  final String imgUrl;
-
   const NBATeamModel({
     required this.id,
     required this.city,
@@ -28,7 +21,26 @@ class NBATeamModel {
     );
   }
 
+  /// Creates full name based on team city and name.
   String fullName() {
     return '$city $name';
   }
+
+  /// Id of the nba team.
+  final int id;
+
+  /// Title of the city.
+  final String city;
+
+  /// Conference title.
+  final String conference;
+
+  /// Name of the team.
+  final String name;
+
+  /// Color of the team.
+  final Color color;
+
+  /// Team logo.
+  final String imgUrl;
 }

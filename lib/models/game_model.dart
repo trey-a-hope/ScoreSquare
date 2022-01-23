@@ -6,19 +6,6 @@ import 'package:score_square/services/format_service.dart';
 import '../service_locator.dart';
 
 class GameModel {
-  String? id;
-  int awayTeamID;
-  int awayTeamScore;
-  int homeTeamID;
-  int homeTeamScore;
-  int betPrice;
-  int betCount;
-  DateTime starts;
-  DateTime? ends;
-  DateTime created;
-  DateTime modified;
-  bool claimed;
-
   GameModel({
     required this.awayTeamID,
     required this.awayTeamScore,
@@ -68,6 +55,7 @@ class GameModel {
     };
   }
 
+  /// Determines if the game is open, (game ended), or not, (game not started or is active).
   bool isOpen() {
     return ends == null;
   }
@@ -135,4 +123,40 @@ class GameModel {
   @override
   int get hashCode =>
       id.hashCode; //id.hashCode ^ id.hashCode ^ starts.hashCode;
+
+  /// ID of the game.
+  String? id;
+
+  /// ID of the away team.
+  int awayTeamID;
+
+  /// Score of the away team.
+  int awayTeamScore;
+
+  /// ID of the home team.
+  int homeTeamID;
+
+  /// Score of the home team.
+  int homeTeamScore;
+
+  /// Price of the bets for this game.
+  int betPrice;
+
+  /// Number of bets for this game.
+  int betCount;
+
+  /// Time game starts.
+  DateTime starts;
+
+  /// Time game ended.
+  DateTime? ends;
+
+  /// Time game was created.
+  DateTime created;
+
+  /// Time game was modified.
+  DateTime modified;
+
+  /// Identifier of if the game was claimed, (winners rewarded).
+  bool claimed;
 }

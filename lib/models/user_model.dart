@@ -2,16 +2,6 @@ import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String? uid;
-  String? imgUrl;
-  String? fcmToken;
-  DateTime modified;
-  DateTime created;
-  String username;
-  int coins;
-  bool isAdmin;
-  bool isOnline;
-
   UserModel({
     required this.uid,
     required this.imgUrl,
@@ -66,4 +56,31 @@ class UserModel {
       'isOnline': isOnline,
     };
   }
+
+  /// The unique id of the user.
+  String? uid;
+
+  /// User's image url.
+  String? imgUrl;
+
+  /// Firebase Cloud Message token for push notifications.
+  String? fcmToken;
+
+  /// Time the user was last modified.
+  DateTime modified;
+
+  /// Time the user was created.
+  DateTime created;
+
+  /// Username of the user.
+  String username;
+
+  /// Number of coins the user has.
+  int coins;
+
+  /// Determines if the user is an admin or not.
+  bool isAdmin;
+
+  /// Determines if the user is online or not.
+  bool isOnline;
 }
