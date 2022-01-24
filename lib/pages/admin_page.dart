@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/blocs/create_game/create_game_bloc.dart'
     as create_game;
 import 'package:score_square/blocs/update_game/update_game_bloc.dart'
@@ -12,6 +13,7 @@ import 'package:score_square/blocs/delete_game/delete_game_bloc.dart'
     as delete_game;
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/user_model.dart';
+import 'package:score_square/pages/recently_active_users.page.dart';
 import 'package:score_square/pages/select_item_page.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/util_service.dart';
@@ -85,6 +87,22 @@ class _AdminPageState extends State<AdminPage> {
                 const Text('Give coins to winners and send notification.'),
             title: Text(
               'Claim Winners',
+              style: textTheme.headline4,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const RecentlyActiveUsersPage(),
+                ),
+              );
+            },
+            leading: const Icon(MdiIcons.naturePeople),
+            subtitle: const Text('See all users by most recent login.'),
+            title: Text(
+              'Recently Active Users',
               style: textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),

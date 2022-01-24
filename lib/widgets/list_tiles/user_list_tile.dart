@@ -55,7 +55,7 @@ class UserListTile extends StatelessWidget {
           textAlign: TextAlign.start,
         ),
         trailing: Text(
-          'joined ${locator<FormatService>().timeAgo(date: user.created)}',
+          'active ${locator<FormatService>().timeAgo(date: user.modified)}',
           textAlign: TextAlign.center,
         ),
         onTap: onTap,
