@@ -12,6 +12,7 @@ import 'package:score_square/blocs/edit_profile/edit_profile_bloc.dart'
     as edit_profile;
 import 'package:score_square/widgets/user_circle_avatar.dart';
 import '../../service_locator.dart';
+import 'package:score_square/blocs/message/message_bloc.dart' as message;
 
 part 'profile_event.dart';
 part 'profile_state.dart';

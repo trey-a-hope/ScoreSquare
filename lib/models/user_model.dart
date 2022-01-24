@@ -33,8 +33,12 @@ class UserModel {
     Map<String, dynamic> data = aob.data;
     return UserModel(
       imgUrl: data['imgUrl'],
-      created: DateTime.now(), //TODO: Convert properly...
-      modified: DateTime.now(), //TODO: Convert properly...
+      created: DateTime.fromMillisecondsSinceEpoch(
+        data['created'],
+      ),
+      modified: DateTime.fromMillisecondsSinceEpoch(
+        data['modified'],
+      ),
       uid: data['uid'],
       username: data['username'],
       fcmToken: data['fcmToken'],

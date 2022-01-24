@@ -48,16 +48,14 @@ class MessagePageState extends State<MessagePage> {
     return WillPopScope(
       onWillPop: () async {
         //Delete room if there are no messages.
-        if (context.read<MessageBloc>().newMessageDocRef != null) {
-          if ((await context
-                  .read<MessageBloc>()
-                  .roomDocRef
-                  .collection('messages')
-                  .get())
-              .docs
-              .isEmpty) {
-            await context.read<MessageBloc>().roomDocRef.delete();
-          }
+        if ((await context
+                .read<MessageBloc>()
+                .roomDocRef
+                .collection('messages')
+                .get())
+            .docs
+            .isEmpty) {
+          await context.read<MessageBloc>().roomDocRef.delete();
         }
         return true;
       },

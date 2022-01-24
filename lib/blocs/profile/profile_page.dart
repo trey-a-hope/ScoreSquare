@@ -85,34 +85,57 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: textTheme.headline4,
                   ),
                 ),
-                Visibility(
-                  visible: isMine,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                edit_profile.EditProfileBloc()
-                                  ..add(
-                                    edit_profile.LoadPageEvent(),
-                                  ),
-                            child: const edit_profile.EditProfilePage(),
+                isMine
+                    ? ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                    edit_profile.EditProfileBloc()
+                                      ..add(
+                                        edit_profile.LoadPageEvent(),
+                                      ),
+                                child: const edit_profile.EditProfilePage(),
+                              ),
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            colorDarkBlue,
                           ),
                         ),
-                      );
-                    },
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        colorDarkBlue,
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Edit Profile'),
+                      )
+                    : ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                    message.MessageBloc(otherUser: user)
+                                      ..add(
+                                        message.LoadPageEvent(),
+                                      ),
+                                child: const message.MessagePage(),
+                              ),
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            colorDarkBlue,
+                          ),
+                        ),
+                        icon: const Icon(Icons.send),
+                        label: const Text('Send Message'),
                       ),
-                    ),
-                    icon: const Icon(Icons.edit),
-                    label: const Text('Edit Profile'),
-                  ),
-                )
               ],
             );
           }
