@@ -160,7 +160,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       title: 'Score Square',
       theme: ThemeData(
-        primaryColor: colorWhite,
+        primaryColor: Colors.lightBlueAccent,
         textTheme: textTheme,
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle.light,

@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 
 class UserModel {
   UserModel({
@@ -55,6 +56,14 @@ class UserModel {
       'isAdmin': isAdmin,
       'isOnline': isOnline,
     };
+  }
+
+  ChatUser chatUser() {
+    return ChatUser(
+      id: uid!,
+      profileImage: imgUrl,
+      firstName: username,
+    );
   }
 
   /// The unique id of the user.

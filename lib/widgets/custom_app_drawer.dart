@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/blocs/games/games_bloc.dart' as games;
+import 'package:score_square/blocs/messages/messages_bloc.dart' as messages;
 import 'package:score_square/blocs/notifications/notifications_bloc.dart'
     as notifications;
 import 'package:score_square/constants.dart';
@@ -220,6 +221,27 @@ class CustomAppDrawer extends StatelessWidget {
                                         profile.LoadPageEvent(),
                                       ),
                                 child: const profile.ProfilePage(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.message),
+                        title: Text(
+                          'Messages',
+                          style: textTheme.headline4,
+                        ),
+                        onTap: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                    messages.MessagesBloc(uid: user.uid!)
+                                      ..add(
+                                        messages.LoadPageEvent(),
+                                      ),
+                                child: const messages.MessagesPage(),
                               ),
                             ),
                           );
