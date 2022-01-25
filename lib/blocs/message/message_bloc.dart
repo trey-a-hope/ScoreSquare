@@ -12,6 +12,7 @@ import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/theme.dart';
+import 'package:score_square/widgets/error_view.dart';
 import '../../service_locator.dart';
 
 part 'message_event.dart';

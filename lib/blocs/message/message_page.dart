@@ -141,8 +141,8 @@ class MessagePageState extends State<MessagePage> {
           }
 
           if (state is ErrorState) {
-            return Center(
-              child: Text('Error: ${state.error.toString()}'),
+            return ErrorView(
+              error: state.error.toString(),
             );
           }
 
