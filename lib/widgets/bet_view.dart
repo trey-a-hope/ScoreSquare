@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:score_square/models/bet_model.dart';
 import 'package:score_square/models/game_model.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 
-import '../constants.dart';
+import '../constants/globals.dart';
 
 class BetView extends StatelessWidget {
   final BetModel bet;
@@ -91,7 +91,7 @@ class BetView extends StatelessWidget {
                                   children: [
                                     Text(
                                       game.homeTeam().name,
-                                      style: textTheme.headline6,
+                                      style: AppThemes.textTheme.headline6,
                                     ),
                                   ],
                                 ),
@@ -100,7 +100,7 @@ class BetView extends StatelessWidget {
                                 ),
                                 Text(
                                   bet.homeDigit.toString(),
-                                  style: textTheme.headline2,
+                                  style: AppThemes.textTheme.headline2,
                                 ),
                               ],
                             ),
@@ -126,7 +126,7 @@ class BetView extends StatelessWidget {
                                   children: [
                                     Text(
                                       game.awayTeam().name,
-                                      style: textTheme.headline6,
+                                      style: AppThemes.textTheme.headline6,
                                     ),
                                   ],
                                 ),
@@ -135,7 +135,7 @@ class BetView extends StatelessWidget {
                                 ),
                                 Text(
                                   bet.awayDigit.toString(),
-                                  style: textTheme.headline2,
+                                  style: AppThemes.textTheme.headline2,
                                 ),
                               ],
                             ),
@@ -147,7 +147,7 @@ class BetView extends StatelessWidget {
                         Text(
                           bet.placedTimeAgo(),
                           textAlign: TextAlign.center,
-                          style: textTheme.headline6,
+                          style: AppThemes.textTheme.headline6,
                         )
                       ],
                     ),

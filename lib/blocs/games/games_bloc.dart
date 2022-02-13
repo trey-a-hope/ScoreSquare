@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/services/game_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/games_list_view.dart';
 import '../../service_locator.dart';

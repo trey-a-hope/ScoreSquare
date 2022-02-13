@@ -150,13 +150,13 @@ class HomePageState extends State<HomePage> {
                             Tab(
                               child: Text(
                                 'Open Bets',
-                                style: textTheme.bodyText2,
+                                style: AppThemes.textTheme.bodyText2,
                               ),
                             ),
                             Tab(
                               child: Text(
                                 'Closed Bets',
-                                style: textTheme.bodyText2,
+                                style: AppThemes.textTheme.bodyText2,
                               ),
                             ),
                           ],
@@ -230,7 +230,7 @@ class HomePageState extends State<HomePage> {
                 Center(
                   child: Text(
                     '${locator<UtilService>().getGreeting()}, and welcome to Score Square!',
-                    style: textTheme.headline4,
+                    style: AppThemes.textTheme.headline4,
                     textAlign: TextAlign.center,
                   ),
                 )

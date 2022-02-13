@@ -6,12 +6,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/message_model.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 import 'package:score_square/widgets/error_view.dart';
 import '../../service_locator.dart';
 

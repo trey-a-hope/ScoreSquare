@@ -9,7 +9,7 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/modal_service.dart';

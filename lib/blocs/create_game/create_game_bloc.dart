@@ -2,7 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/game_model.dart';
 import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/pages/select_item_page.dart';

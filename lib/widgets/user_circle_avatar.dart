@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/user_service.dart';
-import '../../constants.dart';
+import '../constants/globals.dart';
 import '../service_locator.dart';
 
 //TODO: Check and see there are too many reads to the database by fetching the user again...

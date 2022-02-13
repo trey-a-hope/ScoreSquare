@@ -65,7 +65,7 @@ class _GiveCoinsPageState extends State<GiveCoinsPage> {
                   padding: const EdgeInsets.all(20),
                   child: Text(
                     '${user.username} has ${user.coins} coins, how many coins do you want to give them?',
-                    style: textTheme.headline3,
+                    style: AppThemes.textTheme.headline3,
                   ),
                 ),
                 Padding(

@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     '${user.username} | ${user.coins} coins',
-                    style: textTheme.headline4,
+                    style: AppThemes.textTheme.headline4,
                   ),
                 ),
                 isMine
@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor: MaterialStateProperty.all<Color>(
-                            colorDarkBlue,
+                            AppThemes.colorDarkBlue,
                           ),
                         ),
                         icon: const Icon(Icons.edit),
@@ -130,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor: MaterialStateProperty.all<Color>(
-                            colorDarkBlue,
+                            AppThemes.colorDarkBlue,
                           ),
                         ),
                         icon: const Icon(Icons.send),

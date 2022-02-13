@@ -7,13 +7,13 @@ import 'package:score_square/blocs/games/games_bloc.dart' as games;
 import 'package:score_square/blocs/messages/messages_bloc.dart' as messages;
 import 'package:score_square/blocs/notifications/notifications_bloc.dart'
     as notifications;
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/pages/admin_page.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/util_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 import 'package:score_square/widgets/custom_shimmer.dart';
 import 'package:score_square/widgets/user_circle_avatar.dart';
 import '../service_locator.dart';
@@ -44,7 +44,7 @@ class CustomAppDrawer extends StatelessWidget {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               'Hello...',
-                              style: textTheme.headline4,
+                              style: AppThemes.textTheme.headline4,
                             ),
                           ),
                           const CustomShimmer(
@@ -87,7 +87,7 @@ class CustomAppDrawer extends StatelessWidget {
                               padding: const EdgeInsets.all(10.0),
                               child: Text(
                                 'Hello, ${user.username}',
-                                style: textTheme.headline4,
+                                style: AppThemes.textTheme.headline4,
                               ),
                             ),
                             UserCircleAvatar(
@@ -111,7 +111,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.home),
                         title: Text(
                           'Home',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () {
                           //If already on the home page, prevent pushing a new home page.
@@ -137,7 +137,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.sports_basketball),
                         title: Text(
                           'Games',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () {
                           Navigator.of(context).push(
@@ -158,7 +158,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.person),
                         title: Text(
                           'Profile',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () {
                           Navigator.of(context).push(
@@ -179,7 +179,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(MdiIcons.bellAlert),
                         title: Text(
                           'Notifications',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () {
                           Navigator.of(context).push(
@@ -202,7 +202,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.search),
                         title: Text(
                           'Search Users',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () async {
                           UserModel? user = await locator<UtilService>()
@@ -230,7 +230,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.message),
                         title: Text(
                           'Messages',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () async {
                           Navigator.of(context).push(
@@ -252,7 +252,7 @@ class CustomAppDrawer extends StatelessWidget {
                           leading: const Icon(Icons.admin_panel_settings),
                           title: Text(
                             'Admin',
-                            style: textTheme.headline4,
+                            style: AppThemes.textTheme.headline4,
                           ),
                           onTap: () {
                             Navigator.of(context).push(
@@ -268,7 +268,7 @@ class CustomAppDrawer extends StatelessWidget {
                         leading: const Icon(Icons.logout),
                         title: Text(
                           'Logout',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                         onTap: () async {
                           bool? confirm = await locator<ModalService>()

@@ -10,7 +10,6 @@ import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/auth_service.dart';
 import 'package:score_square/services/bet_service.dart';
 import 'package:score_square/services/util_service.dart';
-import 'package:score_square/theme.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/bet_view.dart';
 import 'package:score_square/widgets/custom_app_drawer.dart';

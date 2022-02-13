@@ -41,7 +41,7 @@ class _GamesPageState extends State<GamesPage> {
                         padding: const EdgeInsets.all(10),
                         child: Text(
                           'Sort games by...',
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                       ),
                       Row(
@@ -119,13 +119,13 @@ class _GamesPageState extends State<GamesPage> {
                       Tab(
                         child: Text(
                           'Open Games',
-                          style: textTheme.bodyText2,
+                          style: AppThemes.textTheme.bodyText2,
                         ),
                       ),
                       Tab(
                         child: Text(
                           'Closed Games',
-                          style: textTheme.bodyText2,
+                          style: AppThemes.textTheme.bodyText2,
                         ),
                       ),
                     ],

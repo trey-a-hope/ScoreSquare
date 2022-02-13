@@ -55,7 +55,7 @@ class _GamePageState extends State<GamePage> {
         if (user == null) ...[
           Text(
             number,
-            style: textTheme.headline6,
+            style: AppThemes.textTheme.headline6,
           ),
         ]
       ]),
@@ -234,8 +234,8 @@ class _GamePageState extends State<GamePage> {
                           label: const Text('Done'),
                           icon: const Icon(Icons.done),
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(colorDarkBlue),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                AppThemes.colorDarkBlue),
                           ),
                           onPressed: () {
                             context.read<GameBloc>().add(
@@ -270,11 +270,11 @@ class _GamePageState extends State<GamePage> {
                             ),
                             Text(
                               game.homeTeam().name,
-                              style: textTheme.headline3,
+                              style: AppThemes.textTheme.headline3,
                             ),
                             Text(
                               '${game.homeTeamScore}',
-                              style: textTheme.headline4,
+                              style: AppThemes.textTheme.headline4,
                             ),
                             Text(
                               '${game.homeTeamScore % 10}',
@@ -284,7 +284,7 @@ class _GamePageState extends State<GamePage> {
                         ),
                         Text(
                           'vs.',
-                          style: textTheme.headline3,
+                          style: AppThemes.textTheme.headline3,
                         ),
                         Column(
                           children: [
@@ -294,11 +294,11 @@ class _GamePageState extends State<GamePage> {
                             ),
                             Text(
                               game.awayTeam().name,
-                              style: textTheme.headline3,
+                              style: AppThemes.textTheme.headline3,
                             ),
                             Text(
                               '${game.awayTeamScore}',
-                              style: textTheme.headline4,
+                              style: AppThemes.textTheme.headline4,
                             ),
                             Text(
                               '${game.awayTeamScore % 10}',
@@ -315,12 +315,12 @@ class _GamePageState extends State<GamePage> {
                         leading: const Icon(Icons.timer),
                         title: Text(
                           'Game Starts',
-                          style: textTheme.headline3,
+                          style: AppThemes.textTheme.headline3,
                         ),
                         subtitle: Text(
                           locator<FormatService>()
                               .eMMMddhmmaa(date: game.starts),
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                       ),
                     ],
@@ -332,11 +332,11 @@ class _GamePageState extends State<GamePage> {
                         leading: const Icon(Icons.timer),
                         title: Text(
                           'Game Started',
-                          style: textTheme.headline3,
+                          style: AppThemes.textTheme.headline3,
                         ),
                         subtitle: Text(
                           locator<FormatService>().timeAgo(date: game.starts),
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                       ),
                     ],
@@ -346,11 +346,11 @@ class _GamePageState extends State<GamePage> {
                         leading: const Icon(Icons.timer),
                         title: Text(
                           'Game Ended',
-                          style: textTheme.headline3,
+                          style: AppThemes.textTheme.headline3,
                         ),
                         subtitle: Text(
                           locator<FormatService>().timeAgo(date: game.ends!),
-                          style: textTheme.headline4,
+                          style: AppThemes.textTheme.headline4,
                         ),
                       ),
                     ],
@@ -359,11 +359,11 @@ class _GamePageState extends State<GamePage> {
                       leading: const Icon(Icons.attach_money),
                       title: Text(
                         'Winning Pot',
-                        style: textTheme.headline3,
+                        style: AppThemes.textTheme.headline3,
                       ),
                       subtitle: Text(
                         '${bets.length * game.betPrice} coins',
-                        style: textTheme.headline4,
+                        style: AppThemes.textTheme.headline4,
                       ),
                     ),
                     const Divider(),
@@ -371,11 +371,11 @@ class _GamePageState extends State<GamePage> {
                       leading: const Icon(Icons.person),
                       title: Text(
                         'Total Bets',
-                        style: textTheme.headline3,
+                        style: AppThemes.textTheme.headline3,
                       ),
                       subtitle: Text(
                         '${bets.length} / $maxBetsPerGame',
-                        style: textTheme.headline4,
+                        style: AppThemes.textTheme.headline4,
                       ),
                     ),
                     const Divider(),
@@ -385,7 +385,7 @@ class _GamePageState extends State<GamePage> {
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              colorDarkBlue,
+                              AppThemes.colorDarkBlue,
                             ),
                           ),
                           onPressed: () async {
