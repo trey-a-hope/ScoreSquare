@@ -17,11 +17,11 @@ import 'package:score_square/services/format_service.dart';
 import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import 'package:score_square/widgets/custom_shimmer.dart';
 import 'package:score_square/widgets/user_circle_avatar.dart';
-import '../../constants.dart';
+import '../../constants/globals.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 
 part 'game_event.dart';

@@ -5,7 +5,7 @@ import 'package:score_square/models/notification_model.dart';
 import 'package:score_square/services/format_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 
 import '../../service_locator.dart';
 
@@ -86,11 +86,11 @@ class _NotificationListTileState extends State<NotificationListTile> {
         leading: const Icon(MdiIcons.bellAlert),
         title: Text(
           widget.notification.title,
-          style: textTheme.headline5,
+          style: AppThemes.textTheme.headline5,
         ),
         subtitle: Text(
           widget.notification.message,
-          style: textTheme.subtitle1,
+          style: AppThemes.textTheme.subtitle1,
         ),
         trailing: Text(
           locator<FormatService>().timeAgo(date: widget.notification.created),

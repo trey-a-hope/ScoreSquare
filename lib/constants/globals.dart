@@ -125,6 +125,8 @@ int maxBetsPerGame = 30;
 
 //Assets: Images
 const String appIcon = 'assets/images/app_icon.png';
+const String sportsBettingBackground =
+    'assets/images/sports_betting_background.png';
 
 //NBA Teams
 List<NBATeamModel> nbaTeams = [

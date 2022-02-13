@@ -8,7 +8,7 @@ import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/fcm_notification_service.dart';
 import 'package:score_square/services/modal_service.dart';
 import 'package:score_square/services/user_service.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 import 'package:score_square/widgets/basic_page.dart';
 
 import '../../service_locator.dart';

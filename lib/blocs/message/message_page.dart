@@ -113,7 +113,7 @@ class MessagePageState extends State<MessagePage> {
                   inputOptions: InputOptions(
                     sendOnEnter: true,
                     alwaysShowSend: true,
-                    inputTextStyle: textTheme.headline5,
+                    inputTextStyle: AppThemes.textTheme.headline5,
                   ),
                   messageListOptions: MessageListOptions(
                     showDateSeparator: true,

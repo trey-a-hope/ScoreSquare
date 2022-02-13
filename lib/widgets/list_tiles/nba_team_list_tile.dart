@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:score_square/models/nba_team_model.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 
 class NBATeamListTile extends StatelessWidget {
   final NBATeamModel team;
@@ -34,7 +34,7 @@ class NBATeamListTile extends StatelessWidget {
         ),
         title: Text(
           '${team.city} ${team.name}',
-          style: textTheme.headline4,
+          style: AppThemes.textTheme.headline4,
           textAlign: TextAlign.start,
         ),
         subtitle: Text(

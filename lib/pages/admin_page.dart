@@ -19,7 +19,7 @@ import 'package:score_square/services/game_service.dart';
 import 'package:score_square/services/util_service.dart';
 import 'package:score_square/widgets/basic_page.dart';
 import '../service_locator.dart';
-import '../theme.dart';
+import '../constants/app_themes.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -65,7 +65,7 @@ class _AdminPageState extends State<AdminPage> {
             subtitle: const Text('Create a new game for users to bet on.'),
             title: Text(
               'Create Game',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -87,7 +87,7 @@ class _AdminPageState extends State<AdminPage> {
                 const Text('Give coins to winners and send notification.'),
             title: Text(
               'Claim Winners',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -103,7 +103,7 @@ class _AdminPageState extends State<AdminPage> {
             subtitle: const Text('See all users by most recent login.'),
             title: Text(
               'Recently Active Users',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -140,7 +140,7 @@ class _AdminPageState extends State<AdminPage> {
                 'Modify score, status, and other details about game.'),
             title: Text(
               'Update Game',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -168,7 +168,7 @@ class _AdminPageState extends State<AdminPage> {
             subtitle: const Text('Add coins to a user account.'),
             title: Text(
               'Give Coins',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -204,7 +204,7 @@ class _AdminPageState extends State<AdminPage> {
             subtitle: const Text('Delete a game and it\'s bets.'),
             title: Text(
               'Delete Game',
-              style: textTheme.headline4,
+              style: AppThemes.textTheme.headline4,
             ),
             trailing: const Icon(Icons.chevron_right),
           ),

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/nba_team_model.dart';
 import 'package:score_square/services/format_service.dart';
 

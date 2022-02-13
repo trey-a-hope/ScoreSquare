@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:score_square/theme.dart';
+import 'package:score_square/constants/app_themes.dart';
 
 class CustomIconBox extends StatelessWidget {
   final IconButton iconButton;
@@ -15,7 +15,7 @@ class CustomIconBox extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: colorGrey.withAlpha(40),
+          color: AppThemes.colorGrey.withAlpha(40),
           width: 2,
         ),
       ),

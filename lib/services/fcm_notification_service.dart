@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert' show json;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
-import 'package:score_square/constants.dart';
+import 'package:score_square/constants/globals.dart';
 
 abstract class IFCMNotificationService {
   Future<void> sendNotificationToUser({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../theme.dart';
+import '../constants/app_themes.dart';
 import 'custom_icon_box.dart';
 
 class BasicPage extends StatelessWidget {
@@ -56,7 +56,7 @@ class BasicPage extends StatelessWidget {
                                 ),
                           Text(
                             title,
-                            style: textTheme.headline1,
+                            style: AppThemes.textTheme.headline1,
                           ),
                           rightIconButton == null
                               ? Container(
