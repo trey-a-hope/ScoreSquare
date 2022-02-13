@@ -3,17 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:score_square/blocs/home/home_bloc.dart' as home;
 import 'package:score_square/constants/globals.dart';
 import 'package:score_square/models/user_model.dart';
 import 'package:score_square/services/user_service.dart';
 import 'package:score_square/services/util_service.dart';
-import 'package:score_square/ui/login/login_page.dart';
-
 import '../../service_locator.dart';
 
 class MainViewModel extends GetxController {
@@ -50,7 +45,7 @@ class MainViewModel extends GetxController {
   handleAuthChanged(_firebaseUser) async {
     /// Proceed to Login Page if user is null.
     if (_firebaseUser == null) {
-      Get.offAll(() => const LoginPage());
+      Get.offAllNamed("/login");
     } else {
       /// Get user document reference.
       DocumentReference userDocRef = _usersDB.doc(_firebaseUser.uid);
@@ -96,15 +91,7 @@ class MainViewModel extends GetxController {
           .setOnlineStatus(uid: _firebaseUser.uid, isOnline: true);
 
       /// Proceed to home page.
-      Get.offAll(
-        () => BlocProvider(
-          create: (BuildContext context) => home.HomeBloc()
-            ..add(
-              home.LoadPageEvent(),
-            ),
-          child: const home.HomePage(),
-        ),
-      );
+      Get.offAllNamed("/home");
     }
   }
 
