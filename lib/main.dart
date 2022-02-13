@@ -1,23 +1,12 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
-import 'package:score_square/services/user_service.dart';
+import 'package:score_square/constants/app_routes.dart';
 import 'package:score_square/services/util_service.dart';
 import 'package:score_square/constants/app_themes.dart';
-import 'package:score_square/ui/login/login_page.dart';
-import 'blocs/home/home_bloc.dart' as home;
 import 'constants/globals.dart';
-import 'models/user_model.dart';
 import 'service_locator.dart';
 import 'package:get/get.dart';
 
@@ -29,21 +18,24 @@ import 'package:get/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  /// Wait for firebase app to initialize.
   await Firebase.initializeApp();
 
+  /// Initialize dependencies.
   setUpLocator();
 
-  //Set version and build numbers.
+  /// Set version and build numbers.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
   buildNumber = packageInfo.buildNumber;
 
-  //Initialize Hive.
+  /// Initialize Hive.
   await Hive.initFlutter();
 
-  //Open hive boxes.
+  /// Open hive boxes.
   await Hive.openBox<String>(hiveBoxUserCredentials);
 
+  /// Set status bar color to black.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
@@ -61,234 +53,6 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
   static final Box<dynamic> _userCredentialsBox =
       Hive.box<String>(hiveBoxUserCredentials);
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('users');
-
-  late Stream<User?> stream;
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-  Future<User?> authStateChangesAsyncStream({required User? user}) async {
-    if (user == null) return user;
-
-    DocumentReference userDocRef = _usersDB.doc(user.uid);
-
-    //Check if user already exists.
-    bool userExists = (await userDocRef.get()).exists;
-
-    //Set UID to hive box.
-    _userCredentialsBox.put('uid', user.uid);
-
-    if (userExists) {
-      //Request permission from user.
-      if (Platform.isIOS) {
-        _firebaseMessaging.requestPermission();
-      }
-
-      //Fetch the fcm token for this device.
-      String? token = await _firebaseMessaging.getToken();
-
-      //Validate that it's not null.
-      assert(token != null);
-
-      //Update fcm token for this device in firebase.
-      userDocRef.update({'fcmToken': token});
-
-      return user;
-    }
-
-    //Create user in firebase
-    UserModel newUser = UserModel(
-      imgUrl: user.photoURL,
-      created: DateTime.now(),
-      modified: DateTime.now(),
-      uid: user.uid,
-      username: user.displayName ?? 'John Doe',
-      coins: initialCoinStart,
-      isAdmin: false,
-      isOnline: true,
-    );
-
-    await locator<UserService>().createUser(user: newUser);
-
-    return user;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //Build stream for listening to user authentication states.
-    // stream = FirebaseAuth.instance.authStateChanges().asyncMap(
-    //       (user) => authStateChangesAsyncStream(user: user),
-    //     );
-    //
-    // WidgetsBinding.instance!.addObserver(this);
-
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Score Square',
-      theme: ThemeData(
-        primaryColor: Colors.lightBlueAccent,
-        textTheme: AppThemes.textTheme,
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-      ),
-      initialRoute: '/login',
-      getPages: [
-        // GetPage(name: '/', page: () => MyHomePage()),
-        GetPage(name: '/login', page: () => LoginPage()),
-      ],
-      // home: StreamBuilder<User?>(
-      //   stream: stream,
-      //   builder: (context, snapshot) {
-      //     switch (snapshot.connectionState) {
-      //       case ConnectionState.waiting:
-      //         return const Scaffold(
-      //           body: Center(
-      //             child: CircularProgressIndicator(),
-      //           ),
-      //         );
-      //       default:
-      //         if (snapshot.hasError) {
-      //           return Scaffold(
-      //             body: Center(
-      //               child: Text(
-      //                 snapshot.error.toString(),
-      //               ),
-      //             ),
-      //           );
-      //         } else if (!snapshot.hasData) {
-      //           return SignInScreen(
-      //             showAuthActionSwitch: false,
-      //             headerBuilder: (context, constraints, _) {
-      //               return AspectRatio(
-      //                 aspectRatio: 1,
-      //                 child: CircleAvatar(
-      //                   backgroundImage: Image.asset(
-      //                     appIcon,
-      //                     width: 200,
-      //                     fit: BoxFit.fitHeight,
-      //                   ).image,
-      //                 ),
-      //               );
-      //             },
-      //             providerConfigs: const [
-      //               GoogleProviderConfiguration(
-      //                 clientId: googleProviderConfigurationClientId,
-      //               ),
-      //               AppleProviderConfiguration()
-      //             ],
-      //           );
-      //         } else {
-      //           String? uid = _userCredentialsBox.get('uid');
-      //           locator<UtilService>()
-      //               .setOnlineStatus(uid: uid, isOnline: true);
-      //
-      //           return BlocProvider(
-      //             create: (BuildContext context) => home.HomeBloc()
-      //               ..add(
-      //                 home.LoadPageEvent(),
-      //               ),
-      //             child: const home.HomePage(),
-      //           );
-      //         }
-      //     }
-      //   },
-      // ),
-    );
-  }
-}
-
-class _MyApp extends StatefulWidget {
-  const _MyApp({Key? key}) : super(key: key);
-
-  @override
-  MyAppState createState() => MyAppState();
-}
-
-class MyAppState extends State<_MyApp> with WidgetsBindingObserver {
-  MyAppState();
-
-  static final Box<dynamic> _userCredentialsBox =
-      Hive.box<String>(hiveBoxUserCredentials);
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('users');
-
-  late Stream<User?> stream;
-
-  Future<User?> authStateChangesAsyncStream({required User? user}) async {
-    if (user == null) return user;
-
-    DocumentReference userDocRef = _usersDB.doc(user.uid);
-
-    //Check if user already exists.
-    bool userExists = (await userDocRef.get()).exists;
-
-    //Set UID to hive box.
-    _userCredentialsBox.put('uid', user.uid);
-
-    if (userExists) {
-      //Request permission from user.
-      if (Platform.isIOS) {
-        _firebaseMessaging.requestPermission();
-      }
-
-      //Fetch the fcm token for this device.
-      String? token = await _firebaseMessaging.getToken();
-
-      //Validate that it's not null.
-      assert(token != null);
-
-      //Update fcm token for this device in firebase.
-      userDocRef.update({'fcmToken': token});
-
-      return user;
-    }
-
-    //Create user in firebase
-    UserModel newUser = UserModel(
-      imgUrl: user.photoURL,
-      created: DateTime.now(),
-      modified: DateTime.now(),
-      uid: user.uid,
-      username: user.displayName ?? 'John Doe',
-      coins: initialCoinStart,
-      isAdmin: false,
-      isOnline: true,
-    );
-
-    await locator<UserService>().createUser(user: newUser);
-
-    return user;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    //Build stream for listening to user authentication states.
-    stream = FirebaseAuth.instance.authStateChanges().asyncMap(
-          (user) => authStateChangesAsyncStream(user: user),
-        );
-
-    WidgetsBinding.instance!.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     String? uid = _userCredentialsBox.get('uid');
@@ -301,11 +65,7 @@ class MyAppState extends State<_MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp],
-    );
-
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Score Square',
       theme: ThemeData(
@@ -315,63 +75,8 @@ class MyAppState extends State<_MyApp> with WidgetsBindingObserver {
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
-      home: StreamBuilder<User?>(
-        stream: stream,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            default:
-              if (snapshot.hasError) {
-                return Scaffold(
-                  body: Center(
-                    child: Text(
-                      snapshot.error.toString(),
-                    ),
-                  ),
-                );
-              } else if (!snapshot.hasData) {
-                return SignInScreen(
-                  showAuthActionSwitch: false,
-                  headerBuilder: (context, constraints, _) {
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: CircleAvatar(
-                        backgroundImage: Image.asset(
-                          appIcon,
-                          width: 200,
-                          fit: BoxFit.fitHeight,
-                        ).image,
-                      ),
-                    );
-                  },
-                  providerConfigs: const [
-                    GoogleProviderConfiguration(
-                      clientId: googleProviderConfigurationClientId,
-                    ),
-                    AppleProviderConfiguration()
-                  ],
-                );
-              } else {
-                String? uid = _userCredentialsBox.get('uid');
-                locator<UtilService>()
-                    .setOnlineStatus(uid: uid, isOnline: true);
-
-                return BlocProvider(
-                  create: (BuildContext context) => home.HomeBloc()
-                    ..add(
-                      home.LoadPageEvent(),
-                    ),
-                  child: const home.HomePage(),
-                );
-              }
-          }
-        },
-      ),
+      initialRoute: '/',
+      getPages: AppRoutes.routes,
     );
   }
 }

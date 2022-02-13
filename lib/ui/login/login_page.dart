@@ -7,9 +7,7 @@ import 'package:score_square/widgets/full_width_button.dart';
 import '../../constants/globals.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +15,6 @@ class LoginPage extends StatelessWidget {
       init: LoginViewModel(),
       builder: (model) {
         return Scaffold(
-          key: _scaffoldKey,
           body: Stack(
             children: [
               Container(
