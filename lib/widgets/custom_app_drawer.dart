@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:score_square/blocs/profile/profile_bloc.dart' as profile;
 import 'package:score_square/blocs/home/home_bloc.dart' as home;
@@ -264,6 +265,16 @@ class CustomAppDrawer extends StatelessWidget {
                         ),
                       ],
                       const Spacer(),
+                      ListTile(
+                        leading: const Icon(Icons.settings),
+                        title: Text(
+                          'Settings',
+                          style: AppThemes.textTheme.headline4,
+                        ),
+                        onTap: () {
+                          Get.toNamed('/settings');
+                        },
+                      ),
                       ListTile(
                         leading: const Icon(Icons.logout),
                         title: Text(
