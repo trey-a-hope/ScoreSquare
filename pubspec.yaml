@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^0.8.4+4
   image_stack: ^2.0.1
   intl: ^0.17.0
+  in_app_purchase: ^2.0.1
   launch_review: ^3.0.1
   material_design_icons_flutter: ^5.0.6295
   new_version: ^0.3.0

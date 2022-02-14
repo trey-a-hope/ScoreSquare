@@ -11,7 +11,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SettingsViewModel>(
       init: SettingsViewModel(),
-      builder: (context) => BasicPage(
+      builder: (model) => BasicPage(
         title: 'Settings',
         leftIconButton: IconButton(
           icon: const Icon(Icons.chevron_left),
