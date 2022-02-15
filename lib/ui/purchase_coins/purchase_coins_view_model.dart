@@ -109,57 +109,62 @@ class PurchaseCoinsViewModel extends GetxController {
   }
 
   Future<void> _handlePurchase(PurchaseDetails purchaseDetails) async {
-    if (purchaseDetails.status == PurchaseStatus.purchased) {
-      // TODO: Send to server
-      // var validPurchase = await _verifyPurchase(purchaseDetails);
-      bool validPurchase = true;
+    switch (purchaseDetails.status) {
+      case PurchaseStatus.pending:
 
-      if (validPurchase) {
-        // Apply changes locally
-        // switch (purchaseDetails.productID) {
-        //   case storeKeySubscription:
-        //     counter.applyPaidMultiplier();
-        //     break;
-        //   case storeKeyConsumable:
-        //     counter.addBoughtDashes(1000);
-        //     break;
-        // }
-      }
-    }
+        /// Complete the purchase.
+        await _inAppPurchase.completePurchase(purchaseDetails);
 
-    if (purchaseDetails.pendingCompletePurchase) {
-      /// Complete the purchase.
-      await _inAppPurchase.completePurchase(purchaseDetails);
+        /// Add coins to users account.
+        switch (purchaseDetails.productID) {
+          case 'FIVE_COINS':
+            await locator<UserService>().updateUser(
+              uid: _user.uid!,
+              data: {
+                'coins': FieldValue.increment(5),
+              },
+            );
+            break;
+          case 'TEN_COINS':
+            await locator<UserService>().updateUser(
+              uid: _user.uid!,
+              data: {
+                'coins': FieldValue.increment(10),
+              },
+            );
+            break;
+          case 'FIFTEEN_COINS':
+            await locator<UserService>().updateUser(
+              uid: _user.uid!,
+              data: {
+                'coins': FieldValue.increment(15),
+              },
+            );
+            break;
+          default:
+            break;
+        }
+        break;
+      case PurchaseStatus.purchased:
+        // TODO: Send to server to validate.
+        // var validPurchase = await _verifyPurchase(purchaseDetails);
+        bool validPurchase = true;
 
-      /// Add coins to users account.
-      switch (purchaseDetails.productID) {
-        case 'FIVE_COINS':
-          await locator<UserService>().updateUser(
-            uid: _user.uid!,
-            data: {
-              'coins': FieldValue.increment(5),
-            },
-          );
-          break;
-        case 'TEN_COINS':
-          await locator<UserService>().updateUser(
-            uid: _user.uid!,
-            data: {
-              'coins': FieldValue.increment(10),
-            },
-          );
-          break;
-        case 'FIFTEEN_COINS':
-          await locator<UserService>().updateUser(
-            uid: _user.uid!,
-            data: {
-              'coins': FieldValue.increment(15),
-            },
-          );
-          break;
-        default:
-          break;
-      }
+        if (validPurchase) {
+          //TODO: Show success of valid purchase.
+        } else {
+          //TODO: Show error of invalid purchase.
+        }
+        break;
+      case PurchaseStatus.error:
+        // TODO: Show error.
+        break;
+      case PurchaseStatus.restored:
+        // TODO: Show restores UI, (this isn't necessary for consumables I don't think).
+        break;
+      case PurchaseStatus.canceled:
+        // TODO: Show cancelled message.
+        break;
     }
 
     return;
