@@ -74,7 +74,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
       GameModel game = GameModel(
         awayTeamID: _awayTeam.id,
         awayTeamScore: 0,
-        betPrice: 3,
+        betPrice: 1,
         homeTeamID: _homeTeam.id,
         homeTeamScore: 0,
         id: null,

@@ -125,6 +125,7 @@ int maxBetsPerGame = 30;
 
 //Assets: Images
 const String appIcon = 'assets/images/app_icon.png';
+const String blackManPhone = 'assets/images/black_man_phone.png';
 const String sportsBettingBackground =
     'assets/images/sports_betting_background.png';
 

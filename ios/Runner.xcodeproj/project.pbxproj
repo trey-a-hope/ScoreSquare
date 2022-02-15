@@ -14,6 +14,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		A20E7012276BD4AA0006637E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A20E7011276BD4AA0006637E /* GoogleService-Info.plist */; };
+		A2E6346027BB2A7C009B790E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E6345F27BB2A7C009B790E /* StoreKit.framework */; };
 		C22C62B50CE11D21909410C4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF50D7EFA42D646F81015197 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A20E7011276BD4AA0006637E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A21F775B27662F6D0082F01D /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		A2E6345F27BB2A7C009B790E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		CF50D7EFA42D646F81015197 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -58,6 +60,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C22C62B50CE11D21909410C4 /* Pods_Runner.framework in Frameworks */,
+				A2E6346027BB2A7C009B790E /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +70,7 @@
 		15214FFA0AA9CD929EF701C9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2E6345F27BB2A7C009B790E /* StoreKit.framework */,
 				CF50D7EFA42D646F81015197 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
