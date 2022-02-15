@@ -43,7 +43,7 @@ class BetService implements IBetService {
 
         //Subtract coins from users account.
         transaction.update(userDocRef, {
-          'coins': user.coins - coins,
+          'coins': FieldValue.increment(-coins),
         });
 
         return {

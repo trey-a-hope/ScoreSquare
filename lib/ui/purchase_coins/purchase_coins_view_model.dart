@@ -1,8 +1,15 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:score_square/constants/globals.dart';
+import 'package:score_square/models/user_model.dart';
+import 'package:score_square/services/auth_service.dart';
+import 'package:score_square/services/user_service.dart';
+
+import '../../service_locator.dart';
 
 class PurchaseCoinsViewModel extends GetxController {
   /// Stream for listening to purchases.
@@ -16,6 +23,9 @@ class PurchaseCoinsViewModel extends GetxController {
 
   /// Determine if in-app purchases are available.
   bool inAppPurchasesIsAvailable = false;
+
+  /// The user about to make the purchase.
+  late UserModel _user;
 
   @override
   void onInit() async {
@@ -38,16 +48,9 @@ class PurchaseCoinsViewModel extends GetxController {
     /// Determine if in app purchases are available.
     inAppPurchasesIsAvailable = await _inAppPurchase.isAvailable();
 
-    /// Load products for sale via their products Ids.
-    const Set<String> _kIds = <String>{
-      'FIVE_COINS',
-      'TEN_COINS',
-      'FIFTEEN_COINS'
-    };
-
     /// Query for the products.
     final ProductDetailsResponse response =
-        await _inAppPurchase.queryProductDetails(_kIds);
+        await _inAppPurchase.queryProductDetails(inAppPurchaseProductIds);
 
     /// If no products found, handle error here.
     if (response.notFoundIDs.isNotEmpty) {
@@ -60,11 +63,14 @@ class PurchaseCoinsViewModel extends GetxController {
     /// Sort products by price.
     products.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
 
+    /// Fetch current user.
+    _user = await locator<AuthService>().getCurrentUser();
+
     update();
   }
 
   /// Make purchase of product.
-  void purchase({required ProductDetails product}) async {
+  void purchaseProduct({required ProductDetails product}) async {
     try {
       /// Create purchase param from product.
       final PurchaseParam purchaseParam =
@@ -72,14 +78,15 @@ class PurchaseCoinsViewModel extends GetxController {
 
       /// Proceed to buy product.
       await InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
+
+      /// From here the purchase flow will be handled by the underlying store.
+      /// Updates will be delivered to the `InAppPurchase.instance.purchaseStream`.
     } catch (error) {
       debugPrint(error.toString());
     }
-
-// From here the purchase flow will be handled by the underlying store.
-// Updates will be delivered to the `InAppPurchase.instance.purchaseStream`.
   }
 
+  //TODO: Complete verify purchase method.
   // Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
   //   var functions = await firebaseNotifier.functions;
   //   final callable = functions.httpsCallable('verifyPurchase');
@@ -94,10 +101,10 @@ class PurchaseCoinsViewModel extends GetxController {
 
   Future<void> _listenToPurchaseUpdated(
       List<PurchaseDetails> purchaseDetailsList) async {
-    for (var purchaseDetails in purchaseDetailsList) {
+    for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
       await _handlePurchase(purchaseDetails);
     }
-    // notifyListeners();
+
     update();
   }
 
@@ -105,7 +112,7 @@ class PurchaseCoinsViewModel extends GetxController {
     if (purchaseDetails.status == PurchaseStatus.purchased) {
       // TODO: Send to server
       // var validPurchase = await _verifyPurchase(purchaseDetails);
-      var validPurchase = true;
+      bool validPurchase = true;
 
       if (validPurchase) {
         // Apply changes locally
@@ -121,7 +128,40 @@ class PurchaseCoinsViewModel extends GetxController {
     }
 
     if (purchaseDetails.pendingCompletePurchase) {
+      /// Complete the purchase.
       await _inAppPurchase.completePurchase(purchaseDetails);
+
+      /// Add coins to users account.
+      switch (purchaseDetails.productID) {
+        case 'FIVE_COINS':
+          await locator<UserService>().updateUser(
+            uid: _user.uid!,
+            data: {
+              'coins': FieldValue.increment(5),
+            },
+          );
+          break;
+        case 'TEN_COINS':
+          await locator<UserService>().updateUser(
+            uid: _user.uid!,
+            data: {
+              'coins': FieldValue.increment(10),
+            },
+          );
+          break;
+        case 'FIFTEEN_COINS':
+          await locator<UserService>().updateUser(
+            uid: _user.uid!,
+            data: {
+              'coins': FieldValue.increment(15),
+            },
+          );
+          break;
+        default:
+          break;
+      }
     }
+
+    return;
   }
 }

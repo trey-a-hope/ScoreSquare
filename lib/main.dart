@@ -10,11 +10,6 @@ import 'constants/globals.dart';
 import 'service_locator.dart';
 import 'package:get/get.dart';
 
-//TODO
-//Use in-app purchases to allow users to buy "coins".
-//Use google ads to make revenue as well.
-//Use Stripe payments to pay customers for their coins.
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

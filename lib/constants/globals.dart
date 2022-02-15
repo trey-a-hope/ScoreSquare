@@ -8,7 +8,15 @@ const String dummyProfileImageUrl =
 String? version;
 String? buildNumber;
 
+/// Colors
 final HexColor colorNavy = HexColor('#09487e');
+
+/// In-App Purchase Product Ids
+Set<String> inAppPurchaseProductIds = <String>{
+  'FIVE_COINS',
+  'TEN_COINS',
+  'FIFTEEN_COINS'
+};
 
 //Hive Boxes Names
 const String hiveBoxUserCredentials = 'HIVE_BOX_USER_CREDENTIALS';

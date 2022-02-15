@@ -82,7 +82,7 @@ class PurchaseCoinsPage extends StatelessWidget {
                                         return;
                                       }
 
-                                      model.purchase(product: product);
+                                      model.purchaseProduct(product: product);
                                     },
                                     child: Text(product.price),
                                   )
