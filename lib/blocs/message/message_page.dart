@@ -82,6 +82,7 @@ class MessagePageState extends State<MessagePage> {
 
           if (state is LoadedState) {
             List<MessageModel> messages = state.messages;
+            UserModel receiver = state.receiver;
 
             //Convert messages to chat messages.
             List<ChatMessage> chatMessages = messages
@@ -101,9 +102,10 @@ class MessagePageState extends State<MessagePage> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(state.receiver.username),
+                    Text(receiver.username),
                     CircleAvatar(
-                      backgroundImage: NetworkImage(state.receiver.imgUrl!),
+                      backgroundImage:
+                          NetworkImage(receiver.imgUrl ?? dummyProfileImageUrl),
                     )
                   ],
                 ),
