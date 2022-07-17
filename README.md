@@ -1,16 +1,18 @@
-# score_square
+# Score Square
 
-A new Flutter project.
+### Watching sports is fun when you can put coins on a match! Score Square lets you win coins to use in the app when you correctly guess the scores of each team playing.
 
-## Getting Started
+[![iOS Download](https://img.shields.io/badge/iOS%20Download-Click%20Here-blue?labelColor=black&style=for-the-badge&link=https://apps.apple.com/us/app/score-square/id1604663651)](https://apps.apple.com/us/app/score-square/id1604663651)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+ 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## ⚡ Technologies
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Flutter](https://img.shields.io/badge/-Flutter-black?style=flat-square&logo=flutter)
+![Firebase](https://img.shields.io/badge/-Firebase-black?style=flat-square&logo=Firebase)
+![Algolia](https://img.shields.io/badge/-Algolia-black?style=flat-square&logo=Algolia)
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
+![Nodejs](https://img.shields.io/badge/-Nodejs-black?style=flat-square&logo=Node.js)
+![MongoDB](https://img.shields.io/badge/-MongoDB-black?style=flat-square&logo=mongodb)
+![Google Cloud](https://img.shields.io/badge/Google%20Cloud-black?style=flat-square&logo=google-cloud)
