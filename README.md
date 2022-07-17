@@ -3,8 +3,8 @@
 ### Watching sports is fun when you can put coins on a match! Score Square lets you win coins to use in the app when you correctly guess the scores of each team playing.
 
 [![iOS Download](https://img.shields.io/badge/iOS%20Download-Click%20Here-blue?labelColor=black&style=for-the-badge&link=https://apps.apple.com/us/app/score-square/id1604663651)](https://apps.apple.com/us/app/score-square/id1604663651)
-
-
+[![Android Download](https://img.shields.io/badge/Android%20Download-Click%20Here-green?labelColor=black&style=for-the-badge&link=https://play.google.com/store/apps/details?id=com.io.score_square&hl=en_US&gl=US)](https://play.google.com/store/apps/details?id=com.io.score_square&hl=en_US&gl=US)
+ 
  
 
 ## ⚡ Technologies
